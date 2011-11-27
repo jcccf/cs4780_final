@@ -1,0 +1,46 @@
+# Load stuff in and get correlation
+
+data <- read.table("data_orange.txt", header=TRUE)
+data <- subset(data, select= -c(DOS_YEAR))
+mat.data <- data.matrix(data)
+mat.cor <- cor(mat.data)
+
+# Random Stuff
+
+mat.cord <- mat.cor - diag(diag(mat.cor))
+mat.cord <- abs(mat.cord)
+mat.cormax <- max.col(mat.cord)
+apply(mat.cord, 2, max)
+
+whichmax <- apply(mat.cord, 2, which.max)
+rownames(mat.cord)[whichmax]
+
+rang <- apply(mat.cord, 2, max)
+rangmax <- cbind(rang, maxnames)
+
+rangmaxd <- data.frame(rangmax)
+rangmaxd[order(rangmaxd$rang),]
+
+
+# Getting Correlations
+
+# http://stackoverflow.com/questions/4798076/sorting-a-square-matrix
+
+mtx <- matrix( rnorm(16), 4, 4, dimnames = list( LETTERS[1:4], LETTERS[1:4]))
+mtx[lower.tri(mtx, diag=TRUE)] <- NA
+mtx <- abs(mtx)
+dx <- as.data.frame(as.table(mtx))
+dx <- subset(dx, !is.na(Freq))
+dxdone <- dx[order(-dx$Freq),]
+
+# For first 2
+by(dxdone[1:2,,drop=FALSE], 1:2, function(row) { cor.test(data[,row[1]$Var1],data[,row[2]$Var2]) })
+
+# For everything
+by(dxdone, 1:nrow(dxdone), function(row) { cor.test(data[,row[1]$Var1],data[,row[2]$Var2]) })
+
+# Plot Heatmap
+heatmap(mat.cord, col=topo.colors(256), Rowv=NA, Colv=NA, cexRow = 0.1, cexCol = 0.1)
+
+
+write.table(dxdone2, "topcorr2.txt", sep="\t")

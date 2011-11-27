@@ -1,0 +1,6 @@
+*~
+*.DS_Store
+*.pyc
+data/*
+penn97/*
+test_data/*
