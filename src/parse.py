@@ -73,6 +73,7 @@ field_types = {}
 field_nulls = {}
 to_coarsify = []
 to_binarize = []
+to_split_median = []
 
 #==============================================================================
 
@@ -179,6 +180,9 @@ def process_var(field, list, fields):
             row[newfields[1]] = dateobj.tm_year
             row[newfields[2]] = date(dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday).isoweekday()
             row[newfields[3]] = time.mktime(dateobj)
+            for newf in newfields:
+                field_types[newf] = 'd'
+            field_types[newfields[3]] = 'c'
             del row[field]
         fields.remove(field)
     elif field in to_coarsify: # into 10 buckets or a fifth size, whichever's greater
@@ -207,8 +211,18 @@ def process_var(field, list, fields):
             for newfield in newfields:
                 row[newfield] = 0
             row[field+'_'+row[field]] = 1
+            field_types[field+'_'+row[field]] = 'd'
             del row[field]
         fields.remove(field)
+    elif field in to_split_median:
+        values = get_field_values(list, field)
+        values.sort()
+        median = values[len(values)/2]
+        for row in list:
+            if row[field] < median:
+                row[field] = 0
+            else:
+                row[field] = 1
     else:
         return
 
@@ -230,10 +244,12 @@ def to_orange_fmt(list, features, label, filename):
     for feature in features:
         if feature != label:
             s += feature + '\t'
-            if feature in field_types:
-                f_types += field_types[feature] + '\t'
-            else:
-                f_types += 'd\t'
+            #if feature in field_types:
+            f_types += field_types[feature] + '\t'
+            '''else:
+                if string.find(feature, "_UNO") != -1:
+                    f_types += 'd\t'
+                else '''
             
     s += '\n'
     
@@ -255,7 +271,7 @@ def to_orange_fmt(list, features, label, filename):
     for point in listcpy:
         row = ""
         if label in point:
-            row += point[label]
+            row += str(point[label])
             del point[label]
         else: # skip if label missing
             continue
@@ -297,7 +313,7 @@ if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    #dir = '../test_data/'
+    dir = '../test_data/'
     
     records, rec_fields = parse_record(['CID', 'DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'COUNTY'])
     offenses, off_fields = parse_offense(['CID', 'DOFAGE', 'PCSOFF','PCSSUB','INCMIN', 'INCMAX','INCTYPE','FINE','DOF','GRADE', 'DAASS', 'DISP', 'COMPLETE'])
@@ -314,6 +330,7 @@ if __name__ == '__main__':
 
     ''' output ''' # specify fields to process in to_coarsify and to_binarize
     to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY', 'GRADE']
-    to_coarsify = ['INCMIN', 'INCMAX']
+    to_coarsify = ['INCMAX']
+    to_split_median = ['INCMIN']
     ro, features = process_vars(ro, features) # processes date fields, coarsifies, binarizes
     to_orange_fmt(ro, features, 'INCMIN', '../data/data_orange_b_c.txt')
