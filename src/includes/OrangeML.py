@@ -62,11 +62,11 @@ class OrangeClassifiers:
 #     print "%d: %5.3f (originally %s)" % (i+1, p[1], data[i].getclass())
 
 class OrangeTuners:
-  def initialize(self, filename):
+  def __init__(self, filename):
     self.filename = filename
     
   def tune_decision_tree(self):
-    data = orange.ExampleTable(filename)
+    data = orange.ExampleTable(self.filename)
     tree = orngTree.TreeLearner(sameMajorityPruning=True)
     # tunedTree = orngWrap.Tune1Parameter(object=tree, parameter='mForPruning', \
     #     values=[0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], verbose=2)
