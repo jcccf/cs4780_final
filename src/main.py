@@ -4,7 +4,7 @@ from includes import *
 # Orange Machine Learning Algorithms
 #
 
-oc = OrangeML.OrangeClassifiers('../data/data_orange_full_bin_4.tab')
+# oc = OrangeML.OrangeClassifiers('../data/data_orange_full_bin_4.tab')
 # oc.cross_validate()
 # oc.print_linear_svm()
 # oc.print_decision_tree(measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10)
@@ -13,8 +13,18 @@ oc = OrangeML.OrangeClassifiers('../data/data_orange_full_bin_4.tab')
 #
 # Orange Tuners
 #
-ot = OrangeML.OrangeTuners('../data/uno/data_orange_nb_nc_uno_bal2.tab')
-ot.tune_decision_tree()
+# ot = OrangeML.OrangeTuners('../data/uno/data_orange_nb_nc_uno_bal2.tab')
+# ot.tune_decision_tree()
+
+#
+# SVMLight File Converters
+#
+# Converters.orangetab_to_svmlight('../data/uno/data_orange_b_nc_uno.txt', '../data_svm/data_orange_nb_nc.train')
+
+#
+# SVMLight Tuner
+#
+MSVMLight.tune_parameters('../data_svm/data_orange_nb_nc.train')
 
 #
 # HW Decision Tree (Modified to Allow Discrete Attributes)

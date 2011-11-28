@@ -1,1 +1,1 @@
-__all__ = ['Converters', 'OrangeML', 'DecisionTree', 'Loaders']
+__all__ = ['Converters', 'OrangeML', 'DecisionTree', 'Loaders', 'MSVMLight']
