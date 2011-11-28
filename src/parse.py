@@ -317,10 +317,26 @@ def to_svm_light(list, label, filename):
     f.close()
 
 #==============================================================================
-
-def gen_file(binarize, coarsify, medianize, valsplit):
+''' output ''' # specify fields to process. All lists must be mutually exclusive
+def gen_file(list, features, label, binarize, coarsify, medianize, valsplit):
+    filename = '../data/data_orange'
     if binarize:
-        pass
+        filename += '_b'
+        to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
+    if coarsify:
+        filename += '_c'
+        to_coarsify = []
+    if medianize:
+        filename += '_m'
+        to_split_median = []
+    if valsplit:
+        filename += '_v'
+        to_split_value = {'INCMIN':12,'GRADE':5}
+    
+    ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
+    filename += '.txt'
+    to_orange_fmt(ro, features, label, filename)
+
 
 if __name__ == '__main__':
     dir = '../penn97/'
@@ -340,11 +356,7 @@ if __name__ == '__main__':
     features.extend(off_fields)    
     print "num records = %d, num offenses = %d, rows after join = %d" % (len(records), len(offenses), len(ro))
 
-
-    ''' output ''' # specify fields to process. All lists must be mutually exclusive
-    to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
-    to_coarsify = ['INCMAX']
-    #to_split_median = ['INCMIN']
-    to_split_value = {'INCMIN':12,'GRADE':5}
-    ro, features = process_vars(ro, features) # processes date fields, coarsifies, binarizes
-    to_orange_fmt(ro, features, 'INCMIN', '../data/data_orange_b_c.txt')
+    gen_file(ro, features, 'INCMIN', True, False, False, True)
+    
+    
+    
