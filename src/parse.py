@@ -74,6 +74,7 @@ field_nulls = {}
 to_coarsify = []
 to_binarize = []
 to_split_median = []
+to_split_value = {}
 
 #==============================================================================
 
@@ -165,6 +166,7 @@ def similar_str(s):
 
 # does not have side-effects
 def process_vars(list, fields):
+    list = deepcopy(list)
     for field in deepcopy(fields):
         process_var(field, list, fields)
     return list, fields
@@ -214,12 +216,19 @@ def process_var(field, list, fields):
             field_types[field+'_'+row[field]] = 'd'
             del row[field]
         fields.remove(field)
-    elif field in to_split_median:
+    if field in to_split_median:
         values = get_field_values(list, field)
         values.sort()
         median = values[len(values)/2]
         for row in list:
             if row[field] < median:
+                row[field] = 0
+            else:
+                row[field] = 1
+    if field in to_split_value:
+        split = to_split_value[field]
+        for row in list:
+            if row[field] < split:
                 row[field] = 0
             else:
                 row[field] = 1
@@ -308,7 +317,11 @@ def to_svm_light(list, label, filename):
     f.close()
 
 #==============================================================================
- 
+
+def gen_file(binarize, coarsify, medianize, valsplit):
+    if binarize:
+        pass
+
 if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
@@ -328,9 +341,10 @@ if __name__ == '__main__':
     print "num records = %d, num offenses = %d, rows after join = %d" % (len(records), len(offenses), len(ro))
 
 
-    ''' output ''' # specify fields to process in to_coarsify and to_binarize
-    to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY', 'GRADE']
+    ''' output ''' # specify fields to process. All lists must be mutually exclusive
+    to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
     to_coarsify = ['INCMAX']
-    to_split_median = ['INCMIN']
+    #to_split_median = ['INCMIN']
+    to_split_value = {'INCMIN':12,'GRADE':5}
     ro, features = process_vars(ro, features) # processes date fields, coarsifies, binarizes
     to_orange_fmt(ro, features, 'INCMIN', '../data/data_orange_b_c.txt')
