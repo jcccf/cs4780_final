@@ -7,9 +7,14 @@ from includes import *
 oc = OrangeML.OrangeClassifiers('../data/data_orange_full_bin_4.tab')
 # oc.cross_validate()
 # oc.print_linear_svm()
-oc.print_decision_tree(measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10)
+# oc.print_decision_tree(measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10)
 # oc.print_bayes()
 
+#
+# Orange Tuners
+#
+ot = OrangeML.OrangeTuners('../data/uno/data_orange_nb_nc_uno_bal2.tab')
+ot.tune_decision_tree()
 
 #
 # HW Decision Tree (Modified to Allow Discrete Attributes)

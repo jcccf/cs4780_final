@@ -1,4 +1,4 @@
-import orange, orngBayes, orngTree, orngTest, orngStat
+import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap
 
 class OrangeClassifiers:
   def __init__(self, orangeDataFile):
@@ -60,3 +60,22 @@ class OrangeClassifiers:
 # for i in range(5):
 #     p = tree(data[i], orange.GetProbabilities)
 #     print "%d: %5.3f (originally %s)" % (i+1, p[1], data[i].getclass())
+
+class OrangeTuners:
+  def initialize(self, filename):
+    self.filename = filename
+    
+  def tune_decision_tree(self):
+    data = orange.ExampleTable(filename)
+    tree = orngTree.TreeLearner(sameMajorityPruning=True)
+    # tunedTree = orngWrap.Tune1Parameter(object=tree, parameter='mForPruning', \
+    #     values=[0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], verbose=2)
+    tunedTree = orngWrap.TuneMParameters(object=tree, parameters = [
+      ('mForPruning', [0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]), 
+      ('maxMajority', [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
+      ('minExamples', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+      ('minSubset', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+      ('measure', ['infoGain', 'gainRatio', 'gini', 'relief'])
+    ], folds=10, verbose=2)
+
+    return tunedTree(data)
