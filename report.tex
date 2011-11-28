@@ -1,0 +1,130 @@
+\documentclass[]{article}
+
+\usepackage[]{geometry}
+\geometry{
+  top=1in,            % <-- you want to adjust this
+  inner=1in,
+  outer=1in,
+  bottom=1in,
+  headheight=3ex,       % <-- and this
+  headsep=2ex,          % <-- and this
+}
+\usepackage[T1]{fontenc}
+\usepackage{mathtools}
+\usepackage{algorithmic}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{multicol}
+\usepackage{parskip}
+\usepackage{titling}
+\pretitle{\begin{flushleft}\LARGE\sffamily}
+\posttitle{\par\end{flushleft}\vskip 0.5em}
+\preauthor{\begin{flushleft}}
+\postauthor{\par\end{flushleft}}
+\predate{\begin{flushleft}\scshape}
+\postdate{\par\end{flushleft}}
+\setlength{\droptitle}{-20pt}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt} % remove line at top
+\lhead{\fancyplain{}{CS 4780 Final Project}}
+\rhead{\fancyplain{}{jc882, yl477, jp624}}
+\rfoot{\fancyplain{}{\thepage}}
+
+\begin{document}
+
+\title{CS 4780 Final Project: Predicting Crimial Sentences}
+\author{Justin Cheng \emph{jc882}, Yunchi Luo \emph{yl477}, Jane Jae Won Park \emph{jp624}}
+\date{\today}
+\maketitle
+
+\hrule
+\vskip 1em
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+\subsection{Statement of Task}
+
+\section{Method}
+
+\subsection{Feature Selection}
+
+\begin{enumerate}
+	\item \emph{b/nb} Binarization
+	\item \emph{c/nc} Coarsification
+	\item \emph{\_/uno} Date field separation
+	\item \emph{\_/balN} Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
+\end{enumerate}
+
+\subsection{Linear Regression}
+We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
+
+\subsection{Decision Tree Learning}
+
+\subsubsection{Parameter Tuning}
+\begin{itemize}
+	\item Parameter $m$ from $0.1$ to $100$ \\
+		- Parameter used in computing M-estimate probabilities during post-pruning
+	\item Maximum majority from $0.5$ to $1.0$ \\
+		- Induction stops when a node has a majority at least this value
+	\item Minimum examples per node from $0$ to $10$ \\
+		- Minimum examples in each leaf
+	\item Minimum subset from $0$ to $10$ \\
+		- Minimum examples in non-null leaves
+	\item Measures - information gain, information gain ratio, gini index, relief % See http://orange.biolab.si/doc//orange25/Orange.feature.scoring.html#Orange.feature.scoring.Relief
+\end{itemize}
+
+\section{Results and Discussion}
+
+\subsection{Linear Regression}
+
+\subsubsection{Correlation Heatmap}
+% \includegraphics[scale=0.5]{report_figures/corr_heatmap.pdf} % Uncomment when ready to print
+
+TODO: Uncomment above line to import heatmap
+
+The figure above shows the correlation between all tested attributes, with blue indicating uncorrelated attributes and yellow indicating highly correlated attributes.
+
+\subsubsection{Top Correlated Attributes}
+Ignoring correlation between binarized attributes (ex. GRADE\_1 and GRADE\_2), and trivial correlations such as that between DOSAGE and DOFAGE and PCSOFF and GRADE (since unique PCSOFFs are assigned unique GRADEs in the codebook),
+
+\begin{tabular}{|l|l|r|c|}
+\hline
+Attribute $X$ & Attribute $Y$ & $\rho_{X,Y}$ & $p$-value \\
+\hline
+COUNTY\_37 (Lawrence) & DISP\_6 (Other Disposition) & 0.907 & 2.2e-16 \\
+% PCSOFF\_351600 (Simple Possession) & GRADE\_1 (Unclassified Misdemeanor) & 0.786 & 2.2e-16 \\
+% PCSOFF\_353000 (PWID: Drug Unknown) & GRADE\_5 (Unclassified Felony) & 0.712 & 2.2e-16 \\
+% PCSOFF\_753731 (DUI) & GRADE\_3 (Misdemeanor 2) & 0.626 & 2.2e-16 \\
+% PCSOFF\_753731 (DUI) & GRADE\_1 (Unclassified Misdemeanor) & 0.550 & 2.2e-16 \\
+RACE\_1 (White) & COUNTY\_51 (Philadelphia) & -0.527 & 2.2e-16 \\
+RACE\_2 (Black) & COUNTY\_51 (Philadelphia) & 0.482 & 2.2e-16 \\
+RACE\_9 (Unknown) & COUNTY\_30 (Greene) & 0.446 & 2.2e-16 \\
+INCMIN & PCSOFF\_753731 (DUI) & -0.436 & 2.2e-16 \\
+INCMIN & GRADE\_3 (Misdemeanor 2) & -0.372 & 2.2e-16 \\
+RACE\_2 (Black) & PCSOFF\_753731 (DUI) & -0.369 & 2.2e-16 \\
+COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
+\hline
+\end{tabular}
+
+TODO: Analysis
+
+\subsection{Decision Tree}
+\subsubsection{Optimal Parameters on \emph{nb/nc/uno/bal2}}
+\begin{itemize}
+	\item Label: INCMIN
+	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
+\end{itemize}
+\paragraph{With INCMAX}
+
+\paragraph{Without INCMAX}
+
+\section{Conclusion}
+
+\section{Resources}
+
+\end{document}
