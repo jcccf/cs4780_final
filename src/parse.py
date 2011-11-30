@@ -106,12 +106,14 @@ def parse_data(filename, fields, col_begins, col_ends, omit_fields, project):
         r = {}
         begin = 0
         skip = False
+        
         for column in project:
             #print column
             i = fields.index(column)
             begin = col_begins[i]
             end = col_ends[i]
             field = fields[i]
+
             if field not in omit_fields and field in project:
                 val = strip(line[begin:end])
                 # exclude unknown values
@@ -357,9 +359,9 @@ if __name__ == '__main__':
     #dir = '../test_data/'
     
     records, rec_fields = parse_record(['CID', 'DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'COUNTY'])
-    offenses, off_fields = parse_offense(['CID', 'DOFAGE', 'PCSOFF','PCSSUB','INCMIN', 'INCMAX','INCTYPE','FINE','DOF','GRADE', 'DAASS', 'DISP', 'COMPLETE'])
-    #to_orange_fmt(offenses, off_fields, 'CID', '../data/data_offenses.txt')
-    
+    offenses, off_fields = parse_offense(['CID', 'DOFAGE', 'PCSOFF','PCSSUB','INCMIN', 'INCMAX','INCTYPE','FINE','DOF','GRADE', 'DISP', 'COMPLETE'])
+    to_orange_fmt(offenses, off_fields, 'GRADE', '../data/data_offenses.txt')
+
     ''' join '''
     ro = left_join(records, offenses, 'CID')
     rec_fields.remove('CID')
