@@ -75,6 +75,7 @@ to_coarsify = []
 to_binarize = []
 to_split_median = []
 to_split_value = {}
+use_uno = False
 
 #==============================================================================
 
@@ -116,6 +117,7 @@ def parse_data(filename, fields, col_begins, col_ends, omit_fields, project):
                 # exclude unknown values
                 if not (field in field_nulls and field_nulls[field] == val) and len(val)>0:
                     r[field] = val
+                    
                 else: # skip whole row
                     skip = True
         if not skip:
@@ -175,16 +177,21 @@ def process_vars(list, fields):
 def process_var(field, list, fields):
     if field in ['DOB', 'DOS', 'DOF']: # month/day/year
         newfields = map(lambda sub: field+'_'+sub, ['MONTH', 'YEAR', 'WEEKDAY','UNO'])
-        fields.extend(newfields)
+        if use_uno:
+            fields.extend([newfields[3]])
+        else:
+            fields.extend(newfields[0:3])
         for row in list:
             dateobj = time.strptime(row[field], "%m/%d/%Y")
-            row[newfields[0]] = dateobj.tm_mon
-            row[newfields[1]] = dateobj.tm_year
-            row[newfields[2]] = date(dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday).isoweekday()
-            row[newfields[3]] = time.mktime(dateobj)
-            for newf in newfields:
-                field_types[newf] = 'd'
-            field_types[newfields[3]] = 'c'
+            if not use_uno:
+                row[newfields[0]] = dateobj.tm_mon
+                row[newfields[1]] = dateobj.tm_year
+                row[newfields[2]] = date(dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday).isoweekday()
+                for newf in newfields:
+                    field_types[newf] = 'd'
+            else:
+                row[newfields[3]] = time.mktime(dateobj)
+                field_types[newfields[3]] = 'c'
             del row[field]
         fields.remove(field)
     elif field in to_coarsify: # into 10 buckets or a fifth size, whichever's greater
@@ -274,7 +281,6 @@ def to_orange_fmt(list, features, label, filename):
     
     # 3
     s += 'class' + '\t'*len(list[0]) + '\n'
-    
     features.remove(label)
     # 4
     for point in listcpy:
@@ -289,6 +295,7 @@ def to_orange_fmt(list, features, label, filename):
             if field in point:
                 row += str(point[field])
             else: # if field is missing row shouldn't be here
+                print field, "is missing from this row"
                 exit()
             row += '\t'
         row += '\n'
@@ -318,7 +325,8 @@ def to_svm_light(list, label, filename):
 
 #==============================================================================
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
-def gen_file(list, features, label, binarize, coarsify, medianize, valsplit):
+def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno):
+    global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
     filename = '../data/data_orange'
     if binarize:
         filename += '_b'
@@ -332,9 +340,13 @@ def gen_file(list, features, label, binarize, coarsify, medianize, valsplit):
     if valsplit:
         filename += '_v'
         to_split_value = {'INCMIN':12,'GRADE':5}
-    
+    if uno:
+        filename += '_u'
+        use_uno = uno
+
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     filename += '.txt'
+    print features, "being written to", filename
     to_orange_fmt(ro, features, label, filename)
 
 
@@ -342,7 +354,7 @@ if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    dir = '../test_data/'
+    #dir = '../test_data/'
     
     records, rec_fields = parse_record(['CID', 'DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'COUNTY'])
     offenses, off_fields = parse_offense(['CID', 'DOFAGE', 'PCSOFF','PCSSUB','INCMIN', 'INCMAX','INCTYPE','FINE','DOF','GRADE', 'DAASS', 'DISP', 'COMPLETE'])
@@ -356,7 +368,8 @@ if __name__ == '__main__':
     features.extend(off_fields)    
     print "num records = %d, num offenses = %d, rows after join = %d" % (len(records), len(offenses), len(ro))
 
-    gen_file(ro, features, 'INCMIN', True, False, False, True)
-    
-    
+
+    '''CUSTOMIZE THIS LINE AND LISTS/DICTIONARY INSIDE gen_file'''
+    # list, features, label, binarize, coarsify, medianize, valsplit, uno
+    gen_file(ro, features, 'INCMIN', True, False, False, True, True)
     
