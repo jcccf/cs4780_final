@@ -11,6 +11,7 @@
 }
 \usepackage[T1]{fontenc}
 \usepackage{mathtools}
+\usepackage{pifont}
 \usepackage{algorithmic}
 \usepackage{fancyhdr}
 \usepackage{amssymb}
@@ -53,6 +54,32 @@
 
 \subsection{Feature Selection}
 
+TODO: How did we select features?
+
+\begin{enumerate}
+	\item COMPLETE - Offense Completed/Inchoate
+	\item COUNTY - Sentencing County
+	\item DAASS - Drug and Alcohol Assessment
+	\item DISP - Type of Disposition
+	\item DOB - Date of Birth
+	\item DOF - Date of Offense
+	\item DOSAGE - Age at Sentencing
+	\item DOS - Date of Sentence
+	\item FINE - Amount of Fine Imposed
+	\item GRADE - Statutory Offense Grade
+	\item INCMIN - Minimum Length of Incarceration
+	\item INCMAX - Maximum Length of Incarceration
+	\item INCTYPE - Type of Incarceration
+	\item PCSOFF - PCS Offense Code
+	\item PCSSUB - PCS Offense Subcode
+	\item RACE - Ethnicity of Offender
+	\item SEX - Gender of Offender
+\end{enumerate}
+
+\subsection{Feature Processing}
+
+TODO: What are these?
+
 \begin{enumerate}
 	\item \emph{b/nb} Binarization
 	\item \emph{c/nc} Coarsification
@@ -65,7 +92,11 @@ We performed linear regression on all pairs of attributes, and calculated the co
 
 \subsection{Decision Tree Learning}
 
+We used an the Orange implementation of the C4.5 Decision Tree Algorithm.
+
 \subsubsection{Parameter Tuning}
+Parameter tuning was carried out by trying out all possible combinations of parameters below, using the classification accuracy obtained on 10-fold cross-validation.
+
 \begin{itemize}
 	\item Parameter $m$ from $0.1$ to $100$ \\
 		- Parameter used in computing M-estimate probabilities during post-pruning
@@ -118,12 +149,23 @@ TODO: Analysis
 \subsection{Decision Tree}
 \subsubsection{Optimal Parameters on \emph{nb/nc/uno/bal2}}
 \begin{itemize}
-	\item Label: INCMIN
-	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
+	\item Label: INCMIN/GRADE
+	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE/INCMIN, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
 \end{itemize}
-\paragraph{With INCMAX}
 
-\paragraph{Without INCMAX}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Label & INCMAX? & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
+\hline
+INCMIN & $\checkmark$ & 2 & 1.0 & 1 & 1 & Gini & 0.963\\
+\hline
+INCMIN & - & 50 & 0.9 & 6 & 4 & Gini & 0.921 \\
+\hline
+GRADE & $\checkmark$ & 1 & 1.0 & 2 & 0 & Relief & 0.978 \\
+\hline
+GRADE & - & 0 & 1.0 & 2 & 1 & Relief & 0.979 \\
+\hline
+\end{tabular}
 
 \section{Conclusion}
 
