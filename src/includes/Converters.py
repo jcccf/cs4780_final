@@ -28,11 +28,14 @@ def orangetab_to_svmlight(orangetab_file, output_file):
           fval, rest = 0, {}
           for i,c in enumerate(items):
             if i == feature_index:
-              # MODIFY THIS PART IF LABEL IS ALREADY BINARIFIED
-              if float(c) < 12:
-                fval = -1
-              else:
-                fval = 1
+              if c not in ['-1', '1']:
+                raise Exception("Feature is not binarified!")
+              fval = c
+              # # MODIFY THIS PART IF LABEL IS ALREADY BINARIFIED
+              # if float(c) < 12:
+              #   fval = -1
+              # else:
+              #   fval = 1
             else:
               rest[i] = c
           f2.write('%s %s\n' % (fval, " ".join(['%s:%s' % (k,v) for k,v in rest.iteritems()])))

@@ -237,8 +237,8 @@ def process_var(field, list, fields):
     if field in to_split_value:
         split = to_split_value[field]
         for row in list:
-            if row[field] < split:
-                row[field] = 0
+            if float(row[field]) < float(split):
+                row[field] = -1
             else:
                 row[field] = 1
     else:
@@ -329,7 +329,7 @@ def to_svm_light(list, label, filename):
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
 def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
-    filename = '../data/data_orange'
+    filename = '../data/do_20111129'
     if binarize:
         filename += '_b'
         to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
@@ -347,7 +347,7 @@ def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno
         use_uno = uno
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
-    filename += '.txt'
+    filename += '.tab'
     print features, "being written to", filename
     to_orange_fmt(ro, features, label, filename)
 

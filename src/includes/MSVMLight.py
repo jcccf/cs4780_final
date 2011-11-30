@@ -99,7 +99,7 @@ def get_separating_hyperplane(model_file):
 
 def tune_parameters(train_file):
   max_ca, max_par = 0.0, None
-  for c in [0.0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]:
+  for c in [1, 2, 5, 10, 20, 50, 100]: # [0.0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]
     # Linear
     t = 0
     acc, cc, ic = get_cross_val_accuracy(train_file, c=c)

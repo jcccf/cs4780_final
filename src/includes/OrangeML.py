@@ -66,16 +66,25 @@ class OrangeTuners:
     self.filename = filename
     
   def tune_decision_tree(self):
-    data = orange.ExampleTable(self.filename)
+    self.data = orange.ExampleTable(self.filename)
     tree = orngTree.TreeLearner(sameMajorityPruning=True)
     # tunedTree = orngWrap.Tune1Parameter(object=tree, parameter='mForPruning', \
     #     values=[0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], verbose=2)
     tunedTree = orngWrap.TuneMParameters(object=tree, parameters = [
       ('mForPruning', [0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]), 
       ('maxMajority', [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]),
-      ('minExamples', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-      ('minSubset', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+      ('minExamples', [0, 1, 2]), # ('minExamples', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+      ('minSubset', [0, 1, 2]), # ('minSubset', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       ('measure', ['infoGain', 'gainRatio', 'gini', 'relief'])
     ], folds=10, verbose=2)
+    
+    self.tunedTree = tunedTree
 
-    return tunedTree(data)
+    return tunedTree(self.data)
+    
+  def decision_tree_info(self):
+    classifier = self.tunedTree(self.data)
+    orngTree.dumpTree(classifier, maxDepth=3)
+    print "\n\n\n#\n\n\n"
+    for i in range(0, len(self.data)):
+      print classifier(self.data[i])
