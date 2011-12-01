@@ -98,3 +98,13 @@ def split_orangetab_into_2(orangetab_file):
     f2.write(lines[2])
     for l in lines[1003:2003]:
       f2.write(l)
+      
+def write_actual_labels(orangetab_file, output_file):
+  with open(orangetab_file, 'r') as f:
+    lines = f.readlines()
+  if len(lines) == 1:
+    lines = lines[0].split('\r')
+    lines = [l+'\n' for l in lines]
+  with open(output_file, 'w') as f:
+    for i in range(3, len(lines)):
+      f.write('%s\n' % lines[i].split('\t')[0])

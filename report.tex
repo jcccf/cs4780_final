@@ -130,7 +130,7 @@ Parameter tuning was carried out by trying out all possible combinations of para
 
 \section{Results and Discussion}
 
-\subsection{Overall Results}
+\subsection{Cross-Validation Set Accuracy}
 The classification accuracies listed below is the accuracy obtained on 10-fold cross-validation.
 
 \subsubsection{DEMO}
@@ -142,6 +142,42 @@ bayes  &  0.629 & 284  &  153  &  218  &  345  \\
 c4.5   &  0.659 & 353  &  192  &  149  &  306  \\
 lin. svm & 0.637 & 277  &  138  &  225  &  360  \\
 kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
+\hline
+\end{tabular}
+
+\subsubsection{CRIME}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & CA & TP & FP & FN & TN \\
+\hline
+bayes  &  0.772  & 392 &   118 &   110 &   380  \\
+c4.5   &  0.783 & 404  &  119 &   98   &  379  \\
+lin. svm & 0.583 & 276  &  191 &   226  &  307  \\
+kmeans  & 0.769 & 381  &  110 &   121  &  388  \\
+\hline
+\end{tabular}
+
+\subsubsection{BASE}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & CA & TP & FP & FN & TN \\
+\hline
+bayes   & 0.761  &  390  &  127  &  112  &  371  \\
+c4.5    & 0.774  &  396  &  120  &  106  &  378  \\
+lin.svm & 0.589  &  290  &  199  &  212  &  299  \\
+kmeans  & 0.773  &  400  &  125  &  102  &  373  \\
+\hline
+\end{tabular}
+
+\subsection{Validation Set Accuracy}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & DEMO & CRIME & BASE \\
+\hline
+bayes  &  0.629 & 0.765  &  0.753   \\
+c4.5   &  0.610 & 0.762  &  0.755  \\
+lin.svm & 0.633 & 0.600  &  0.603   \\
+kmeans  & 0.616 & 0.777  &  0.758   \\
 \hline
 \end{tabular}
 
@@ -175,7 +211,7 @@ Attribute $X$ & Attribute $Y$ & $|\rho_{X,Y}|$ & $p$-value \\
 %INCMIN & GRADE\_3 (Misdemeanor 2) & -0.372 & 2.2e-16 \\
 %RACE\_2 (Black) & PCSOFF\_753731 (DUI) & -0.369 & 2.2e-16 \\
 %COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
-COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\INCMIN&	GRADE&	0.51992742 & 2.2e-16\\COUNTY\_47&	PCSOFF\_180912&	0.44711808 & 2.2e-16\\INCMIN&	PCSOFF\_753731&	0.44359416 & 2.2e-16\\COUNTY\_51&	DISP\_4&	0.40880622 & 2.2e-16\\RACE\_1&	COUNTY\_51&	0.38671562 & 2.2e-16\\INCMIN&	PCSSUB\_A&	0.34272914 & 2.2e-16\\RACE\_2&	COUNTY\_51&	0.33313766 & 2.2e-16\\RACE\_1&	PCSOFF_753731&	0.3129321 & 2.2e-16\\COUNTY\_9&	DISP\_2&	0.31041962 & 2.2e-16\\
+COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\INCMIN&	GRADE&	0.51992742 & 2.2e-16\\COUNTY\_47&	PCSOFF\_180912&	0.44711808 & 2.2e-16\\INCMIN&	PCSOFF\_753731&	0.44359416 & 2.2e-16\\COUNTY\_51&	DISP\_4&	0.40880622 & 2.2e-16\\RACE\_1&	COUNTY\_51&	0.38671562 & 2.2e-16\\INCMIN&	PCSSUB\_A&	0.34272914 & 2.2e-16\\RACE\_2&	COUNTY\_51&	0.33313766 & 2.2e-16\\RACE\_1&	PCSOFF\_753731&	0.3129321 & 2.2e-16\\COUNTY\_9&	DISP\_2&	0.31041962 & 2.2e-16\\
 \hline
 \end{tabular}
 
@@ -189,6 +225,8 @@ TODO: Analysis
 Dataset & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
 \hline
 DEMO & 5 & 1.0 & 2 & 2 & Gini & 0.659 \\
+CRIME & 100 & 1.0 & 2 & 2 & Relief & 0.783 \\
+BASE & 100 & 0.8 & 0 & 0 & Relief & 0.774 \\
 \hline
 \end{tabular}
 
@@ -230,45 +268,52 @@ Dataset & $k$ & Accuracy \\
 \hline
 DEMO & 55 & 0.643 \\
 CRIME & 28 & 0.769 \\
+BASE & 42 & 0.773 \\
 \hline
 \end{tabular}
 
 
 \subsection{Significance Tests}
 
-\subsubsection{Binomial Sign Test for DEMO}
-Each cell in the table below corresponds to whether the learning algorithm in that row was significantly better than the algorithm in that column.
+\subsubsection{Binomial Sign Test}
+Each cell in the table below corresponds to whether the learning algorithm in that row was significantly BETTER than the algorithm in that column, WORSE or similar ($\sim$).
+
+\paragraph{DEMO} \quad
 
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
 \hline
-C4.5 (Tuned) & - & NO & YES & NO \\
-SVM & - & - & NO & NO \\
-kNN (Tuned) & - & - & - & NO \\
+C4.5 (Tuned) & - & $\sim$ & $\sim$ & $\sim$ \\
+SVM & - & - & $\sim$ & $\sim$ \\
+kNN (Tuned) & - & - & - & $\sim$ \\
 \hline
 \end{tabular}
 
-\paragraph{C4.5 vs kNN}
-\begin{itemize}
-	\item H1 CA vs H2 CA: 0.482 vs. 0.464
-	\item $d1 = 23$, $d2 = 41$
-	\item $p$-value: 0.0164
-\end{itemize}
+\paragraph{CRIME} \quad
 
-\paragraph{C4.5 vs Bayes}
-\begin{itemize}
-	\item H1 CA vs H2 CA: 0.482 vs. 0.473
-	\item $d1 = 106$, $d2 = 115$
-	\item $p$-value: 0.295
-\end{itemize}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+\hline
+C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
+SVM & - & - & WORSE & WORSE \\
+kNN (Tuned) & - & - & - & $\sim$ \\
+\hline
+\end{tabular}
 
-\paragraph{kNN vs Bayes}
-\begin{itemize}
-	\item H1 CA vs H2 CA: 0.464 vs. 0.473
-	\item $d1 = 107$, $d2 = 98$
-	\item $p$-value: 0.243
-\end{itemize}
+\paragraph{BASE} \quad
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+\hline
+C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
+SVM & - & - & WORSE & WORSE \\
+kNN (Tuned) & - & - & - & $\sim$ \\
+\hline
+\end{tabular}
+
 
 \section{Conclusion}
 
