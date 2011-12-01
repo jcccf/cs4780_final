@@ -161,20 +161,21 @@ and trivial correlations such as that between DOSAGE and DOFAGE and PCSOFF and G
 
 \begin{tabular}{|l|l|r|c|}
 \hline
-Attribute $X$ & Attribute $Y$ & $\rho_{X,Y}$ & $p$-value \\
+Attribute $X$ & Attribute $Y$ & $|\rho_{X,Y}|$ & $p$-value \\
 \hline
-COUNTY\_37 (Lawrence) & DISP\_6 (Other Disposition) & 0.907 & 2.2e-16 \\
+%COUNTY\_37 (Lawrence) & DISP\_6 (Other Disposition) & 0.907 & 2.2e-16 \\
 % PCSOFF\_351600 (Simple Possession) & GRADE\_1 (Unclassified Misdemeanor) & 0.786 & 2.2e-16 \\
 % PCSOFF\_353000 (PWID: Drug Unknown) & GRADE\_5 (Unclassified Felony) & 0.712 & 2.2e-16 \\
 % PCSOFF\_753731 (DUI) & GRADE\_3 (Misdemeanor 2) & 0.626 & 2.2e-16 \\
 % PCSOFF\_753731 (DUI) & GRADE\_1 (Unclassified Misdemeanor) & 0.550 & 2.2e-16 \\
-RACE\_1 (White) & COUNTY\_51 (Philadelphia) & -0.527 & 2.2e-16 \\
-RACE\_2 (Black) & COUNTY\_51 (Philadelphia) & 0.482 & 2.2e-16 \\
-RACE\_9 (Unknown) & COUNTY\_30 (Greene) & 0.446 & 2.2e-16 \\
-INCMIN & PCSOFF\_753731 (DUI) & -0.436 & 2.2e-16 \\
-INCMIN & GRADE\_3 (Misdemeanor 2) & -0.372 & 2.2e-16 \\
-RACE\_2 (Black) & PCSOFF\_753731 (DUI) & -0.369 & 2.2e-16 \\
-COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
+%RACE\_1 (White) & COUNTY\_51 (Philadelphia) & -0.527 & 2.2e-16 \\
+%RACE\_2 (Black) & COUNTY\_51 (Philadelphia) & 0.482 & 2.2e-16 \\
+%RACE\_9 (Unknown) & COUNTY\_30 (Greene) & 0.446 & 2.2e-16 \\
+%INCMIN & PCSOFF\_753731 (DUI) & -0.436 & 2.2e-16 \\
+%INCMIN & GRADE\_3 (Misdemeanor 2) & -0.372 & 2.2e-16 \\
+%RACE\_2 (Black) & PCSOFF\_753731 (DUI) & -0.369 & 2.2e-16 \\
+%COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
+COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\INCMIN&	GRADE&	0.51992742 & 2.2e-16\\COUNTY\_47&	PCSOFF\_180912&	0.44711808 & 2.2e-16\\INCMIN&	PCSOFF\_753731&	0.44359416 & 2.2e-16\\COUNTY\_51&	DISP\_4&	0.40880622 & 2.2e-16\\RACE\_1&	COUNTY\_51&	0.38671562 & 2.2e-16\\INCMIN&	PCSSUB\_A&	0.34272914 & 2.2e-16\\RACE\_2&	COUNTY\_51&	0.33313766 & 2.2e-16\\RACE\_1&	PCSOFF_753731&	0.3129321 & 2.2e-16\\COUNTY\_9&	DISP\_2&	0.31041962 & 2.2e-16\\
 \hline
 \end{tabular}
 
@@ -228,6 +229,7 @@ RACE_1=1
 Dataset & $k$ & Accuracy \\
 \hline
 DEMO & 55 & 0.643 \\
+CRIME & 28 & 0.769 \\
 \hline
 \end{tabular}
 
