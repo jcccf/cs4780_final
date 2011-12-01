@@ -4,32 +4,35 @@ from includes import *
 # Orange Machine Learning Algorithms
 #
 
-# oc = OrangeML.OrangeClassifiers('../data/do_20111129_b_v_u_bal_noincmax_nopcs.tab')
-# oc.cross_validate()
-# oc.print_linear_svm()
-# oc.print_decision_tree(mForPruning=0.5, maxMajority=0.8, minExamples=0, minSubset=1, measure='relief')
-# oc.print_bayes()
-# oc.print_knn(k=28)
+oc = OrangeML.OrangeClassifiers('../data/do_20111130_b_v_u_bal_demo_train.tab', '../data/do_20111130_b_v_u_bal_demo_val.tab')
+oc.cross_validate()
+oc.print_linear_svm()
+oc.print_decision_tree(mForPruning=5, maxMajority=1.0, minExamples=2, minSubset=2, measure='gini', suffix='demo')
+oc.print_bayes()
+oc.print_knn(k=55)
 
 #
 # Orange Tuners
 #
 # ot = OrangeML.OrangeTuners('../data/do_20111130_b_v_u_bal_demo_train.tab')
 # ot.tune_decision_tree()
-# ot.decision_tree_info()
 # ot.tune_knn()
 
 #
 # SVMLight Tuner
 #
-MSVMLight.tune_parameters('../data_svm/do_20111130_b_v_u_bal_demo_train.train')
+# MSVMLight.tune_parameters('../data_svm/do_20111130_b_v_u_bal_demo_train.train')
 
 #
 # Significance Tests
 #
 # Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/svm.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/knn.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/bayes.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
 
 #
 # Example File Balanced Label Classes

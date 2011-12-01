@@ -87,14 +87,25 @@ TODO: What are these?
 	\item \emph{\_/balN} Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
 \end{enumerate}
 
+\subsection{Datasets}
+\begin{enumerate}
+	\item DEMO - SEX, DOFAGE, RACE (should add DAASS in the future)
+	\item CRIME - FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
+	\item BASE - Features from both DEMO and CRIME
+\end{enumerate}
+
+The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+
 \subsection{Linear Regression}
 We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
 
-\subsection{Decision Tree Learning}
+\subsection{Learning Algorithms}
+
+\subsubsection{Decision Tree Learning}
 
 We used an the Orange implementation of the C4.5 Decision Tree Algorithm.
 
-\subsubsection{Parameter Tuning}
+\paragraph{Parameter Tuning}
 Parameter tuning was carried out by trying out all possible combinations of parameters below, using the classification accuracy obtained on 10-fold cross-validation.
 
 \begin{itemize}
@@ -109,20 +120,28 @@ Parameter tuning was carried out by trying out all possible combinations of para
 	\item Measures - information gain, information gain ratio, gini index, relief % See http://orange.biolab.si/doc//orange25/Orange.feature.scoring.html#Orange.feature.scoring.Relief
 \end{itemize}
 
+\subsubsection{kNN Learning}
+
+\paragraph{Parameter Tuning}
+\begin{itemize}
+	\item $k$ from $1$ to $2\sqrt{n}$ \\
+		- Since a good value of $k$ to use is generally $\sqrt{n}$
+\end{itemize}
+
 \section{Results and Discussion}
 
 \subsection{Overall Results}
+The classification accuracies listed below is the accuracy obtained on 10-fold cross-validation.
 
-The classification accuracy listed below is the accuracy obtained on 10-fold cross-validation.
-
+\subsubsection{DEMO}
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-Naive Bayes & 0.858 & 438 & 75 & 67 & 420 \\ 
-C4.5 (Tuned) & 0.900 & 437 & 32 & 68 & 463 \\
-Linear SVM & 0.602 & 300 & 193 & 205 & 302 \\
-k-Means (Tuned) & 0.899 & 446 & 61 & 59 & 434 \\
+bayes  &  0.629 & 284  &  153  &  218  &  345  \\
+c4.5   &  0.659 & 353  &  192  &  149  &  306  \\
+lin. svm & 0.637 & 277  &  138  &  225  &  360  \\
+kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
 \hline
 \end{tabular}
 
@@ -162,100 +181,91 @@ COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
 TODO: Analysis
 
 \subsection{Decision Tree}
-\subsubsection{Optimal Parameters on \emph{nb/nc/uno/bal2}}
+\subsubsection{Optimal Parameters}
 
-% BROKEN DATA - The one with 6k examples
-%\begin{itemize}
-%	\item Label: INCMIN/GRADE
-%	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE/INCMIN, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
-%\end{itemize}
-%
-%\begin{tabular}{|c|c|c|c|c|c|c|c|}
-%\hline
-%Label & INCMAX? & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
-%\hline
-%INCMIN & $\checkmark$ & 2 & 1.0 & 1 & 1 & Gini & 0.963\\
-%\hline
-%INCMIN & - & 50 & 0.9 & 6 & 4 & Gini & 0.921 \\
-%\hline
-%GRADE & $\checkmark$ & 1 & 1.0 & 2 & 0 & Relief & 0.978 \\
-%\hline
-%GRADE & - & 0 & 1.0 & 2 & 1 & Relief & 0.979 \\
-%\hline
-%\end{tabular}
-
-\begin{itemize}
-	\item Label: INCMIN
-	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, INCTYPE, FINE, GRADE (2), DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
-\end{itemize}
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Label & INCMAX? & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
+Dataset & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
 \hline
-INCMIN & - & 0.5 & 0.8 & 0 & 1 & Relief & 0.900 \\
+DEMO & 5 & 1.0 & 2 & 2 & Gini & 0.659 \\
 \hline
 \end{tabular}
 
-\paragraph{Optimal Decision Tree} % TODO Turn this into a pretty tree?
+\paragraph{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
 \begin{verbatim}
-INCTYPE=1: 1 (94.09%)
-INCTYPE=2: -1 (88.09%)
-INCTYPE=6: 1 (100.00%)
-INCTYPE=3
-|    DISP_2=0
-|    |    RACE_2=0: -1 (92.00%)
-|    |    RACE_2=1
-|    |    |    FINE>25.000: -1 (100.00%)
-|    |    |    FINE<=25.000
+RACE_1=0
+|    SEX=1
+|    |    DOFAGE<=39.500: 1 (69.05%)
+|    |    DOFAGE>39.500
+|    |    |    RACE_9=1: -1 (100.00%)
+|    |    |    RACE_9=0
 |    |    |    |    . . .
-|    DISP_2=1
-|    |    DOSAGE<=25.000: 1 (100.00%)
-|    |    DOSAGE>25.000: -1 (85.71%)
+|    SEX=2
+|    |    RACE_9=1: -1 (100.00%)
+|    |    RACE_9=0
+|    |    |    DOFAGE<=32.000: 1 (61.54%)
+|    |    |    DOFAGE>32.000
+|    |    |    |    . . .
+RACE_1=1
+|    DOFAGE<=24.500
+|    |    DOFAGE<=19.500
+|    |    |    DOFAGE<=17.500: 1 (80.00%)
+|    |    |    DOFAGE>17.500: -1 (75.47%)
+|    |    DOFAGE>19.500
+|    |    |    SEX=1: 1 (57.94%)
+|    |    |    SEX=2: -1 (83.33%)
+|    DOFAGE>24.500
+|    |    DOFAGE<=38.500: -1 (70.00%)
+|    |    DOFAGE>38.500
+|    |    |    DOFAGE>43.500: -1 (76.92%)
+|    |    |    DOFAGE<=43.500
+|    |    |    |    . . .
 \end{verbatim}
 
 \subsection{kNN}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-Label & INCMAX? & $k$ & Accuracy \\
+Dataset & $k$ & Accuracy \\
 \hline
-INCMIN & - & 28 & 0.889 \\
+DEMO & 55 & 0.643 \\
 \hline
 \end{tabular}
 
 
 \subsection{Significance Tests}
 
-\subsubsection{Binomial Sign Test}
+\subsubsection{Binomial Sign Test for DEMO}
 Each cell in the table below corresponds to whether the learning algorithm in that row was significantly better than the algorithm in that column.
 
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
 \hline
-C4.5 (Tuned) & - & \checkmark & \checkmark & \checkmark \\
+C4.5 (Tuned) & - & NO & YES & NO \\
+SVM & - & - & NO & NO \\
+kNN (Tuned) & - & - & - & NO \\
 \hline
 \end{tabular}
 
-\paragraph{C4.5 vs SVM}
-\begin{itemize}
-	\item H1 CA vs H2 CA: 0.912 vs. 0.497
-	\item $d1 = 30$, $d2 = 445$
-	\item $p$-value: $3.25e-96$
-\end{itemize}
-
 \paragraph{C4.5 vs kNN}
 \begin{itemize}
-	\item H1 CA vs H2 CA: 0.912 vs. 0.899
-	\item $d1 = 7$, $d2 = 20$
-	\item $p$-value: 0.00958
+	\item H1 CA vs H2 CA: 0.482 vs. 0.464
+	\item $d1 = 23$, $d2 = 41$
+	\item $p$-value: 0.0164
 \end{itemize}
 
 \paragraph{C4.5 vs Bayes}
 \begin{itemize}
-	\item H1 CA vs H2 CA: 0.912 vs. 0.866
-	\item $d1 = 21$, $d2 = 67$
-	\item $p$-value: 4.60e-7
+	\item H1 CA vs H2 CA: 0.482 vs. 0.473
+	\item $d1 = 106$, $d2 = 115$
+	\item $p$-value: 0.295
+\end{itemize}
+
+\paragraph{kNN vs Bayes}
+\begin{itemize}
+	\item H1 CA vs H2 CA: 0.464 vs. 0.473
+	\item $d1 = 107$, $d2 = 98$
+	\item $p$-value: 0.243
 \end{itemize}
 
 \section{Conclusion}

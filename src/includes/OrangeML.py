@@ -1,19 +1,22 @@
-import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap
+import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap, commands, math
 
 class OrangeClassifiers:
-  def __init__(self, orangeDataFile):
+  def __init__(self, orangeDataFile, orangeValFile):
     self.data = orange.ExampleTable(orangeDataFile)
+    self.valdata = orange.ExampleTable(orangeValFile)
     if len(self.data.domain.classVar.values) == 2:
       self.is_binary = True
     else:
       self.is_binary = False
       
-  def print_decision_tree(self, measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10):
+  def print_decision_tree(self, measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10, suffix='demo'):
     classifier = orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)
     stringy = orngTree.dumpTree(classifier, maxDepth=3).split('\n')
     # stringy = [s for s in stringy if "null node" not in s]
+    orngTree.printDot(classifier, fileName='../data_stat/dtree_%s.dot' % suffix, internalNodeShape="ellipse", leafShape="box", maxDepth=2)
+    print commands.getoutput('dot -Tsvg ../data_stat/dtree_%s.dot > ../data_stat/dtree_%s.svg' % (suffix, suffix))
     print "\n".join(stringy)
-    self.output_classified(classifier, '../data_stat/dtree.txt')
+    self.output_classified(classifier, '../data_stat/dtree_%s.txt' % suffix)
   
   def print_knn(self, k=10):
     classifier = orange.kNNLearner(self.data, k=k)
@@ -21,8 +24,8 @@ class OrangeClassifiers:
   
   def output_classified(self, classifier, filename):
     with open(filename, 'w') as f:
-      for i in range(0, len(self.data)):
-        f.write('%s\n' % classifier(self.data[i]))
+      for i in range(0, len(self.valdata)):
+        f.write('%s\n' % classifier(self.valdata[i]))
   
   def print_bayes(self):
     for i, dist in enumerate(orngBayes.BayesLearner(self.data).conditionalDistributions):
@@ -42,11 +45,12 @@ class OrangeClassifiers:
           print "Attribute weights for %s vs. rest classification:\n" % cls_name,
           for attr, w in  zip(self.data.domain.attributes, classifier.weights[i]):
               print "\t%s: %.3f " % (attr.name, w)
+    self.output_classified(classifier, '../data_stat/linsvm.txt')
   
   def cross_validate(self):
     bayes = orngBayes.BayesLearner()
-    kmeans = orange.kNNLearner(k=10)
-    tree = orngTree.TreeLearner(mForPruning=0.5, maxMajority=0.8, minExamples=0, minSubset=1, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
+    kmeans = orange.kNNLearner(k=55)
+    tree = orngTree.TreeLearner(mForPruning=5, maxMajority=1.0, minExamples=2, minSubset=2, measure='gini') # orngTree.TreeLearner(, mForPruning=2)
     lin_svm = orange.LinearLearner()
     bayes.name = "bayes"
     tree.name = "c4.5"
@@ -98,7 +102,7 @@ class OrangeTuners:
   def tune_knn(self):
     knn = orange.kNNLearner()
     tunedKnn = orngWrap.TuneMParameters(object=knn, parameters = [
-      ('k', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40])
+      ('k', range(1, 2*int(math.sqrt(len(self.data)))))
     ], folds=10, verbose=2)
   
     return tunedKnn(self.data)
