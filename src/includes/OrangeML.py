@@ -9,14 +9,27 @@ class OrangeClassifiers:
       self.is_binary = False
       
   def print_decision_tree(self, measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10):
-    stringy = orngTree.dumpTree(orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)).split('\n')
-    stringy = [s for s in stringy if "null node" not in s]
+    classifier = orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)
+    stringy = orngTree.dumpTree(classifier, maxDepth=3).split('\n')
+    # stringy = [s for s in stringy if "null node" not in s]
     print "\n".join(stringy)
+    self.output_classified(classifier, '../data_stat/dtree.txt')
   
-  def print_bayes(self):    
+  def print_knn(self, k=10):
+    classifier = orange.kNNLearner(self.data, k=k)
+    self.output_classified(classifier, '../data_stat/knn.txt')
+  
+  def output_classified(self, classifier, filename):
+    with open(filename, 'w') as f:
+      for i in range(0, len(self.data)):
+        f.write('%s\n' % classifier(self.data[i]))
+  
+  def print_bayes(self):
     for i, dist in enumerate(orngBayes.BayesLearner(self.data).conditionalDistributions):
       print self.data.domain[i]
       print dist
+    classifier = orange.BayesLearner(self.data)
+    self.output_classified(classifier, '../data_stat/bayes.txt')
     
   def print_linear_svm(self):
     classifier = orange.LinearLearner(self.data)
@@ -33,7 +46,7 @@ class OrangeClassifiers:
   def cross_validate(self):
     bayes = orngBayes.BayesLearner()
     kmeans = orange.kNNLearner(k=10)
-    tree = orngTree.TreeLearner(sameMajorityPruning=1, mForPruning=2) # orngTree.TreeLearner(, mForPruning=2)
+    tree = orngTree.TreeLearner(mForPruning=0.5, maxMajority=0.8, minExamples=0, minSubset=1, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
     lin_svm = orange.LinearLearner()
     bayes.name = "bayes"
     tree.name = "c4.5"
@@ -64,9 +77,9 @@ class OrangeClassifiers:
 class OrangeTuners:
   def __init__(self, filename):
     self.filename = filename
+    self.data = orange.ExampleTable(self.filename)
     
   def tune_decision_tree(self):
-    self.data = orange.ExampleTable(self.filename)
     tree = orngTree.TreeLearner(sameMajorityPruning=True)
     # tunedTree = orngWrap.Tune1Parameter(object=tree, parameter='mForPruning', \
     #     values=[0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], verbose=2)
@@ -82,9 +95,10 @@ class OrangeTuners:
 
     return tunedTree(self.data)
     
-  def decision_tree_info(self):
-    classifier = self.tunedTree(self.data)
-    orngTree.dumpTree(classifier, maxDepth=3)
-    print "\n\n\n#\n\n\n"
-    for i in range(0, len(self.data)):
-      print classifier(self.data[i])
+  def tune_knn(self):
+    knn = orange.kNNLearner()
+    tunedKnn = orngWrap.TuneMParameters(object=knn, parameters = [
+      ('k', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40])
+    ], folds=10, verbose=2)
+  
+    return tunedKnn(self.data)

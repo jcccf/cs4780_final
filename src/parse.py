@@ -329,10 +329,10 @@ def to_svm_light(list, label, filename):
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
 def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
-    filename = '../data/do_20111129'
+    filename = '../data/do_20111130'
     if binarize:
         filename += '_b'
-        to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
+        to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY', 'INCTYPE']
     if coarsify:
         filename += '_c'
         to_coarsify = []

@@ -111,6 +111,21 @@ Parameter tuning was carried out by trying out all possible combinations of para
 
 \section{Results and Discussion}
 
+\subsection{Overall Results}
+
+The classification accuracy listed below is the accuracy obtained on 10-fold cross-validation.
+
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & CA & TP & FP & FN & TN \\
+\hline
+Naive Bayes & 0.858 & 438 & 75 & 67 & 420 \\ 
+C4.5 (Tuned) & 0.900 & 437 & 32 & 68 & 463 \\
+Linear SVM & 0.602 & 300 & 193 & 205 & 302 \\
+k-Means (Tuned) & 0.899 & 446 & 61 & 59 & 434 \\
+\hline
+\end{tabular}
+
 \subsection{Linear Regression}
 
 \subsubsection{Correlation Heatmap}
@@ -148,24 +163,100 @@ TODO: Analysis
 
 \subsection{Decision Tree}
 \subsubsection{Optimal Parameters on \emph{nb/nc/uno/bal2}}
+
+% BROKEN DATA - The one with 6k examples
+%\begin{itemize}
+%	\item Label: INCMIN/GRADE
+%	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE/INCMIN, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
+%\end{itemize}
+%
+%\begin{tabular}{|c|c|c|c|c|c|c|c|}
+%\hline
+%Label & INCMAX? & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
+%\hline
+%INCMIN & $\checkmark$ & 2 & 1.0 & 1 & 1 & Gini & 0.963\\
+%\hline
+%INCMIN & - & 50 & 0.9 & 6 & 4 & Gini & 0.921 \\
+%\hline
+%GRADE & $\checkmark$ & 1 & 1.0 & 2 & 0 & Relief & 0.978 \\
+%\hline
+%GRADE & - & 0 & 1.0 & 2 & 1 & Relief & 0.979 \\
+%\hline
+%\end{tabular}
+
 \begin{itemize}
-	\item Label: INCMIN/GRADE
-	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, PCSOFF, PCSSUB, INCTYPE, FINE, GRADE/INCMIN, DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
+	\item Label: INCMIN
+	\item Attributes: DOSAGE, SEX, RACE, COUNTY, DOFAGE, INCTYPE, FINE, GRADE (2), DAASS, DISP, COMPLETE, DOB\_UNO, DOS\_UNO, DOF\_UNO
 \end{itemize}
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
 Label & INCMAX? & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
 \hline
-INCMIN & $\checkmark$ & 2 & 1.0 & 1 & 1 & Gini & 0.963\\
-\hline
-INCMIN & - & 50 & 0.9 & 6 & 4 & Gini & 0.921 \\
-\hline
-GRADE & $\checkmark$ & 1 & 1.0 & 2 & 0 & Relief & 0.978 \\
-\hline
-GRADE & - & 0 & 1.0 & 2 & 1 & Relief & 0.979 \\
+INCMIN & - & 0.5 & 0.8 & 0 & 1 & Relief & 0.900 \\
 \hline
 \end{tabular}
+
+\paragraph{Optimal Decision Tree} % TODO Turn this into a pretty tree?
+\begin{verbatim}
+INCTYPE=1: 1 (94.09%)
+INCTYPE=2: -1 (88.09%)
+INCTYPE=6: 1 (100.00%)
+INCTYPE=3
+|    DISP_2=0
+|    |    RACE_2=0: -1 (92.00%)
+|    |    RACE_2=1
+|    |    |    FINE>25.000: -1 (100.00%)
+|    |    |    FINE<=25.000
+|    |    |    |    . . .
+|    DISP_2=1
+|    |    DOSAGE<=25.000: 1 (100.00%)
+|    |    DOSAGE>25.000: -1 (85.71%)
+\end{verbatim}
+
+\subsection{kNN}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Label & INCMAX? & $k$ & Accuracy \\
+\hline
+INCMIN & - & 28 & 0.889 \\
+\hline
+\end{tabular}
+
+
+\subsection{Significance Tests}
+
+\subsubsection{Binomial Sign Test}
+Each cell in the table below corresponds to whether the learning algorithm in that row was significantly better than the algorithm in that column.
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+\hline
+C4.5 (Tuned) & - & \checkmark & \checkmark & \checkmark \\
+\hline
+\end{tabular}
+
+\paragraph{C4.5 vs SVM}
+\begin{itemize}
+	\item H1 CA vs H2 CA: 0.912 vs. 0.497
+	\item $d1 = 30$, $d2 = 445$
+	\item $p$-value: $3.25e-96$
+\end{itemize}
+
+\paragraph{C4.5 vs kNN}
+\begin{itemize}
+	\item H1 CA vs H2 CA: 0.912 vs. 0.899
+	\item $d1 = 7$, $d2 = 20$
+	\item $p$-value: 0.00958
+\end{itemize}
+
+\paragraph{C4.5 vs Bayes}
+\begin{itemize}
+	\item H1 CA vs H2 CA: 0.912 vs. 0.866
+	\item $d1 = 21$, $d2 = 67$
+	\item $p$-value: 4.60e-7
+\end{itemize}
 
 \section{Conclusion}
 
