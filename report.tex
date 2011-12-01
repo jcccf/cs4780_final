@@ -141,6 +141,7 @@ Algorithm & CA & TP & FP & FN & TN \\
 bayes  &  0.629 & 284  &  153  &  218  &  345  \\
 c4.5   &  0.659 & 353  &  192  &  149  &  306  \\
 lin. svm & 0.637 & 277  &  138  &  225  &  360  \\
+svm & 0.651 & ? & ? & ? & ? \\
 kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
 \hline
 \end{tabular}
@@ -175,8 +176,9 @@ kmeans  & 0.773  &  400  &  125  &  102  &  373  \\
 Algorithm & DEMO & CRIME & BASE \\
 \hline
 bayes  &  0.629 & 0.765  &  0.753   \\
-c4.5   &  0.610 & 0.762  &  0.755  \\
+c4.5   &  0.610 & 0.762  &  0.754  \\
 lin.svm & 0.633 & 0.600  &  0.603   \\
+svm & 0.599 & ? & ? \\
 kmeans  & 0.616 & 0.777  &  0.758   \\
 \hline
 \end{tabular}
@@ -226,7 +228,7 @@ Dataset & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy
 \hline
 DEMO & 5 & 1.0 & 2 & 2 & Gini & 0.659 \\
 CRIME & 100 & 1.0 & 2 & 2 & Relief & 0.783 \\
-BASE & 100 & 0.8 & 0 & 0 & Relief & 0.774 \\
+BASE & 100 & 0.8 & 1 & 2 & Relief & 0.774 \\
 \hline
 \end{tabular}
 
@@ -260,6 +262,15 @@ RACE_1=1
 |    |    |    DOFAGE<=43.500
 |    |    |    |    . . .
 \end{verbatim}
+
+\subsection{SVM}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Dataset & $C$ & $t$ & $t$-dependent. vars & Accuracy \\
+\hline
+DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
+\hline
+\end{tabular}
 
 \subsection{kNN}
 \begin{tabular}{|c|c|c|}

@@ -13,7 +13,7 @@ class OrangeClassifiers:
     classifier = orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)
     stringy = orngTree.dumpTree(classifier, maxDepth=3).split('\n')
     # stringy = [s for s in stringy if "null node" not in s]
-    orngTree.printDot(classifier, fileName='../data_stat/dtree_%s.dot' % suffix, internalNodeShape="ellipse", leafShape="box", maxDepth=2)
+    orngTree.printDot(classifier, fileName='../data_stat/dtree_%s.dot' % suffix, internalNodeShape="ellipse", leafShape="box", maxDepth=3)
     print commands.getoutput('dot -Tpng ../data_stat/dtree_%s.dot > ../data_stat/dtree_%s.png' % (suffix, suffix))
     print "\n".join(stringy)
     self.output_classified(classifier, '../data_stat/dtree_%s.txt' % suffix)
@@ -50,7 +50,7 @@ class OrangeClassifiers:
   def cross_validate(self):
     bayes = orngBayes.BayesLearner()
     kmeans = orange.kNNLearner(k=42)
-    tree = orngTree.TreeLearner(mForPruning=100, maxMajority=0.8, minExamples=0, minSubset=0, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
+    tree = orngTree.TreeLearner(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
     # kmeans = orange.kNNLearner(k=28)
     # tree = orngTree.TreeLearner(mForPruning=100, maxMajority=1.0, minExamples=2, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
     # kmeans = orange.kNNLearner(k=55)

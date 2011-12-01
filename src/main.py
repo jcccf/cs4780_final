@@ -4,13 +4,13 @@ from includes import *
 # Orange Machine Learning Algorithms
 #
 
-oc = OrangeML.OrangeClassifiers('../data/do_20111130_b_v_u_bal_base_train.tab', '../data/do_20111130_b_v_u_bal_base_val.tab')
-oc.cross_validate()
-oc.print_linear_svm()
-oc.print_bayes()
-
-oc.print_decision_tree(mForPruning=100, maxMajority=0.8, minExamples=0, minSubset=0, measure='relief', suffix='demo')
-oc.print_knn(k=42)
+# oc = OrangeML.OrangeClassifiers('../data/do_20111130_b_v_u_bal_base_train.tab', '../data/do_20111130_b_v_u_bal_base_val.tab')
+# oc.cross_validate()
+# oc.print_linear_svm()
+# oc.print_bayes()
+# 
+# oc.print_decision_tree(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief', suffix='demo')
+# oc.print_knn(k=42)
 
 # oc.print_decision_tree(mForPruning=100, maxMajority=1.0, minExamples=2, minSubset=2, measure='relief', suffix='demo')
 # oc.print_knn(k=28)
@@ -34,13 +34,14 @@ oc.print_knn(k=42)
 # Significance Tests
 #
 # Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/svm.txt', verbose=True)
-Converters.write_actual_labels('../data/do_20111130_b_v_u_bal_crime_val.tab', '../data_stat/original.txt')
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
+# Converters.write_actual_labels('../data/do_20111130_b_v_u_bal_crime_val.tab', '../data_stat/original.txt')
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/svm.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
+# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
 
 #
 # Example File Balanced Label Classes
@@ -56,7 +57,9 @@ Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt
 # Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_demo_train.tab', '../data_svm/do_20111130_b_v_u_bal_demo_train.train')
 # Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_crime_train.tab', '../data_svm/do_20111130_b_v_u_bal_crime_train.train')
 # Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_base_train.tab', '../data_svm/do_20111130_b_v_u_bal_base_train.train')
-
+# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_demo_val.tab', '../data_svm/do_20111130_b_v_u_bal_demo_val.val')
+# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_crime_val.tab', '../data_svm/do_20111130_b_v_u_bal_crime_val.val')
+# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_base_val.tab', '../data_svm/do_20111130_b_v_u_bal_base_val.val')
 
 #
 # HW Decision Tree (Modified to Allow Discrete Attributes)
