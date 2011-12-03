@@ -30,7 +30,7 @@ Creating the Example File
 
 Tuning
 ======
-1. Should be self-explanatory. Set the filename to the training dataset, and make a note of the optimal parameters, and the classification accuracy for that set of optimal parameters.
+1. Should be self-explanatory. Set the TRAIN_FILE to the training dataset and VAL_FILE to the validation dataset, and make a note of the optimal parameters, and the classification accuracy for that set of optimal parameters.
 
 Output
 ======

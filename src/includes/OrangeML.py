@@ -1,4 +1,4 @@
-import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap, commands, math
+import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap, commands, math, orngLR
 
 class OrangeClassifiers:
   def __init__(self, orangeDataFile, orangeValFile, attrs):
@@ -8,14 +8,14 @@ class OrangeClassifiers:
       self.is_binary = True
     else:
       self.is_binary = False
-    this.attrs = attrs
+    self.attrs = attrs
       
   def print_decision_tree(self, suffix='demo'):
-    measure = this.attrs['measure']
-    mForPruning = this.attrs['mForPruning']
-    maxMajority = this.attrs['maxMajority']
-    minSubset = this.attrs['minSubset']
-    minExamples = this.attrs['minExamples']
+    measure = self.attrs['measure']
+    mForPruning = self.attrs['mForPruning']
+    maxMajority = self.attrs['maxMajority']
+    minSubset = self.attrs['minSubset']
+    minExamples = self.attrs['minExamples']
     classifier = orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)
     stringy = orngTree.dumpTree(classifier, maxDepth=3).split('\n')
     # stringy = [s for s in stringy if "null node" not in s]
@@ -25,7 +25,7 @@ class OrangeClassifiers:
     self.output_classified(classifier, '../data_stat/dtree_%s.txt' % suffix)
   
   def print_knn(self):
-    k = this.attrs['k']
+    k = self.attrs['k']
     classifier = orange.kNNLearner(self.data, k=k)
     self.output_classified(classifier, '../data_stat/knn.txt')
   
@@ -40,7 +40,11 @@ class OrangeClassifiers:
       print dist
     classifier = orange.BayesLearner(self.data)
     self.output_classified(classifier, '../data_stat/bayes.txt')
-    
+  
+  def print_log_reg(self):
+    classifier = orngLR.LogRegLearner(removeSingular=1)
+    self.output_classified(classifier, '../data_stat/logreg.txt')
+  
   def print_linear_svm(self):
     classifier = orange.LinearLearner(self.data)
     if self.is_binary:
@@ -55,19 +59,23 @@ class OrangeClassifiers:
     self.output_classified(classifier, '../data_stat/linsvm.txt')
   
   def cross_validate(self):
+    measure = self.attrs['measure']
+    mForPruning = self.attrs['mForPruning']
+    maxMajority = self.attrs['maxMajority']
+    minSubset = self.attrs['minSubset']
+    minExamples = self.attrs['minExamples']
+    k = self.attrs['k']
     bayes = orngBayes.BayesLearner()
-    # kmeans = orange.kNNLearner(k=42)
-    # tree = orngTree.TreeLearner(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
-    # kmeans = orange.kNNLearner(k=28)
-    # tree = orngTree.TreeLearner(mForPruning=100, maxMajority=1.0, minExamples=2, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
-    kmeans = orange.kNNLearner(k=61)
-    tree = orngTree.TreeLearner(mForPruning=0.5, maxMajority=0.6, minExamples=0, minSubset=0, measure='gainRatio') # orngTree.TreeLearner(, mForPruning=2)
+    kmeans = orange.kNNLearner(k=k)
+    tree = orngTree.TreeLearner(mForPruning=mForPruning, maxMajority=maxMajority, minExamples=minExamples, minSubset=minSubset, measure=measure) # orngTree.TreeLearner(, mForPruning=2)
     lin_svm = orange.LinearLearner()
+    log_reg = orngLR.LogRegLearner(removeSingular=1)
     bayes.name = "bayes"
     tree.name = "c4.5"
     kmeans.name = "kmeans"
-    lin_svm.name = "lin_svm"
-    learners = [bayes, tree, lin_svm, kmeans]
+    lin_svm.name = "linsvm"
+    log_reg.name = 'logreg'
+    learners = [tree, lin_svm, log_reg, bayes, kmeans]
     results = orngTest.crossValidation(learners, self.data, folds=10)
     cm = orngStat.confusionMatrices(results)
 

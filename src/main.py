@@ -1,6 +1,12 @@
 from includes import *
 
 #
+# CONSTANTS
+#
+TRAIN_FILE = '../data/do_20111201_b_v_u_bal_demo_train.tab'
+VAL_FILE = '../data/do_20111201_b_v_u_bal_demo_val.tab'
+
+#
 # Example File Balanced Label Classes and so on
 #
 # Converters.balance_orangetab('../data/do_20111201_b_v_u.tab', '../data/do_20111201_b_v_u_bal.tab')
@@ -20,21 +26,17 @@ from includes import *
 # Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_base_val.tab', '../data_svm/do_20111201_b_v_u_bal_base_val.val')
 
 #
-# Orange Tuners
+# Tuners
 #
-# ot = OrangeML.OrangeTuners('../data/do_20111201_b_v_u_bal_demo_train.tab')
+# ot = OrangeML.OrangeTuners(TRAIN_FILE)
 # ot.tune_decision_tree()
 # ot.tune_knn()
-
-#
-# SVMLight Tuner
-#
-# MSVMLight.tune_parameters('../data_svm/do_20111201_b_v_u_bal_demo_train.train')
+# MSVMLight.tune_parameters(TRAIN_FILE)
 
 #
 # Cross-validation and so on
 #
-attrs = {
+attrs = { # Attributes to set after tuning
   'mForPruning': 100, # DTree
   'maxMajority': 0.8, # DTree
   'minExamples': 1, # DTree
@@ -42,9 +44,10 @@ attrs = {
   'measure': 'relief', # DTree
   'k': 42 # KNN
 }
-# oc = OrangeML.OrangeClassifiers('../data/do_20111201_b_v_u_bal_demo_train.tab', '../data/do_20111201_b_v_u_bal_demo_val.tab', attrs)
+# oc = OrangeML.OrangeClassifiers(TRAIN_FILE, VAL_FILE, attrs)
 # oc.cross_validate()
 # oc.print_linear_svm()
+# oc.print_log_reg()
 # oc.print_bayes()
 # oc.print_decision_tree(suffix='demo')
 # oc.print_knn()
@@ -52,15 +55,14 @@ attrs = {
 #
 # Significance Tests
 #
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/svm.txt', verbose=True)
-Converters.write_actual_labels('../data/do_20111201_b_v_u_bal_demo_val.tab', '../data_stat/original.txt')
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/svm.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
-Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
+# Converters.write_actual_labels(VAL_FILE, '../data_stat/original.txt')
+Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
+  '../data_stat/dtree_demo.txt',
+  '../data_stat/linsvm.txt',
+  '../data_stat/logreg.txt',
+  '../data_stat/knn.txt',
+  '../data_stat/bayes.txt'
+], verbose=True)
 
 #
 # IGNORE ALL BELOW

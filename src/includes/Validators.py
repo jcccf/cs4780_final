@@ -1,4 +1,9 @@
 from scipy.stats import binom
+import itertools
+
+def binomial_sign_test_multiple(original_file, filelist, p=0.025, verbose=False):
+  for h1_file, h2_file in itertools.combinations(filelist, 2):
+    binomial_sign_test(original_file, h1_file, h2_file, p=p, verbose=verbose)
 
 # Assumes classification values between -1 and 1, and only two classes -1 and 1
 def binomial_sign_test(original_file, h1_file, h2_file, p=0.025, verbose=False):
@@ -32,12 +37,10 @@ def binomial_sign_test(original_file, h1_file, h2_file, p=0.025, verbose=False):
   
   if verbose:
     print "Binomial Sign Test (McNemar's Test)"
-    print "H1 CA is", float(h1_corr)/len(true_y)
-    print "H2 CA is", float(h2_corr)/len(true_y)
-    print "D1 is", d1
-    print "D2 is", d2
-    print "k is", k
+    print "H1 CA is", float(h1_corr)/len(true_y), "H2 CA is", float(h2_corr)/len(true_y)
+    print "D1 is", d1, "D2 is", d2, "k is", k
     print "p-value is", p, "/", (1-p*2)*100, "% confidence"
-    print "probability is", prob
+    print "probability is", prob, "/ significance is", (prob < p)
+    print
   
   return (prob, prob < p)
