@@ -1,4 +1,5 @@
 import random
+from numpy import *
 
 def base_to_orangetab(svmlight_file, output_file):
   '''Convert File from the Base Format to Orange Tabular Format'''
@@ -108,3 +109,38 @@ def write_actual_labels(orangetab_file, output_file):
   with open(output_file, 'w') as f:
     for i in range(3, len(lines)):
       f.write('%s\n' % lines[i].split('\t')[0])
+
+def normalize_orange(orangetab_file, output_file):
+  with open(orangetab_file, 'r') as f:
+    lines = f.readlines()
+  if len(lines) == 1:
+    lines = lines[0].split('\r')
+  headlines = array(lines[0].replace('\n', '').strip().split('\t'))
+  sublines = array(lines[1].replace('\n', '').strip().split('\t'))
+  splitlines = [l.replace('\n', '').strip().split('\t') for l in lines]
+  splitlines = splitlines[3:]
+  # print splitlines
+  floatize = vectorize(lambda x: float(x)) # convert each string into a float (this creates a function)
+  a = floatize(array(splitlines))
+  a = transpose(a) # transpose columns to rows
+  
+  # Remove all columns with std deviation of 0 - i.e. all values are the same
+  i = 0
+  eyes = []
+  for b in a:
+    if b.std() == 0:
+      eyes.append(i)
+    i += 1
+  a = delete(a, eyes, 0)
+  headlines = delete(headlines, eyes, 0)
+  sublines = delete(sublines, eyes, 0)
+  
+  a = array([(b - b.mean())/b.std() if (b.max() != 1 or b.min() != -1) else b for b in a]) # normalize each row
+  a = transpose(a) # transpose rows back to columns
+  a = a.tolist()
+  with open(output_file, 'w') as f:
+    f.write("\t".join([str(r) for r in headlines.tolist()])+"\n")
+    f.write("\t".join([str(r) for r in sublines.tolist()])+"\n")
+    f.write(lines[2].replace('\n','')+"\n")
+    for row in a:
+      f.write("\t".join([str(r) for r in row])+"\n")

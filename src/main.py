@@ -1,65 +1,70 @@
 from includes import *
 
 #
-# Orange Machine Learning Algorithms
+# Example File Balanced Label Classes and so on
 #
+# Converters.balance_orangetab('../data/do_20111201_b_v_u.tab', '../data/do_20111201_b_v_u_bal.tab')
+# Converters.normalize_orange('../data/do_20111201_b_v_u_bal.tab','../data/do_20111201_b_v_u_bal_norm.tab')
+# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_crime.tab')
+# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab')
+# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_base.tab')
 
-# oc = OrangeML.OrangeClassifiers('../data/do_20111130_b_v_u_bal_base_train.tab', '../data/do_20111130_b_v_u_bal_base_val.tab')
-# oc.cross_validate()
-# oc.print_linear_svm()
-# oc.print_bayes()
-# 
-# oc.print_decision_tree(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief', suffix='demo')
-# oc.print_knn(k=42)
-
-# oc.print_decision_tree(mForPruning=100, maxMajority=1.0, minExamples=2, minSubset=2, measure='relief', suffix='demo')
-# oc.print_knn(k=28)
-
-# oc.print_decision_tree(mForPruning=5, maxMajority=1.0, minExamples=2, minSubset=2, measure='gini', suffix='demo')
-# oc.print_knn(k=55)
+#
+# SVMLight File Converters
+#
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_demo_train.tab', '../data_svm/do_20111201_b_v_u_bal_demo_train.train')
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_crime_train.tab', '../data_svm/do_20111201_b_v_u_bal_crime_train.train')
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_base_train.tab', '../data_svm/do_20111201_b_v_u_bal_base_train.train')
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_demo_val.tab', '../data_svm/do_20111201_b_v_u_bal_demo_val.val')
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_crime_val.tab', '../data_svm/do_20111201_b_v_u_bal_crime_val.val')
+# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_base_val.tab', '../data_svm/do_20111201_b_v_u_bal_base_val.val')
 
 #
 # Orange Tuners
 #
-# ot = OrangeML.OrangeTuners('../data/do_20111130_b_v_u_bal_base_train.tab')
+# ot = OrangeML.OrangeTuners('../data/do_20111201_b_v_u_bal_demo_train.tab')
 # ot.tune_decision_tree()
 # ot.tune_knn()
 
 #
 # SVMLight Tuner
 #
-# MSVMLight.tune_parameters('../data_svm/do_20111130_b_v_u_bal_demo_train.train')
+# MSVMLight.tune_parameters('../data_svm/do_20111201_b_v_u_bal_demo_train.train')
+
+#
+# Cross-validation and so on
+#
+attrs = {
+  'mForPruning': 100, # DTree
+  'maxMajority': 0.8, # DTree
+  'minExamples': 1, # DTree
+  'minSubset': 2, # DTree
+  'measure': 'relief', # DTree
+  'k': 42 # KNN
+}
+# oc = OrangeML.OrangeClassifiers('../data/do_20111201_b_v_u_bal_demo_train.tab', '../data/do_20111201_b_v_u_bal_demo_val.tab', attrs)
+# oc.cross_validate()
+# oc.print_linear_svm()
+# oc.print_bayes()
+# oc.print_decision_tree(suffix='demo')
+# oc.print_knn()
 
 #
 # Significance Tests
 #
 # Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree.txt', '../data_stat/svm.txt', verbose=True)
-# Converters.write_actual_labels('../data/do_20111130_b_v_u_bal_crime_val.tab', '../data_stat/original.txt')
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/svm.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
-# Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
+Converters.write_actual_labels('../data/do_20111201_b_v_u_bal_demo_val.tab', '../data_stat/original.txt')
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/linsvm.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/svm.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/knn.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/dtree_demo.txt', '../data_stat/bayes.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/knn.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/linsvm.txt', '../data_stat/bayes.txt', verbose=True)
+Validators.binomial_sign_test('../data_stat/original.txt', '../data_stat/knn.txt', '../data_stat/bayes.txt', verbose=True)
 
 #
-# Example File Balanced Label Classes
+# IGNORE ALL BELOW
 #
-# Converters.balance_orangetab('../data/do_20111130_b_v_u.tab', '../data/do_20111130_b_v_u_bal.tab')
-# Converters.split_orangetab_into_2('../data/do_20111130_b_v_u_bal_crime.tab')
-# Converters.split_orangetab_into_2('../data/do_20111130_b_v_u_bal_demo.tab')
-# Converters.split_orangetab_into_2('../data/do_20111130_b_v_u_bal_base.tab')
-
-#
-# SVMLight File Converters
-#
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_demo_train.tab', '../data_svm/do_20111130_b_v_u_bal_demo_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_crime_train.tab', '../data_svm/do_20111130_b_v_u_bal_crime_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_base_train.tab', '../data_svm/do_20111130_b_v_u_bal_base_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_demo_val.tab', '../data_svm/do_20111130_b_v_u_bal_demo_val.val')
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_crime_val.tab', '../data_svm/do_20111130_b_v_u_bal_crime_val.val')
-# Converters.orangetab_to_svmlight('../data/do_20111130_b_v_u_bal_base_val.tab', '../data_svm/do_20111130_b_v_u_bal_base_val.val')
 
 #
 # HW Decision Tree (Modified to Allow Discrete Attributes)

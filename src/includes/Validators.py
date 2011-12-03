@@ -2,6 +2,7 @@ from scipy.stats import binom
 
 # Assumes classification values between -1 and 1, and only two classes -1 and 1
 def binomial_sign_test(original_file, h1_file, h2_file, p=0.025, verbose=False):
+  print h1_file, ' against ', h2_file
   with open(original_file, 'r') as f:
     true_y = f.readlines()
   with open(h1_file, 'r') as f:

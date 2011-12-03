@@ -1,15 +1,21 @@
 import orange, orngBayes, orngTree, orngTest, orngStat, orngWrap, commands, math
 
 class OrangeClassifiers:
-  def __init__(self, orangeDataFile, orangeValFile):
+  def __init__(self, orangeDataFile, orangeValFile, attrs):
     self.data = orange.ExampleTable(orangeDataFile)
     self.valdata = orange.ExampleTable(orangeValFile)
     if len(self.data.domain.classVar.values) == 2:
       self.is_binary = True
     else:
       self.is_binary = False
+    this.attrs = attrs
       
-  def print_decision_tree(self, measure='infoGain', mForPruning=2, maxMajority=0.8, minSubset=10, minExamples=10, suffix='demo'):
+  def print_decision_tree(self, suffix='demo'):
+    measure = this.attrs['measure']
+    mForPruning = this.attrs['mForPruning']
+    maxMajority = this.attrs['maxMajority']
+    minSubset = this.attrs['minSubset']
+    minExamples = this.attrs['minExamples']
     classifier = orngTree.TreeLearner(self.data, measure=measure, sameMajorityPruning=1, mForPruning=mForPruning, maxMajority=maxMajority, minSubset=minSubset, minExamples=minExamples)
     stringy = orngTree.dumpTree(classifier, maxDepth=3).split('\n')
     # stringy = [s for s in stringy if "null node" not in s]
@@ -18,7 +24,8 @@ class OrangeClassifiers:
     print "\n".join(stringy)
     self.output_classified(classifier, '../data_stat/dtree_%s.txt' % suffix)
   
-  def print_knn(self, k=10):
+  def print_knn(self):
+    k = this.attrs['k']
     classifier = orange.kNNLearner(self.data, k=k)
     self.output_classified(classifier, '../data_stat/knn.txt')
   
@@ -49,12 +56,12 @@ class OrangeClassifiers:
   
   def cross_validate(self):
     bayes = orngBayes.BayesLearner()
-    kmeans = orange.kNNLearner(k=42)
-    tree = orngTree.TreeLearner(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
+    # kmeans = orange.kNNLearner(k=42)
+    # tree = orngTree.TreeLearner(mForPruning=100, maxMajority=0.8, minExamples=1, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
     # kmeans = orange.kNNLearner(k=28)
     # tree = orngTree.TreeLearner(mForPruning=100, maxMajority=1.0, minExamples=2, minSubset=2, measure='relief') # orngTree.TreeLearner(, mForPruning=2)
-    # kmeans = orange.kNNLearner(k=55)
-    # tree = orngTree.TreeLearner(mForPruning=5, maxMajority=1.0, minExamples=2, minSubset=2, measure='gini') # orngTree.TreeLearner(, mForPruning=2)
+    kmeans = orange.kNNLearner(k=61)
+    tree = orngTree.TreeLearner(mForPruning=0.5, maxMajority=0.6, minExamples=0, minSubset=0, measure='gainRatio') # orngTree.TreeLearner(, mForPruning=2)
     lin_svm = orange.LinearLearner()
     bayes.name = "bayes"
     tree.name = "c4.5"

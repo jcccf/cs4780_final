@@ -220,7 +220,7 @@ def process_var(field, list, fields):
         fields.extend(newfields)
         for row in list:
             for newfield in newfields:
-                row[newfield] = 0
+                row[newfield] = -1
             row[field+'_'+row[field]] = 1
             field_types[field+'_'+row[field]] = 'd'
             del row[field]
@@ -231,7 +231,7 @@ def process_var(field, list, fields):
         median = values[len(values)/2]
         for row in list:
             if row[field] < median:
-                row[field] = 0
+                row[field] = -1
             else:
                 row[field] = 1
     if field in to_split_value:
@@ -329,7 +329,7 @@ def to_svm_light(list, label, filename):
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
 def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
-    filename = '../data/do_20111130'
+    filename = '../data/do_20111201'
     if binarize:
         filename += '_b'
         to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY', 'INCTYPE']
