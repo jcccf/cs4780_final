@@ -406,7 +406,7 @@ if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    dir = '../test_data/'
+    #dir = '../test_data/'
     
     recordvars = ['CID']
     offensevars = ['CID']
