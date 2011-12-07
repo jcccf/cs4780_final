@@ -4,6 +4,7 @@ from datetime import date
 import csv
 import re
 import time
+from math import sqrt
 
 ''' Records data (key: cid) and Offense Data
  unit of analysis: judicial proceeding ("a proceeding in which all offenses for 
@@ -120,8 +121,9 @@ def parse_data(filename, fields, col_begins, col_ends, omit_fields, project):
                 if not (field in field_nulls and field_nulls[field] == val) and len(val)>0:
                     r[field] = val
                     
-                else: # skip whole row
-                    skip = True
+                #else: # skip whole row
+                    #skip = True
+
         if not skip:
             results.append(r)
     f.close()
@@ -160,7 +162,7 @@ def read_field_types(filename):
 def get_field_values(list, label):
     result = []
     for point in list:
-        if point[label] not in result:
+        if label in point and point[label] not in result:
             result.append(point[label])
     return result
 
@@ -184,6 +186,8 @@ def process_var(field, list, fields):
         else:
             fields.extend(newfields[0:3])
         for row in list:
+            if field not in row:
+                continue
             dateobj = time.strptime(row[field], "%m/%d/%Y")
             if not use_uno:
                 row[newfields[0]] = dateobj.tm_mon
@@ -208,6 +212,8 @@ def process_var(field, list, fields):
         num_bigger_buckets = capacity_split
         # every bucket contains scale or scale+1 values
         for row in list:
+            if field not in row:
+                continue
             val = row[field]
             if values.index(val) < capacity_split:
                 index = (values.index(val)/(scale+1))*(scale+1) 
@@ -219,10 +225,12 @@ def process_var(field, list, fields):
         newfields = map(lambda sub: field+'_'+sub, values)
         fields.extend(newfields)
         for row in list:
+            if field not in row:
+                continue
             for newfield in newfields:
                 row[newfield] = -1
+                field_types[newfield] = 'd'
             row[field+'_'+row[field]] = 1
-            field_types[field+'_'+row[field]] = 'd'
             del row[field]
         fields.remove(field)
     if field in to_split_median:
@@ -230,6 +238,8 @@ def process_var(field, list, fields):
         values.sort()
         median = values[len(values)/2]
         for row in list:
+            if field not in row:
+                continue
             if row[field] < median:
                 row[field] = -1
             else:
@@ -237,6 +247,8 @@ def process_var(field, list, fields):
     if field in to_split_value:
         split = to_split_value[field]
         for row in list:
+            if field not in row:
+                continue
             if float(row[field]) < float(split):
                 row[field] = -1
             else:
@@ -283,6 +295,7 @@ def to_orange_fmt(list, features, label, filename):
     
     # 3
     s += 'class' + '\t'*len(list[0]) + '\n'
+    print label
     features.remove(label)
     # 4
     for point in listcpy:
@@ -296,9 +309,6 @@ def to_orange_fmt(list, features, label, filename):
         for field in features:
             if field in point:
                 row += str(point[field])
-            else: # if field is missing row shouldn't be here
-                print field, "is missing from this row"
-                exit()
             row += '\t'
         row += '\n'
         s += row
@@ -327,12 +337,12 @@ def to_svm_light(list, label, filename):
 
 #==============================================================================
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
-def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno):
+def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
     filename = '../data/do_20111201'
     if binarize:
         filename += '_b'
-        to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY', 'INCTYPE']
+        to_binarize = ['RACE', 'DISP', 'PCSOFF', 'PCSSUB', 'COUNTY']
     if coarsify:
         filename += '_c'
         to_coarsify = []
@@ -347,20 +357,85 @@ def gen_file(list, features, label, binarize, coarsify, medianize, valsplit, uno
         use_uno = uno
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
-    filename += '.tab'
+    ro = normalize(ro, features)
+
     print features, "being written to", filename
-    to_orange_fmt(ro, features, label, filename)
+    
+    for label in labels:
+        to_orange_fmt(ro, features, label, filename+'_'+label+'.tab')
 
 
+def mean(list):
+    list = map(lambda x: float(x), list)
+    return sum(list) / len(list)
+
+def std(list, u):
+    diff_squareds = map(lambda x: (float(x) - u)**2, list)
+    return sqrt(sum(diff_squareds) / (len(list)))
+
+# if standard deviation is 0, the feature is removed
+def normalize(list, features):
+    list = deepcopy(list)
+    features = deepcopy(features)
+    features = filter(lambda f: field_types[f]=='c',features)
+    features = filter(lambda f: len(get_field_values(list,f)) > 0,features)
+    means = []
+    stds = []
+    findex = {}
+    i = 0
+
+    for f in deepcopy(features):
+        values = get_field_values(list, f)
+        u = mean(values)  
+        s = std(values, u)
+        if s == 0:
+            features.remove(f)
+            continue
+        findex[f] = i
+        i += 1           
+        means.append(u)
+        stds.append(s)
+    for row in list:
+       for f in features:
+           if f in row:
+               row[f] = (float(row[f])-means[findex[f]]) / stds[findex[f]]
+    
+    return list
+    
 if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    #dir = '../test_data/'
+    dir = '../test_data/'
     
-    records, rec_fields = parse_record(['CID', 'DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'COUNTY'])
-    offenses, off_fields = parse_offense(['CID', 'DOFAGE', 'PCSOFF','PCSSUB','INCMIN', 'INCMAX','INCTYPE','FINE','DOF','GRADE', 'DISP', 'COMPLETE'])
-    to_orange_fmt(offenses, off_fields, 'GRADE', '../data/data_offenses.txt')
+    recordvars = ['CID']
+    offensevars = ['CID']
+    ''' CHANGE ME BEGIN'''
+    varsets = ['HIST','ABOUT']
+    labels = ['INCMIN', 'INCTYPE','FINE','BOOTCAMP','RIPTYPE','IPTYPE']
+    ''' CHANGE ME END'''
+    if 'DEMO' in varsets:
+        recordvars.extend(['DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'DOSAGE','COUNTY'])
+    if 'CRIME' in varsets:
+        offensevars.extend(['DOF','OGS','PCSOFF','PCSSUB','GRADE','DISP','COMPLETE','DWE','ENHANC'])
+    if 'HIST' in varsets:
+        base = ['MUR','VM','RAP','KID','IVD','ARSPERS','ROBSBI','ROBMVSB','AGASBI','DRUGDTH','BUR','ETHF1','INCHOAT','ARS','ROB','ROBMV','AG','BUROTHR','AGIND','SEXASLT','F1','F2','DRG50G','DRG','F3','M1DEATH','WE','M1CHILD','M1DUI']
+        baseA = map(lambda x: x+'A', base)
+        baseC = map(lambda x: x+'C', base)
+        recordvars.extend(baseA)
+        recordvars.extend(baseC)
+        recordvars.extend(['MIS'])
+        offensevars.extend(['PRS'])
+    if 'ABOUT' in varsets:
+        offensevars.extend(['DRUGDEP','SEXPRED'])
+    
+    for l in labels:
+        if l not in offensevars:
+            offensevars.extend([l])
+
+    records, rec_fields = parse_record(recordvars)
+    offenses, off_fields = parse_offense(offensevars)
+    #to_orange_fmt(offenses, off_fields, 'GRADE', '../data/data_offenses.txt')
 
     ''' join '''
     ro = left_join(records, offenses, 'CID')
@@ -373,5 +448,5 @@ if __name__ == '__main__':
 
     '''CUSTOMIZE THIS LINE AND LISTS/DICTIONARY INSIDE gen_file'''
     # list, features, label, binarize, coarsify, medianize, valsplit, uno
-    gen_file(ro, features, 'INCMIN', True, False, False, True, True)
+    gen_file(ro, features, labels, True, False, False, True, True)
     
