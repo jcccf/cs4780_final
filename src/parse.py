@@ -5,6 +5,8 @@ import csv
 import re
 import time
 from math import sqrt
+import argparse
+import sys
 
 ''' Records data (key: cid) and Offense Data
  unit of analysis: judicial proceeding ("a proceeding in which all offenses for 
@@ -430,6 +432,23 @@ def balance_list(list, label):
         result.extend([pos[i]])
         result.extend([neg[i]])
     return result
+
+def parse_args(args):
+    parser = argparse.ArgumentParser()
+    
+    global filter_unknown
+    parser.add_argument('--filterunknown', action='store_true')
+    parser.add_argument('-b', '--binarize', action='store_true')
+    parser.add_argument('-c', '--coarsify', action='store_true')
+    parser.add_argument('-m', '--medianize', action='store_true')
+    parser.add_argument('-v', '--valsplit', action='store_true')
+    parser.add_argument('-u', '--uno', action='store_true')
+    parser.add_argument('-d', '--balance', action='store_true')
+    parser.add_argument('-l', '--labels', nargs='+', required=True)
+    parser.add_argument('-s', '--varsets', nargs='+', required=True)
+    
+    ns = parser.parse_args(args)
+    return vars(ns)
    
 if __name__ == '__main__':
     dir = '../penn97/'
@@ -439,13 +458,15 @@ if __name__ == '__main__':
     if dir == '../test_data/':
         print "***** Note: Running on test set, not actual set"
     
+    args = parse_args(sys.argv[1:])
+    
     recordvars = ['CID']
     offensevars = ['CID']
     
     ''' CHANGE ME BEGIN'''
-    filter_unknown = True
-    varsets = ['DEMO','CRIME']
-    labels = ['INCMIN']
+    filter_unknown = args['filter_unknown']
+    varsets = args['varsets']
+    labels = args['labels']
     ''' CHANGE ME END'''
     
     if 'DEMO' in varsets:
@@ -483,5 +504,15 @@ if __name__ == '__main__':
 
     '''CUSTOMIZE THIS LINE AND LISTS/DICTIONARY INSIDE gen_file'''
     # list, features, label, binarize, coarsify, medianize, valsplit, uno, balance
-    gen_file(ro, features, labels, True, False, False, True, True, True)
+    # gen_file(ro, features, labels, True, False, False, True, True, True)
+    gen_file(
+        list=ro, 
+        features=features, 
+        labels=labels, 
+        binarize=args['binarize'],
+        coarsify=args['coarsify'],
+        medianize=args['medianize'],
+        valsplit=args['valsplit'],
+        uno=args['uno'],
+        balance=args['balance'])
     
