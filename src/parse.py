@@ -60,6 +60,7 @@ offense_col_end = [10, 20, 28, 31, 39, 54, 64, 65, 67, 73, 81, 89, 139, 154,
                    1140, 1144, 1148, 1152, 1153, 1155, 1157, 1159, 1168, 1177, 
                    1185, 1193, 1198, 1204, 1213, 1223, 1273, 1323, 1373, 1423,
                    1473, 1481]
+possible_labels = ['INCMIN', 'INCMAX', 'INCTYPE', 'IPTYPE', 'GRADE', 'FINE', 'BOOTCAMP']
 
 def build_begin(end):
     begin = [0]
@@ -360,6 +361,14 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
     if uno:
         filename += '_u'
         use_uno = uno
+        
+    # keep only the labels we want, remove others
+    labels_to_remove = possible_labels[:]
+    for l in labels:
+        labels_to_remove.remove(l)
+    for l in labels_to_remove:
+        if l in features:
+            featueres.remove(l)
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     ro = normalize(ro, features)
@@ -464,6 +473,7 @@ if __name__ == '__main__':
     offensevars = ['CID']
     
     ''' CHANGE ME BEGIN'''
+    ''' Possible varsets: HIST, ABOUT, DEMO, CRIME '''
     filter_unknown = args['filter_unknown']
     varsets = args['varsets']
     labels = args['labels']
