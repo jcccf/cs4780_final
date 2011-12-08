@@ -127,6 +127,7 @@ def parse_data(filename, fields, col_begins, col_ends, omit_fields, project):
 
         if not skip:
             results.append(r)
+
     f.close()
     return results
 
@@ -184,8 +185,11 @@ def process_var(field, list, fields):
         newfields = map(lambda sub: field+'_'+sub, ['MONTH', 'YEAR', 'WEEKDAY','UNO'])
         if use_uno:
             fields.extend([newfields[3]])
+            field_types[newfields[3]] = 'c'
         else:
             fields.extend(newfields[0:3])
+            for newf in newfields:
+                field_types[newf] = 'd'
         for row in list:
             if field not in row:
                 continue
@@ -194,11 +198,9 @@ def process_var(field, list, fields):
                 row[newfields[0]] = dateobj.tm_mon
                 row[newfields[1]] = dateobj.tm_year
                 row[newfields[2]] = date(dateobj.tm_year, dateobj.tm_mon, dateobj.tm_mday).isoweekday()
-                for newf in newfields:
-                    field_types[newf] = 'd'
             else:
                 row[newfields[3]] = time.mktime(dateobj)
-                field_types[newfields[3]] = 'c'
+    
             del row[field]
         fields.remove(field)
     elif field in to_coarsify: # into 10 buckets or a fifth size, whichever's greater
@@ -433,21 +435,23 @@ if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    dir = '../test_data/'
+    #dir = '../test_data/'
+    if dir == '../test_data/':
+        print "***** Note: Running on test set, not actual set"
     
     recordvars = ['CID']
     offensevars = ['CID']
     
     ''' CHANGE ME BEGIN'''
     filter_unknown = True
-    varsets = ['HIST','ABOUT']
+    varsets = ['DEMO','CRIME']
     labels = ['INCMIN']
     ''' CHANGE ME END'''
     
     if 'DEMO' in varsets:
         recordvars.extend(['DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'DOSAGE','COUNTY'])
     if 'CRIME' in varsets:
-        offensevars.extend(['DOF','OGS','PCSOFF','PCSSUB','GRADE','DISP','COMPLETE','DWE','ENHANC'])
+        offensevars.extend(['DOF','OGS','PCSOFF','PCSSUB','GRADE','DISP','COMPLETE'])
     if 'HIST' in varsets:
         base = ['MUR','VM','RAP','KID','IVD','ARSPERS','ROBSBI','ROBMVSB','AGASBI','DRUGDTH','BUR','ETHF1','INCHOAT','ARS','ROB','ROBMV','AG','BUROTHR','AGIND','SEXASLT','F1','F2','DRG50G','DRG','F3','M1DEATH','WE','M1CHILD','M1DUI']
         baseA = map(lambda x: x+'A', base)
@@ -465,6 +469,7 @@ if __name__ == '__main__':
 
     records, rec_fields = parse_record(recordvars)
     offenses, off_fields = parse_offense(offensevars)
+
     #to_orange_fmt(offenses, off_fields, 'GRADE', '../data/data_offenses.txt')
 
     ''' join '''
