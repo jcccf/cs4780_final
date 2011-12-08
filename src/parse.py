@@ -77,6 +77,7 @@ to_binarize = []
 to_split_median = []
 to_split_value = {}
 use_uno = False
+filter_unknown = False
 
 #==============================================================================
 
@@ -121,8 +122,8 @@ def parse_data(filename, fields, col_begins, col_ends, omit_fields, project):
                 if not (field in field_nulls and field_nulls[field] == val) and len(val)>0:
                     r[field] = val
                     
-                #else: # skip whole row
-                    #skip = True
+                elif filter_unknown: # skip whole row
+                    skip = True
 
         if not skip:
             results.append(r)
@@ -337,7 +338,7 @@ def to_svm_light(list, label, filename):
 
 #==============================================================================
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
-def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno):
+def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno, balance):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
     filename = '../data/do_20111201'
     if binarize:
@@ -358,11 +359,16 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     ro = normalize(ro, features)
+    
 
     print features, "being written to", filename
     
     for label in labels:
-        to_orange_fmt(ro, features, label, filename+'_'+label+'.tab')
+        if balance:
+            ro_label = balance_list(ro, label)
+        else:
+            ro_label = ro
+        to_orange_fmt(ro_label, features, label, filename+'_'+label+'.tab')
 
 
 def mean(list):
@@ -401,19 +407,43 @@ def normalize(list, features):
                row[f] = (float(row[f])-means[findex[f]]) / stds[findex[f]]
     
     return list
-    
+
+# label MUST be binary!
+# returns perfectly shuffled list
+def balance_list(list, label):
+    pos = []
+    neg = []
+    for row in list:
+        if label in row:
+            if row[label] == 1:
+                pos.extend([row])
+            else:
+                neg.extend([row])
+    num_pos = len(pos)
+    num_neg = len(neg)
+    num = min(num_pos, num_neg)
+    print "From %d pos and %d neg labels, outputting %d of each." % (num_pos, num_neg, num)
+    result = []
+    for i in range(num):
+        result.extend([pos[i]])
+        result.extend([neg[i]])
+    return result
+   
 if __name__ == '__main__':
     dir = '../penn97/'
     read_field_types('field_info.csv')
     ''' parse data '''
-    #dir = '../test_data/'
+    dir = '../test_data/'
     
     recordvars = ['CID']
     offensevars = ['CID']
+    
     ''' CHANGE ME BEGIN'''
+    filter_unknown = True
     varsets = ['HIST','ABOUT']
-    labels = ['INCMIN', 'INCTYPE','FINE','BOOTCAMP','RIPTYPE','IPTYPE']
+    labels = ['INCMIN']
     ''' CHANGE ME END'''
+    
     if 'DEMO' in varsets:
         recordvars.extend(['DOSAGE','SEX', 'RACE', 'DOB', 'DOS', 'DOSAGE','COUNTY'])
     if 'CRIME' in varsets:
@@ -447,6 +477,6 @@ if __name__ == '__main__':
 
 
     '''CUSTOMIZE THIS LINE AND LISTS/DICTIONARY INSIDE gen_file'''
-    # list, features, label, binarize, coarsify, medianize, valsplit, uno
-    gen_file(ro, features, labels, True, False, False, True, True)
+    # list, features, label, binarize, coarsify, medianize, valsplit, uno, balance
+    gen_file(ro, features, labels, True, False, False, True, True, True)
     
