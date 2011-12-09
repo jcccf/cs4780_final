@@ -1,5 +1,6 @@
 import random
 from numpy import *
+from math import floor, ceil
 
 def base_to_orangetab(svmlight_file, output_file):
   '''Convert File from the Base Format to Orange Tabular Format'''
@@ -79,25 +80,27 @@ def balance_orangetab(orangetab_file, output_file):
       for l in combined:
         f2.write(l)
         
-def split_orangetab_into_2(orangetab_file):
+def split_orangetab_into_2(orangetab_file, train_frac=.8):
   with open(orangetab_file, 'r') as f:
     lines = f.readlines()
   if len(lines) == 1:
     lines = lines[0].split('\r')
     lines = [l+'\n' for l in lines]
+
+  train_size = int(floor((len(lines) - 3) * train_frac))
   
   with open(orangetab_file.rsplit('.', 1)[0]+'_train.tab', 'w') as f2:
     f2.write(lines[0])
     f2.write(lines[1])
     f2.write(lines[2])
-    for l in lines[3:1003]:
+    for l in lines[3:3+train_size]:
       f2.write(l)
     
   with open(orangetab_file.rsplit('.', 1)[0]+'_val.tab', 'w') as f2:
     f2.write(lines[0])
     f2.write(lines[1])
     f2.write(lines[2])
-    for l in lines[1003:2003]:
+    for l in lines[3+train_size:]:
       f2.write(l)
       
 def write_actual_labels(orangetab_file, output_file):

@@ -239,8 +239,9 @@ def process_var(field, list, fields):
             row[field+'_'+row[field]] = 1
             del row[field]
         fields.remove(field)
-    if field in to_split_median:
+    elif field in to_split_median:
         values = get_field_values(list, field)
+        field_types[field] = 'd'
         values.sort()
         median = values[len(values)/2]
         for row in list:
@@ -250,8 +251,9 @@ def process_var(field, list, fields):
                 row[field] = -1
             else:
                 row[field] = 1
-    if field in to_split_value:
+    elif field in to_split_value:
         split = to_split_value[field]
+        field_types[field] = 'd'
         for row in list:
             if field not in row:
                 continue
@@ -343,7 +345,7 @@ def to_svm_light(list, label, filename):
 
 #==============================================================================
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
-def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno, balance):
+def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno, balance, varsets):
     global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
     filename = '../data/do_20111201'
     if binarize:
@@ -357,18 +359,20 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         to_split_median = []
     if valsplit:
         filename += '_v'
-        to_split_value = {'INCMIN':12,'GRADE':5}
+        to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
     if uno:
         filename += '_u'
         use_uno = uno
+    if varsets:
+        filename += '_' + '_'.join(varsets)
         
     # keep only the labels we want, remove others
-    """labels_to_remove = possible_labels[:]
+    labels_to_remove = possible_labels[:]
     for l in labels:
         labels_to_remove.remove(l)
     for l in labels_to_remove:
         if l in features:
-            features.remove(l)"""
+            featueres.remove(l)
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     ro = normalize(ro, features)
@@ -445,18 +449,18 @@ def balance_list(list, label):
 def parse_args(args):
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-l', '--labels', nargs='+', required=True)
-    parser.add_argument('-s', '--varsets', nargs='+', required=True)
-    parser.add_argument('-f', '--filterunknown', action='store_true')
+    global filter_unknown
+    parser.add_argument('--filterunknown', action='store_true')
     parser.add_argument('-b', '--binarize', action='store_true')
     parser.add_argument('-c', '--coarsify', action='store_true')
     parser.add_argument('-m', '--medianize', action='store_true')
     parser.add_argument('-v', '--valsplit', action='store_true')
     parser.add_argument('-u', '--uno', action='store_true')
     parser.add_argument('-d', '--balance', action='store_true')
+    parser.add_argument('-l', '--labels', nargs='+', required=True)
+    parser.add_argument('-s', '--varsets', nargs='+', required=True)
     
     ns = parser.parse_args(args)
-    print ns
     return vars(ns)
    
 if __name__ == '__main__':
@@ -474,7 +478,7 @@ if __name__ == '__main__':
     
     ''' CHANGE ME BEGIN'''
     ''' Possible varsets: HIST, ABOUT, DEMO, CRIME '''
-    filter_unknown = args['filterunknown']
+    filter_unknown = args['filter_unknown']
     varsets = args['varsets']
     labels = args['labels']
     ''' CHANGE ME END'''
@@ -524,5 +528,6 @@ if __name__ == '__main__':
         medianize=args['medianize'],
         valsplit=args['valsplit'],
         uno=args['uno'],
-        balance=args['balance'])
+        balance=args['balance'],
+        varsets=varsets)
     
