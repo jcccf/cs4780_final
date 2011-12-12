@@ -103,6 +103,8 @@ def split_orangetab_into_2(orangetab_file, train_frac=.8):
     for l in lines[3+train_size:]:
       f2.write(l)
       
+  return [orangetab_file.rsplit('.', 1)[0]+'_train.tab', orangetab_file.rsplit('.', 1)[0]+'_val.tab']
+      
 def write_actual_labels(orangetab_file, output_file):
   with open(orangetab_file, 'r') as f:
     lines = f.readlines()

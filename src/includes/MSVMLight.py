@@ -5,8 +5,10 @@ def classify(test_file, model_file, classified_file):
   # print '../bin/svm_classify %s %s %s' % (test_file, model_file, classified_file)
   return commands.getoutput('../bin/svm_classify %s %s %s' % (test_file, model_file, classified_file))
   
-def learn(train_file, model_file, c=None, j=None, t=None, d=None, g=None):
+def learn(train_file, model_file, c=None, j=None, t=None, d=None, g=None, z=None):
   options = ""
+  if z is not None:
+    options += "-z %s " % z
   if c is not None:
     options += "-c %s " % c
   if j is not None:
@@ -19,7 +21,7 @@ def learn(train_file, model_file, c=None, j=None, t=None, d=None, g=None):
     options += "-g %s " % g
   # print '../bin/svm_learn %s%s %s' % (options, train_file, model_file)
   return commands.getoutput('../bin/svm_learn %s%s %s' % (options, train_file, model_file))
-  
+
 def get_accuracy(stringy):
   stringy = stringy.split('\n')
   for s in stringy:

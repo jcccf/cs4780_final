@@ -359,7 +359,7 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         to_split_median = []
     if valsplit:
         filename += '_v'
-        to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
+        to_split_value = {'SEX':2} # to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
     if uno:
         filename += '_u'
         use_uno = uno
@@ -372,7 +372,7 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         labels_to_remove.remove(l)
     for l in labels_to_remove:
         if l in features:
-            featueres.remove(l)
+            features.remove(l)
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     ro = normalize(ro, features)
@@ -450,7 +450,7 @@ def parse_args(args):
     parser = argparse.ArgumentParser()
     
     global filter_unknown
-    parser.add_argument('--filterunknown', action='store_true')
+    parser.add_argument('-f', '--filter_unknown', action='store_true')
     parser.add_argument('-b', '--binarize', action='store_true')
     parser.add_argument('-c', '--coarsify', action='store_true')
     parser.add_argument('-m', '--medianize', action='store_true')
@@ -519,6 +519,17 @@ if __name__ == '__main__':
     '''CUSTOMIZE THIS LINE AND LISTS/DICTIONARY INSIDE gen_file'''
     # list, features, label, binarize, coarsify, medianize, valsplit, uno, balance
     # gen_file(ro, features, labels, True, False, False, True, True, True)
+    # gen_file(
+    #     list=ro, 
+    #     features=features, 
+    #     labels=['INCMIN'], 
+    #     binarize=True,
+    #     coarsify=False,
+    #     medianize=True,
+    #     valsplit=True,
+    #     uno=False,
+    #     balance=False,
+    #     varsets=['DEMO'])
     gen_file(
         list=ro, 
         features=features, 
