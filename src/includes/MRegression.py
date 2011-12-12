@@ -5,19 +5,23 @@ from sklearn import metrics
 import rpy2.robjects as R
 import MSVMLight
 import Converters
+import os.path
+
+np.set_printoptions(threshold='nan')
 
 class MRegression:
   
   def __init__(self, filename, select_y = 'INCMIN', select_x = ['DOSAGE', 'SEX', 'RACE_1']):
+    self.base_file = '../data_reg/' + os.path.basename(filename).split('.')[0]
     self.select_x = select_x
     self.select_y = select_y
-    self.train_file, self.val_file = Converters.split_orangetab_into_2(filename)
-    self.X, self.Y = self.__read_into_array(self.train_file)
-    self.Xv, self.Yv = self.__read_into_array(self.val_file)
+    self.train_file, self.val_file = Converters.split_orangetab_into_2(filename, randomize=True)
+    self.X, self.Y = self.__read_into_array(self.train_file, remove_constants=True)
+    self.Xv, self.Yv = self.__read_into_array(self.val_file, remove_constants=False)
     # self.X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     # self.Y = [-1,-1,-1,1,1,1]
 
-  def __read_into_array(self, filename):
+  def __read_into_array(self, filename, remove_constants=True):
     select_y_index = 0
     select_x_indices = []
     x_array, y_array = [], []
@@ -35,7 +39,24 @@ class MRegression:
         if len([j for j in select_x_indices if len(vals[j]) == 0]) == 0: # Eliminate any rows with missing values
           x_array.append([float(vals[j]) for j in select_x_indices])
           y_array.append(float(vals[select_y_index]))
-    return [np.array(x_array), y_array]
+          
+    a = np.array(x_array)
+    
+    if remove_constants:
+      a = np.transpose(a)
+      i = 0
+      eyes = []
+      for b in a:
+        if b.std() == 0:
+          eyes.append(i)
+        i += 1
+      print eyes
+      a = np.delete(a, eyes, 0)
+      for eye in eyes:
+        self.select_x.remove(attributes[eye])
+      a = np.transpose(a)
+    
+    return [a, y_array]
 
   def to_svmlight(self, out_filename):
     with open(out_filename+".train", 'w') as f:
@@ -88,22 +109,26 @@ class MRegression:
       print metrics.mean_square_error(ytrue, yguess), metrics.mean_square_error(ytrue_orig, yguess_orig)
       print "---"
 
-  def pca(self, n_components=None, verbose=False):
+  def pca(self, n_components=None):
     num_comps = len(self.X[0]) if n_components == None else n_components
     self.pca = PCA(n_components=num_comps)
     self.pca.fit(self.X)
     self.Xt = self.pca.transform(self.X)
     self.Xvt = self.pca.transform(self.Xv)
-    if verbose:
-      print "---"
-      print "PCA..."
-      print "Explained Variance"
-      print self.pca.explained_variance_ratio_
-      print "Components"
-      print self.pca.components_
-      print "---"
+    print "Writing output to " + self.base_file+"_pca_comp.txt"
+    with open(self.base_file+"_pca_comp.txt", 'w') as f:
+      f.write("---\n")
+      f.write("PCA...\n")
+      f.write("Explained Variance\n")
+      f.write("%s\n" % self.pca.explained_variance_ratio_)
+      f.write("Components\n")
+      for j, c in enumerate(self.pca.components_):
+        f.write("---%d---\n" % j)
+        for i, n in enumerate(c):
+          f.write("%e \t %s\n" % (n, self.select_x[i]))
+      f.write("------\n")
   
-  def regression(self, type='PCA', verbose=False):
+  def regression(self, type='PCA'):
     self.lm = linear_model.LinearRegression()
     if type == 'PCA':
       X = self.Xt
@@ -114,15 +139,32 @@ class MRegression:
     self.lm.fit(X, self.Y)
     Ypv = self.lm.predict(Xv)
     Yp = self.lm.predict(X)
-    if verbose:
-      print "---"
-      print type, "Regression..."
-      print "R2 Score (Val / Test)"
-      print metrics.r2_score(self.Yv, Ypv), metrics.r2_score(self.Y, Yp)
-      print "MSE (Val / Test)"
-      print metrics.mean_square_error(self.Yv, Ypv), metrics.mean_square_error(self.Y, Yp)
-      print "Coefficients"
-      print self.lm.coef_
-      print "Intercept"
-      print self.lm.intercept_
-      print "---"
+    print "Writing output to " + self.base_file+"_"+type+".txt"
+    with open(self.base_file+"_"+type+".txt", 'w') as f:
+      if type == 'Linear':
+        f.write("---\n")
+        f.write("Linear Components\n")
+        for i, x in enumerate(self.select_x):
+          f.write("%d\t%s\n" % (i,x))
+      f.write("---\n")
+      f.write("%s Regression...\n" % type)
+      f.write("R2 Score (Val / Test) \n")
+      f.write("%f %f \n" % (metrics.r2_score(self.Yv, Ypv), metrics.r2_score(self.Y, Yp)))
+      f.write("MSE (Val / Test)")
+      f.write("%f %f \n" % (metrics.mean_square_error(self.Yv, Ypv), metrics.mean_square_error(self.Y, Yp)))
+      f.write("Coefficients\n")
+      f.write("%s\n" % self.lm.coef_)
+      f.write("Intercept\n")
+      f.write("%s\n" % self.lm.intercept_)
+      f.write("---\n")      
+      # Do R Linear Regression
+      lm_string = "y ~ x0"
+      for i in range(len(self.select_x)):
+        R.globalenv['x%d' % i] = R.FloatVector(X[:,i].tolist())
+        if i > 0:
+          lm_string += " + x%d" % i
+      R.globalenv['y'] = R.FloatVector(self.Y)
+      fit = R.r.lm(lm_string)
+      f.write("%s\n" % R.r.summary(fit))    
+      # fit2 = R.r.lm('y ~ x1 + x2 + x3')
+      # print R.r.anova(fit, fit2)

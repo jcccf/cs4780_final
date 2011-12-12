@@ -80,7 +80,7 @@ def balance_orangetab(orangetab_file, output_file):
       for l in combined:
         f2.write(l)
         
-def split_orangetab_into_2(orangetab_file, train_frac=.8):
+def split_orangetab_into_2(orangetab_file, train_frac=.8, randomize=False):
   with open(orangetab_file, 'r') as f:
     lines = f.readlines()
   if len(lines) == 1:
@@ -89,18 +89,27 @@ def split_orangetab_into_2(orangetab_file, train_frac=.8):
 
   train_size = int(floor((len(lines) - 3) * train_frac))
   
+  if randomize:
+    lx = lines[3:]
+    random.shuffle(lx)
+    l1 = lx[0:train_size]
+    l2 = lx[train_size:]
+  else:
+    l1 = lines[3:3+train_size]
+    l2 = lines[3+train_size:]
+  
   with open(orangetab_file.rsplit('.', 1)[0]+'_train.tab', 'w') as f2:
     f2.write(lines[0])
     f2.write(lines[1])
     f2.write(lines[2])
-    for l in lines[3:3+train_size]:
+    for l in l1:
       f2.write(l)
     
   with open(orangetab_file.rsplit('.', 1)[0]+'_val.tab', 'w') as f2:
     f2.write(lines[0])
     f2.write(lines[1])
     f2.write(lines[2])
-    for l in lines[3+train_size:]:
+    for l in l2:
       f2.write(l)
       
   return [orangetab_file.rsplit('.', 1)[0]+'_train.tab', orangetab_file.rsplit('.', 1)[0]+'_val.tab']

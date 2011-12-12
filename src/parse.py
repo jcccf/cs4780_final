@@ -359,7 +359,7 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         to_split_median = []
     if valsplit:
         filename += '_v'
-        to_split_value = {'SEX':2} # to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
+        to_split_value = {'SEX':2, 'DRUGDEP':2, 'SEXPRED':2} # to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
     if uno:
         filename += '_u'
         use_uno = uno
