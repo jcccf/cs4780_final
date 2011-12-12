@@ -79,6 +79,7 @@ to_coarsify = []
 to_binarize = []
 to_split_median = []
 to_split_value = {}
+hist_split_value = {}
 use_uno = False
 filter_unknown = False
 
@@ -303,7 +304,7 @@ def to_orange_fmt(list, features, label, filename):
     
     # 3
     s += 'class' + '\t'*len(list[0]) + '\n'
-    print label
+    #print label
     features.remove(label)
     # 4
     for point in listcpy:
@@ -346,7 +347,7 @@ def to_svm_light(list, label, filename):
 #==============================================================================
 ''' output ''' # specify fields to process. All lists must be mutually exclusive
 def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, uno, balance, varsets):
-    global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median
+    global use_uno, to_split_value, to_binarize, to_coarsify, to_split_median, hist_split_value
     filename = '../data/do_20111201'
     if binarize:
         filename += '_b'
@@ -359,7 +360,8 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         to_split_median = []
     if valsplit:
         filename += '_v'
-        to_split_value = {'SEX':2, 'DRUGDEP':2, 'SEXPRED':2} # to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
+        to_split_value_indiv = {'SEX':2, 'DRUGDEP':2, 'SEXPRED':2} # to_split_value = {'INCMIN':12,'GRADE':5,'SEX':2}
+        to_split_value = dict(to_split_value_indiv.items() + hist_split_value.items())
     if uno:
         filename += '_u'
         use_uno = uno
@@ -378,7 +380,7 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
     ro = normalize(ro, features)
     
 
-    print features, "being written to", filename
+    #print features, "being written to", filename
     
     for label in labels:
         if balance:
@@ -488,13 +490,20 @@ if __name__ == '__main__':
     if 'CRIME' in varsets:
         offensevars.extend(['DOF','OGS','PCSOFF','PCSSUB','GRADE','DISP','COMPLETE'])
     if 'HIST' in varsets:
-        base = ['MUR','VM','RAP','KID','IVD','ARSPERS','ROBSBI','ROBMVSB','AGASBI','DRUGDTH','BUR','ETHF1','INCHOAT','ARS','ROB','ROBMV','AG','BUROTHR','AGIND','SEXASLT','F1','F2','DRG50G','DRG','F3','M1DEATH','WE','M1CHILD','M1DUI']
-        baseA = map(lambda x: x+'A', base)
-        baseC = map(lambda x: x+'C', base)
-        recordvars.extend(baseA)
-        recordvars.extend(baseC)
+        HIST_base = ['MUR','VM','RAP','KID','IVD','ARSPERS','ROBSBI','ROBMVSB','AGASBI','DRUGDTH','BUR','ETHF1','INCHOAT','ARS','ROB','ROBMV','AG','BUROTHR','AGIND','SEXASLT','F1','F2','DRG50G','DRG','F3','M1DEATH','WE','M1CHILD','M1DUI']
+        HIST_baseA = map(lambda x: x+'A', HIST_base)
+        HIST_baseC = map(lambda x: x+'C', HIST_base)
+        recordvars.extend(HIST_baseA)
+        recordvars.extend(HIST_baseC)
         recordvars.extend(['MIS'])
         offensevars.extend(['PRS'])
+        
+        hist_vars = HIST_baseA
+        hist_vars.extend(HIST_baseC)
+        hist_vars.extend(['MIS','PRS'])
+        for var in hist_vars:
+            hist_split_value[var] = 1
+            
     if 'ABOUT' in varsets:
         offensevars.extend(['DRUGDEP','SEXPRED'])
     
