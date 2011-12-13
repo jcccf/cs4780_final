@@ -293,11 +293,11 @@ def to_orange_fmt(list, features, label, filename):
     s += '\n'
     
     # 2
-    if field_types[label] == 'd':
-        for val in get_field_values(list, label):
-            s += val + ' '
-    else:
-        s += field_types[label]
+    #if field_types[label] == 'd':
+    #    for val in get_field_values(list, label):
+    #        s += val + ' '
+    #else:
+    s += field_types[label]
         
     s += '\t'
     s += f_types + '\n'
@@ -369,12 +369,12 @@ def gen_file(list, features, labels, binarize, coarsify, medianize, valsplit, un
         filename += '_' + '_'.join(varsets)
         
     # keep only the labels we want, remove others
-    labels_to_remove = possible_labels[:]
+    """labels_to_remove = possible_labels[:]
     for l in labels:
         labels_to_remove.remove(l)
     for l in labels_to_remove:
         if l in features:
-            features.remove(l)
+            features.remove(l)"""
 
     ro, features = process_vars(list, features) # processes date fields, coarsifies, binarizes
     ro = normalize(ro, features)
@@ -451,18 +451,18 @@ def balance_list(list, label):
 def parse_args(args):
     parser = argparse.ArgumentParser()
     
-    global filter_unknown
-    parser.add_argument('-f', '--filter_unknown', action='store_true')
+    parser.add_argument('-l', '--labels', nargs='+', required=True)
+    parser.add_argument('-s', '--varsets', nargs='+', required=True)
+    parser.add_argument('-f', '--filterunknown', action='store_true')
     parser.add_argument('-b', '--binarize', action='store_true')
     parser.add_argument('-c', '--coarsify', action='store_true')
     parser.add_argument('-m', '--medianize', action='store_true')
     parser.add_argument('-v', '--valsplit', action='store_true')
     parser.add_argument('-u', '--uno', action='store_true')
     parser.add_argument('-d', '--balance', action='store_true')
-    parser.add_argument('-l', '--labels', nargs='+', required=True)
-    parser.add_argument('-s', '--varsets', nargs='+', required=True)
     
     ns = parser.parse_args(args)
+    print ns
     return vars(ns)
    
 if __name__ == '__main__':
@@ -480,7 +480,7 @@ if __name__ == '__main__':
     
     ''' CHANGE ME BEGIN'''
     ''' Possible varsets: HIST, ABOUT, DEMO, CRIME '''
-    filter_unknown = args['filter_unknown']
+    filter_unknown = args['filterunknown']
     varsets = args['varsets']
     labels = args['labels']
     ''' CHANGE ME END'''
