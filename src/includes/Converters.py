@@ -41,7 +41,8 @@ def orangetab_to_svmlight(orangetab_file, output_file):
               # else:
               #   fval = 1
             else:
-              rest[i] = c
+              if len(c) > 0: # Only include features which are non-null
+                rest[i] = c
           f2.write('%s %s\n' % (fval, " ".join(['%s:%s' % (k,v) for k,v in rest.iteritems()])))
         i += 1  
         

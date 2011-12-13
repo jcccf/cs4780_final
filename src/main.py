@@ -3,27 +3,25 @@ from includes import *
 #
 # CONSTANTS
 #
-TRAIN_FILE = '../data/do_20111201_b_v_u_bal_demo_train.tab'
-VAL_FILE = '../data/do_20111201_b_v_u_bal_demo_val.tab'
+TRAIN_FILE = '../data/inkmind_bal_train.tab'
+TRAIN_FILE_SVM = '../data_svm/inkmind_bal.train'
+VAL_FILE = '../data/inkmind_bal_val.tab'
+VAL_FILE_SVM = '../data_svm/inkmind_bal.val'
 
 #
 # Example File Balanced Label Classes and so on
 #
-# Converters.balance_orangetab('../data/do_20111201_b_v_u.tab', '../data/do_20111201_b_v_u_bal.tab')
+Converters.balance_orangetab('../data/inkmind.tab', '../data/inkmind_bal.tab')
 # Converters.normalize_orange('../data/do_20111201_b_v_u_bal.tab','../data/do_20111201_b_v_u_bal_norm.tab')
-# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_crime.tab')
+Converters.split_orangetab_into_2('../data/inkmind_bal.tab')
 # Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab')
 # Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_base.tab')
 
 #
 # SVMLight File Converters
 #
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_demo_train.tab', '../data_svm/do_20111201_b_v_u_bal_demo_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_crime_train.tab', '../data_svm/do_20111201_b_v_u_bal_crime_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_base_train.tab', '../data_svm/do_20111201_b_v_u_bal_base_train.train')
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_demo_val.tab', '../data_svm/do_20111201_b_v_u_bal_demo_val.val')
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_crime_val.tab', '../data_svm/do_20111201_b_v_u_bal_crime_val.val')
-# Converters.orangetab_to_svmlight('../data/do_20111201_b_v_u_bal_base_val.tab', '../data_svm/do_20111201_b_v_u_bal_base_val.val')
+Converters.orangetab_to_svmlight(TRAIN_FILE, TRAIN_FILE_SVM)
+Converters.orangetab_to_svmlight(VAL_FILE, VAL_FILE_SVM)
 
 #
 # Tuners
@@ -31,7 +29,7 @@ VAL_FILE = '../data/do_20111201_b_v_u_bal_demo_val.tab'
 # ot = OrangeML.OrangeTuners(TRAIN_FILE)
 # ot.tune_decision_tree()
 # ot.tune_knn()
-# MSVMLight.tune_parameters(TRAIN_FILE)
+MSVMLight.tune_parameters(TRAIN_FILE_SVM)
 
 #
 # Cross-validation and so on

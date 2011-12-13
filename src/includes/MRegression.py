@@ -31,8 +31,14 @@ class MRegression:
         lines = lines[0].split('\r')
         lines = [l+'\n' for l in lines]
       attributes = lines[0].replace('\n','').split('\t')
+      select_x_new = list(self.select_x)
       for x in self.select_x:
-        select_x_indices.append(attributes.index(x))
+        if x not in attributes: # If an attribute specified doesn't exist
+          print "Removing Attribute ", x
+          select_x_new.remove(x)
+        else:
+          select_x_indices.append(attributes.index(x))
+      self.select_x = select_x_new
       select_y_index = attributes.index(self.select_y)
       for i in range(3, len(lines)):
         vals = lines[i].replace('\n', '').split('\t')
@@ -50,7 +56,7 @@ class MRegression:
         if b.std() == 0:
           eyes.append(i)
         i += 1
-      print eyes
+      print "Removed sd=0 attributes ", eyes
       a = np.delete(a, eyes, 0)
       for eye in eyes:
         self.select_x.remove(attributes[eye])
@@ -81,33 +87,43 @@ class MRegression:
     classified_file = test_file+".class"
     classified_file_original = test_file+".class_orig"
     
-    for t in [0]:
-      print "---"
-      print "SVM Regression..."
-      MSVMLight.learn(train_file, model_file, z='r', t=t)
-      print "Learnt Model"
-      MSVMLight.classify(test_file, model_file, classified_file)
-      MSVMLight.classify(train_file, model_file, classified_file_original)
+    print "Writing output to " + self.base_file+"_svm.txt"
+    with open(self.base_file+"_svm.txt", 'w') as fx:
+      d = 1
+      for t in [0, 1, 1, 1, 1, 1, 2]:
+        print "---"
+        print "SVM Regression..."
+        if t != 1:
+          MSVMLight.learn(train_file, model_file, z='r', t=t)
+        else:
+          MSVMLight.learn(train_file, model_file, z='r', t=t, d=d)
+          d += 1
+        print "Learnt Model"
+        MSVMLight.classify(test_file, model_file, classified_file)
+        MSVMLight.classify(train_file, model_file, classified_file_original)
     
-      with open(test_file, 'r') as f:
-        ytrue = f.readlines()
-        ytrue = [float(l.split(' ', 1)[0]) for l in ytrue]
+        with open(test_file, 'r') as f:
+          ytrue = f.readlines()
+          ytrue = [float(l.split(' ', 1)[0]) for l in ytrue]
     
-      with open(classified_file, 'r') as f:
-        yguess = f.readlines()
-        yguess = [float(l.replace('\n', '')) for l in yguess]
+        with open(classified_file, 'r') as f:
+          yguess = f.readlines()
+          yguess = [float(l.replace('\n', '')) for l in yguess]
         
-      with open(train_file, 'r') as f:
-        ytrue_orig = f.readlines()
-        ytrue_orig = [float(l.split(' ', 1)[0]) for l in ytrue_orig]
+        with open(train_file, 'r') as f:
+          ytrue_orig = f.readlines()
+          ytrue_orig = [float(l.split(' ', 1)[0]) for l in ytrue_orig]
 
-      with open(classified_file_original, 'r') as f:
-        yguess_orig = f.readlines()
-        yguess_orig = [float(l.replace('\n', '')) for l in yguess_orig]
-    
-      print metrics.r2_score(ytrue, yguess), metrics.r2_score(ytrue_orig, yguess_orig)
-      print metrics.mean_square_error(ytrue, yguess), metrics.mean_square_error(ytrue_orig, yguess_orig)
-      print "---"
+        with open(classified_file_original, 'r') as f:
+          yguess_orig = f.readlines()
+          yguess_orig = [float(l.replace('\n', '')) for l in yguess_orig]
+        
+        fx.write("---t=%d d=%d\n" % (t, d))
+        fx.write("R2 (val/test)\n")
+        fx.write("%f %f \n" % metrics.r2_score(ytrue, yguess), metrics.r2_score(ytrue_orig, yguess_orig))
+        fx.write("MSE (val/test)\n")
+        fx.write("%f %f \n" % metrics.mean_square_error(ytrue, yguess), metrics.mean_square_error(ytrue_orig, yguess_orig))
+        fx.write("---\n")
 
   def pca(self, n_components=None):
     num_comps = len(self.X[0]) if n_components == None else n_components
@@ -159,12 +175,30 @@ class MRegression:
       f.write("---\n")      
       # Do R Linear Regression
       lm_string = "y ~ x0"
+      data_frame_val = {}
+      data_frame_train = {}
       for i in range(len(self.select_x)):
         R.globalenv['x%d' % i] = R.FloatVector(X[:,i].tolist())
+        #data_frame_val['x%d' % i] = R.FloatVector(Xv[:,i].tolist())
+        #data_frame_train['x%d' % i] = R.FloatVector(X[:,i].tolist())
         if i > 0:
           lm_string += " + x%d" % i
       R.globalenv['y'] = R.FloatVector(self.Y)
+      #data_frame_val['y'] = R.FloatVector(self.Yv)
+      #data_frame_train['y'] = R.FloatVector(self.Y)
+      #data_frame_val = R.DataFrame(data_frame_val)
+      #data_frame_train = R.DataFrame(data_frame_train)
+      #R.r.attach(data_frame_train)
       fit = R.r.lm(lm_string)
-      f.write("%s\n" % R.r.summary(fit))    
+      f.write("%s\n" % R.r.summary(fit))
+      #R.r.attach(data_frame_val)
+      for i in range(len(self.select_x)):
+        R.globalenv['x%d' % i] = R.FloatVector(Xv[:,i].tolist())
+      R.globalenv['y'] = R.FloatVector(self.Yv)
+      predicted = R.r.predict(fit)
+      YpvR = []
+      for p in predicted:
+        YpvR.append(p)
+      print metrics.r2_score(self.Yv, Ypv)
       # fit2 = R.r.lm('y ~ x1 + x2 + x3')
       # print R.r.anova(fit, fit2)
