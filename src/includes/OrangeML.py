@@ -42,7 +42,7 @@ class OrangeClassifiers:
     self.output_classified(classifier, '../data_stat/bayes.txt')
   
   def print_log_reg(self):
-    classifier = orngLR.LogRegLearner(removeSingular=1)
+    classifier = orngLR.LogRegLearner(self.data, removeSingular=1)
     self.output_classified(classifier, '../data_stat/logreg.txt')
   
   def print_linear_svm(self):
