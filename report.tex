@@ -116,30 +116,27 @@ Can we recover the rules judges use to determine sentences by investigating info
 
 TODO: How did we select features?
 
-\begin{enumerate}
-	\item COMPLETE - Offense Completed/Inchoate
-	\item COUNTY - Sentencing County
-	\item DAASS - Drug and Alcohol Assessment
-	\item DISP - Type of Disposition
-	\item DOB - Date of Birth
-	\item DOF - Date of Offense
-	\item DOSAGE - Age at Sentencing
-	\item DOS - Date of Sentence
-	\item FINE - Amount of Fine Imposed
-	\item GRADE - Statutory Offense Grade
-	\item INCMIN - Minimum Length of Incarceration
-	\item INCMAX - Maximum Length of Incarceration
-	\item INCTYPE - Type of Incarceration
-	\item PCSOFF - PCS Offense Code
-	\item PCSSUB - PCS Offense Subcode
-	\item RACE - Ethnicity of Offender
-	\item SEX - Gender of Offender
-\end{enumerate}
+\begin{description}
+	\item [COMPLETE] Offense Completed/Inchoate
+	\item [COUNTY] Sentencing County
+	\item [DAASS] Drug and Alcohol Assessment
+	\item [DISP] Type of Disposition
+	\item [DOB] Date of Birth
+	\item [DOF] Date of Offense
+	\item [DOSAGE] Age at Sentencing
+	\item [DOS] Date of Sentence
+	\item [FINE] Amount of Fine Imposed
+	\item [GRADE] Statutory Offense Grade
+	\item [INCMIN] Minimum Length of Incarceration
+	\item [INCMAX] Maximum Length of Incarceration
+	\item [INCTYPE] Type of Incarceration
+	\item [PCSOFF] PCS Offense Code
+	\item [PCSSUB] PCS Offense Subcode
+	\item [RACE] Ethnicity of Offender
+	\item [SEX] Gender of Offender
+\end{description}
 
 \subsection{Feature Processing}
-
-TODO: What are these?
-
 \begin{description}
 	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
 	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
@@ -148,11 +145,13 @@ TODO: What are these?
 \end{description}
 
 \subsection{Datasets}
-\begin{enumerate}
-	\item DEMO - SEX, DOFAGE, RACE (should add DAASS in the future)
-	\item CRIME - FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item BASE - Features from both DEMO and CRIME
-\end{enumerate}
+\begin{description}
+	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
+	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
+	\item [HIST] \hfill \\TODO
+	\item [ABOUT] \hfill \\TODO
+	\item [BASE] \hfill \\Features from both DEMO and CRIME
+\end{description}
 
 The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
 
