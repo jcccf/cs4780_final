@@ -31,6 +31,8 @@ class MRegression:
         lines = lines[0].split('\r')
         lines = [l+'\n' for l in lines]
       attributes = lines[0].replace('\n','').split('\t')
+      # print lines[0]
+      # print attributes
       select_x_new = list(self.select_x)
       for x in self.select_x:
         if x not in attributes: # If an attribute specified doesn't exist
@@ -59,7 +61,8 @@ class MRegression:
       print "Removed sd=0 attributes ", eyes
       a = np.delete(a, eyes, 0)
       for eye in eyes:
-        self.select_x.remove(attributes[eye])
+        print self.select_x[eye]
+        self.select_x.remove(self.select_x[eye])
       a = np.transpose(a)
     
     return [a, y_array]
@@ -140,8 +143,11 @@ class MRegression:
       f.write("Components\n")
       for j, c in enumerate(self.pca.components_):
         f.write("---%d---\n" % j)
+        comps = []
         for i, n in enumerate(c):
-          f.write("%e \t %s\n" % (n, self.select_x[i]))
+          comps.append((n,self.select_x[i]))
+        for n, w in sorted(comps, key=lambda x:-x[0]):
+          f.write("%e \t %s\n" % (n, w))
       f.write("------\n")
   
   def regression(self, type='PCA'):
@@ -161,6 +167,7 @@ class MRegression:
         f.write("---\n")
         f.write("Linear Components\n")
         for i, x in enumerate(self.select_x):
+          
           f.write("%d\t%s\n" % (i,x))
       f.write("---\n")
       f.write("%s Regression...\n" % type)
@@ -179,26 +186,42 @@ class MRegression:
       data_frame_train = {}
       for i in range(len(self.select_x)):
         R.globalenv['x%d' % i] = R.FloatVector(X[:,i].tolist())
-        #data_frame_val['x%d' % i] = R.FloatVector(Xv[:,i].tolist())
+        data_frame_val['x%d' % i] = R.FloatVector(Xv[:,i].tolist())
         #data_frame_train['x%d' % i] = R.FloatVector(X[:,i].tolist())
         if i > 0:
           lm_string += " + x%d" % i
       R.globalenv['y'] = R.FloatVector(self.Y)
-      #data_frame_val['y'] = R.FloatVector(self.Yv)
+      data_frame_val['y'] = R.FloatVector(self.Yv)
       #data_frame_train['y'] = R.FloatVector(self.Y)
-      #data_frame_val = R.DataFrame(data_frame_val)
+      data_frame_val = R.DataFrame(data_frame_val)
       #data_frame_train = R.DataFrame(data_frame_train)
       #R.r.attach(data_frame_train)
       fit = R.r.lm(lm_string)
+      
+      aic = R.r.AIC(fit)
+      
       f.write("%s\n" % R.r.summary(fit))
+      f.write("%s\n" % aic)
+      
       #R.r.attach(data_frame_val)
+      
+      # Print Test R2 Value
+      predicted = R.r.predict(fit)
+      YpR = []
+      for p in predicted:
+        YpR.append(p)
+      f.write("Test: %s\n" % metrics.r2_score(self.Y, YpR))
+      
+      # Print Validation R2 Value
       for i in range(len(self.select_x)):
         R.globalenv['x%d' % i] = R.FloatVector(Xv[:,i].tolist())
       R.globalenv['y'] = R.FloatVector(self.Yv)
-      predicted = R.r.predict(fit)
+      predicted = R.r.predict(fit, newdata=data_frame_val)
       YpvR = []
       for p in predicted:
         YpvR.append(p)
-      print metrics.r2_score(self.Yv, Ypv)
+      f.write("Val: %s\n" % metrics.r2_score(self.Yv, YpvR))
       # fit2 = R.r.lm('y ~ x1 + x2 + x3')
       # print R.r.anova(fit, fit2)
+      
+      #print aic[0]

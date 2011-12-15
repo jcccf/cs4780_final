@@ -1,6 +1,7 @@
 import random
 from numpy import *
 from math import floor, ceil
+import os.path
 
 def base_to_orangetab(svmlight_file, output_file):
   '''Convert File from the Base Format to Orange Tabular Format'''
@@ -91,13 +92,20 @@ def split_orangetab_into_2(orangetab_file, train_frac=.8, randomize=False):
   train_size = int(floor((len(lines) - 3) * train_frac))
   
   if randomize:
-    lx = lines[3:]
-    random.shuffle(lx)
-    l1 = lx[0:train_size]
-    l2 = lx[train_size:]
-  else:
-    l1 = lines[3:3+train_size]
-    l2 = lines[3+train_size:]
+    if not os.path.exists(orangetab_file+".rand"):
+      print "Creating Random File..."
+      lx = lines[3:]
+      random.shuffle(lx)
+      with open(orangetab_file+".rand", 'w') as f:
+        for i in [0, 1, 2]:
+          f.write(lines[i])
+        for l in lx:
+          f.write(l)
+    with open(orangetab_file+".rand", 'r') as f:
+      lines = f.readlines()
+    
+  l1 = lines[3:3+train_size]
+  l2 = lines[3+train_size:]
   
   with open(orangetab_file.rsplit('.', 1)[0]+'_train.tab', 'w') as f2:
     f2.write(lines[0])
