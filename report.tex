@@ -397,9 +397,9 @@ kNN (Tuned) & - & - & - & $\sim$ \\
 \hline
 \end{tabular}
 
-\section{Regression Analysis}
+\subsubsection{Regression Analysis}
 
-\subsubsection{Linear Regression}
+\textbf{Linear Regression}
 The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}. Here, we see that the Akaike information criterion (AIC) is lowest for ALL, given that every other feature set is a subset of it. Surprisingly, ABOUT, despite having only 2 features, best predicts minimum incarceration. Nevertheless, we see here that using demographic features (DEMO) results in the highest AIC score, again demonstrating that by-and-large, sentences lengths are decided independent of one's age, gender or race.
 \begin{table}[h]
   \centering
@@ -428,7 +428,7 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
 \end{table}
 
 
-\subsubsection{Principle Component Regression}
+\textbf{Principle Component Regression}
 Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained, are listed in Table \ref{TablePCR1}, along with the original attributes that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components.
 
 \begin{table}[h]
@@ -483,7 +483,7 @@ Principle component decomposition was performed on each dataset, and the top com
   \label{TablePCR2}
 \end{table}
 
-\subsubsection{SVM Regression}
+\textbf{SVM Regression}
 SVM regression was also performed, and the results summarized in Table \ref{TableSVMReg}.
 \begin{table}[h]
   \centering
