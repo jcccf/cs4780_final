@@ -101,11 +101,11 @@ def get_separating_hyperplane(model_file):
 
 def tune_parameters(train_file):
   max_ca, max_par = 0.0, None
-  for c in [0.0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]: # [0.0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]
+  for c in [None]: # [0.0, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]
     # Linear
     t = 0
     acc, cc, ic = get_cross_val_accuracy(train_file, c=c)
-    print "c=%f\tt=%d\n%f\t%d\t%d" % (c, t, acc, cc, ic)
+    print "t=%d\n%f\t%d\t%d" % (t, acc, cc, ic)
     if acc > max_ca:
       max_ca = acc
       max_par = {'c': c, 't': t}
@@ -114,7 +114,7 @@ def tune_parameters(train_file):
     t = 1
     for d in [0, 1, 2, 3, 4, 5]:
       acc, cc, ic = get_cross_val_accuracy(train_file, c=c, t=t, d=d)
-      print "c=%f\tt=%d\td=%d\n%f\t%d\t%d" % (c, t, d, acc, cc, ic)
+      print "t=%d\td=%d\n%f\t%d\t%d" % (t, d, acc, cc, ic)
       if acc > max_ca:
         max_ca = acc
         max_par = {'c': c, 't': t, 'd': d}
@@ -123,7 +123,7 @@ def tune_parameters(train_file):
     t = 2
     for g in [500, 200, 100, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.001, 0.0001, 0.00001]:
       acc, cc, ic = get_cross_val_accuracy(train_file, c=c, t=t, g=g)
-      print "c=%f\tt=%d\tg=%f\n%f\t%d\t%d" % (c, t, g, acc, cc, ic)
+      print "t=%d\tg=%f\n%f\t%d\t%d" % (t, g, acc, cc, ic)
       if acc > max_ca:
         max_ca = acc
         max_par = {'c': c, 't': t, 'g': g}

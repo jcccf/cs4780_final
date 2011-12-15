@@ -3,19 +3,17 @@ from includes import *
 #
 # CONSTANTS
 #
-TRAIN_FILE = '../data/inkmind_bal_train.tab'
-TRAIN_FILE_SVM = '../data_svm/inkmind_bal.train'
-VAL_FILE = '../data/inkmind_bal_val.tab'
-VAL_FILE_SVM = '../data_svm/inkmind_bal.val'
+TRAIN_FILE = '../data/do_20111201_b_v_u_bal_demo_train.tab'
+TRAIN_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_train.train'
+VAL_FILE = '../data/do_20111201_b_v_u_bal_demo_val.tab'
+VAL_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_val.val'
 
 #
 # Example File Balanced Label Classes and so on
 #
-Converters.balance_orangetab('../data/inkmind.tab', '../data/inkmind_bal.tab')
+#Converters.balance_orangetab('../data/do_20111201_b_v_u_demo.tab', '../data/do_20111201_b_v_u_bal_demo.tab')
 # Converters.normalize_orange('../data/do_20111201_b_v_u_bal.tab','../data/do_20111201_b_v_u_bal_norm.tab')
-Converters.split_orangetab_into_2('../data/inkmind_bal.tab')
-# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab')
-# Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_base.tab')
+Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab')
 
 #
 # SVMLight File Converters
@@ -26,9 +24,9 @@ Converters.orangetab_to_svmlight(VAL_FILE, VAL_FILE_SVM)
 #
 # Tuners
 #
-# ot = OrangeML.OrangeTuners(TRAIN_FILE)
-# ot.tune_decision_tree()
-# ot.tune_knn()
+#ot = OrangeML.OrangeTuners(TRAIN_FILE)
+#ot.tune_decision_tree()
+#ot.tune_knn()
 MSVMLight.tune_parameters(TRAIN_FILE_SVM)
 
 #
@@ -54,13 +52,13 @@ attrs = { # Attributes to set after tuning
 # Significance Tests
 #
 # Converters.write_actual_labels(VAL_FILE, '../data_stat/original.txt')
-Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
+"""Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
   '../data_stat/dtree_demo.txt',
   '../data_stat/linsvm.txt',
   '../data_stat/logreg.txt',
   '../data_stat/knn.txt',
   '../data_stat/bayes.txt'
-], verbose=True)
+], verbose=True)"""
 
 #
 # IGNORE ALL BELOW

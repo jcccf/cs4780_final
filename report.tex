@@ -1,4 +1,4 @@
-\documentclass[]{article}
+\documentclass[11pt,letter]{article}
 
 \usepackage[]{geometry}
 \geometry{
@@ -32,28 +32,86 @@
 \providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
 
 \fancyhf{}
-\renewcommand{\headrulewidth}{0pt} % remove line at top
+\setlength{\headheight}{5pt}
+\setlength\headsep{25pt}
+%\renewcommand{\headrulewidth}{0pt} % remove line at top
 \lhead{\fancyplain{}{CS 4780 Final Project}}
 \rhead{\fancyplain{}{jc882, yl477, jp624}}
-\rfoot{\fancyplain{}{\thepage}}
+% \rfoot{\fancyplain{}{\thepage}}
+\cfoot{\thepage\ of \pageref{LastPage}}
+\usepackage{lastpage}
+
+%==Bookmarks==
+\usepackage{hyperref}
+\hypersetup{
+    % Document Information
+    pdftitle={},
+    pdfauthor={},
+    pdfkeywords={},
+    % Link Options
+    colorlinks={false},
+    linkcolor={white},
+    pagecolor={white},
+    % Display Options
+    bookmarks={true},
+    bookmarksopen={true},
+    pdfstartview={FitH},
+    pdfpagelayout={OneColumn},
+    pdfpagemode={UseOutlines}}
 
 \begin{document}
+%-------------------------------------------------------------------------------
+\begin{center}
+% ==================TITLE PAGE==================
+% Location Information
+    {\large \sc Cornell University $\bullet$ Ithaca, NY}
+    \vspace{42mm}
+    % Title
+    \\ {\Huge \textbf {CS 4780\vspace{2mm}
+    \\Final Project Report\vspace{8mm}\huge\\Predicting Criminal Sentences}}
+    \vspace{22mm}
+    \normalsize
+    % Author
+    \\ Justin Cheng
+    \\ Yunchi Luo
+    \\ Jane\,\,\,Jae Won\,\,\,\,Park
+    % Email
+    \\ \{jc882, yl477, jp624\}@cornell.edu
+    
+    \vspace{8mm}
+    
+    \vspace{12mm}
+    % Date
+    
+    December 16, 2011
+ \footnote{This version was last updated and generated on \today.}
+\end{center}
 
-\title{CS 4780 Final Project: Predicting Crimial Sentences}
-\author{Justin Cheng \emph{jc882}, Yunchi Luo \emph{yl477}, Jane Jae Won Park \emph{jp624}}
-\date{\today}
-\maketitle
+\vspace{20mm}
 
-\hrule
-\vskip 1em
+%-------------------------------------------------------------------------------
+\newpage
+\tableofcontents
+\newpage
+
+%-------------------------------------------------------------------------------
+
+%\title{CS 4780 Final Project: Predicting Crimial Sentences}
+%\author{Justin Cheng \emph{jc882}, Yunchi Luo \emph{yl477}, Jane Jae Won Park \emph{jp624}}
+%\date{\today}
+%\maketitle
+
+%\hrule
+%\vskip 1em
 
 \section{Introduction}
 
 \subsection{Motivation}
-
+If two different individuals commit an identical or similar crime that should be given same sentences by the non-discriminatory nature of our laws, is it actually the case that the two end up receiving the same sentences? The sentence is, after all, determined by a human who uses some combination of his objective knowledge of law and subjective judgment, perhaps even some whimsical impulse. 
+While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various factors affect what kind of sentences are handed out to criminals, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves. Existing studies on criminal justice use traditional statistical techniques and limited case studies. We seek to employ machine learning techniques to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon’s sentence.
 \subsection{Statement of Task}
-
-\section{Method}
+Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
+\section{Methods}
 
 \subsection{Feature Selection}
 
@@ -445,6 +503,10 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \caption{SVM regression listing components with the highest coefficients (in linear case)}
   \label{TableSVMReg}
 \end{table}
+
+\section{Related Work}
+
+\section{Future Work}
 
 \section{Conclusion}
 
