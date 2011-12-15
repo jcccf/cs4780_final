@@ -338,7 +338,7 @@ kNN (Tuned) & - & - & - & $\sim$ \\
 \section{Regression Analysis}
 
 \subsection{Linear Regression}
-The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}.
+The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}. Here, we see that the Akaike information criterion (AIC) is lowest for ALL, given that every other feature set is a subset of it. Surprisingly, ABOUT, despite having only 2 features, best predicts minimum incarceration. Nevertheless, we see here that using demographic features (DEMO) results in the highest AIC score, again demonstrating that by-and-large, sentences lengths are decided independent of one's age, gender or race.
 \begin{table}[h]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
@@ -348,14 +348,17 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
   \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & COUNTY48 & 0.249 & 2\e{-16} \\
   &&& COUNTY39 & 0.183 & 4.73\e{-16} \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{???\e{4}} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & PCSOFF751543 & 2.76 & 4.73\e{-7} \\
+  &&& PCSOFF353009 & 1.34 & 1.19\e{-2} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{1.57\e{4}} & \multirow{2}{*}{3.44\e{-3}} & SEXPRED & -3.78\e{-1} & 8.55\e{-4} \\
+  &&& - & - & - \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{2.86\e{4}} & \multirow{2}{*}{-7.82\e{-3}} & RAPC & 7.28\e{-1} & 3.49\e{-4} \\
+  &&& F1C & 7.34\e{-2} & 4.43\e{-3} \\
+  \hline
+  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & PCSOFF185503 & 1.08 & 3.58\e{-3} \\
+  &&& COMPLETE & 1.97\e{-1} & 2.68\e{-4} \\
   \hline
   \end{tabular}
   \caption{Linear regression listing components with the highest coefficients}
@@ -375,14 +378,17 @@ Principle component decomposition was performed on each dataset, and the top com
   \multirow{2}{*}{DEMO} & 1 & 2.70\e{-1} & RACE1, COUNTY67, COUNTY40, COUNTY54, SEX \\
   & 2 & 7.16\e{-2} & SEX, RACE2, COUNTY2, RACE1, COUNTY23 \\
   \hline
-  \multirow{2}{*}{CRIME} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{CRIME} & 1 & 1.84\e{-1} & PCSSUB\_B, OGS, PCSSUB\_D, PCSOFF183502, PCSOFF183701 \\
+  & 2 & 1.57\e{-1} & DISP2, OGS, DISP4, PCSSUB\_B, DISP5 \\
   \hline
-  \multirow{2}{*}{ABOUT} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{ABOUT} & 1 & 9.67\e{-1} & DRUGDEP, SEXPRED \\
+  & 2 & 3.27\e{-2} & SEXPRED, DRUGDEP \\
   \hline
-  \multirow{2}{*}{HIST} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{HIST} & 1 & 4.13\e{-1} & PRS, MIS, F3C, DRGC, F1C \\
+  & 2 & 1.29\e{-1} & MIS, AGC, M1CHILDA, WEA, M1DUIA  \\
+  \hline
+  \multirow{2}{*}{ALL} & 1 & 1.20\e{-1} & RACE1, PCSOFF753731, PCSSUB\_A, DISP1, DOFUNO \\
+  & 2 & 8.55\e{-2} & MIS, PRS, F3C, PCSSUB\_A, DOFUNO \\
   \hline
   \end{tabular}
   \caption{PCA decomposition listing top components (\#) by variance explained (V.E.) and makeup}
@@ -398,17 +404,20 @@ Principle component decomposition was performed on each dataset, and the top com
   \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & 17 & 1.19\e{-2} & 2.05\e{-1} & <2\e{-16} \\
   &&& 18 & 1.14\e{-2} & -2.07\e{-1} & <2\e{-16} \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{8.05\e{4}} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & 111 & 1.03\e{-4} & -1.64 & 2.58\e{-15} \\
+  &&& 113 & 1.02\e{-4} & -1.89 & <2\e{-16} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{1.57\e{4}} & \multirow{2}{*}{3.44\e{-3}} & 2 & 3.27\e{-2} & 1.19\e{-2} & 8.55\e{-4} \\
+  &&& - & - & - & - \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{2.86\e{4}} & \multirow{2}{*}{-7.82\e{-3}} & 37 & 7.21\e{-4} & 5.97\e{-1} & 7.71\e{-3} \\
+  &&& 30 & 1.14\e{-3} & -3.54\e{-1} & 4.67\e{-2} \\
+  \hline
+  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & - & - & - & - \\
+  &&& - & - & - & - \\
   \hline
   \end{tabular}
-  \caption{PCR listing components with the highest coefficients}
+  \caption{PCR listing significant components with the highest absolute coefficients}
   \label{TablePCR2}
 \end{table}
 
