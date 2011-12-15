@@ -140,12 +140,12 @@ TODO: How did we select features?
 
 TODO: What are these?
 
-\begin{enumerate}
-	\item \emph{b/nb} Binarization
-	\item \emph{c/nc} Coarsification
-	\item \emph{\_/uno} Date field separation
-	\item \emph{\_/balN} Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
-\end{enumerate}
+\begin{description}
+	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
+	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
+	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
+	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
+\end{description}
 
 \subsection{Datasets}
 \begin{enumerate}
