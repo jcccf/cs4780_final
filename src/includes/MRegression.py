@@ -60,9 +60,11 @@ class MRegression:
         i += 1
       print "Removed sd=0 attributes ", eyes
       a = np.delete(a, eyes, 0)
+      sx_new = list(self.select_x)
       for eye in eyes:
         print self.select_x[eye]
-        self.select_x.remove(self.select_x[eye])
+        sx_new.remove(self.select_x[eye])
+      self.select_x = sx_new
       a = np.transpose(a)
     
     return [a, y_array]
@@ -93,7 +95,7 @@ class MRegression:
     print "Writing output to " + self.base_file+"_svm.txt"
     with open(self.base_file+"_svm.txt", 'w') as fx:
       d = 1
-      for t in [0, 1, 1, 1, 1, 1, 2]:
+      for t in [0]: #[0, 1, 1, 1, 1, 1, 2]:
         print "---"
         print "SVM Regression..."
         if t != 1:
