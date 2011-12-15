@@ -194,12 +194,18 @@ We also employ the use of principle component analysis (PCA), in order to better
 
 As in the binary task, we trained a regression classifier on 80\% of the data, while validating it on the remaining 20\%.
 
-\section{Results and Discussion}
+\section{Experimental Evaluation}
+\subsection{Methdology}
+TODO: overview of evaluation methodology, what we used to measure performance
 
-\subsection{Cross-Validation Set Accuracy}
+TODO: training/test data used, why is it realistic or interesting?
+
+\subsection{Results}
+TODO: change all tables to charts
+\subsubsection{Cross-Validation Set Accuracy}
 The classification accuracies listed below is the accuracy obtained on 10-fold cross-validation.
 
-\subsubsection{DEMO}
+\textbf{DEMO}
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
@@ -212,7 +218,7 @@ kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
 \hline
 \end{tabular}
 
-\subsubsection{CRIME}
+\textbf{CRIME}
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
@@ -224,7 +230,7 @@ kmeans  & 0.769 & 381  &  110 &   121  &  388  \\
 \hline
 \end{tabular}
 
-\subsubsection{BASE}
+\textbf{BASE}
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
@@ -236,7 +242,7 @@ kmeans  & 0.773  &  400  &  125  &  102  &  373  \\
 \hline
 \end{tabular}
 
-\subsection{Validation Set Accuracy}
+\subsubsection{Validation Set Accuracy}
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & DEMO & CRIME & BASE \\
@@ -249,9 +255,9 @@ kmeans  & 0.616 & 0.777  &  0.758   \\
 \hline
 \end{tabular}
 
-\subsection{Linear Regression}
+\subsubsection{Linear Regression}
 
-\subsubsection{Correlation Heatmap}
+\textbf{Correlation Heatmap}
 % \includegraphics[scale=0.5]{report_figures/corr_heatmap.pdf} % Uncomment when ready to print
 
 TODO: Uncomment above line to import heatmap
@@ -259,7 +265,7 @@ TODO: Uncomment above line to import heatmap
 The figure above shows the correlation between all tested attributes, 
 with blue indicating uncorrelated attributes and yellow indicating highly correlated attributes.
 
-\subsubsection{Top Correlated Attributes}
+\textbf{Top Correlated Attributes}
 Ignoring correlation between binarized attributes (ex. GRADE\_1 and GRADE\_2), 
 and trivial correlations such as that between DOSAGE and DOFAGE and PCSOFF and GRADE (since unique PCSOFFs are assigned unique GRADEs in the codebook),
 
@@ -285,8 +291,8 @@ COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\INCMIN&	GRADE&	0.51992742 & 2.2e-16\
 
 TODO: Analysis
 
-\subsection{Decision Tree}
-\subsubsection{Optimal Parameters}
+\subsubsection{Decision Tree}
+\textbf{Optimal Parameters}
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
@@ -329,7 +335,7 @@ RACE_1=1
 |    |    |    |    . . .
 \end{verbatim}
 
-\subsection{SVM}
+\subsubsection{SVM}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Dataset & $C$ & $t$ & $t$-dependent. vars & Accuracy \\
@@ -338,7 +344,7 @@ DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
 \hline
 \end{tabular}
 
-\subsection{kNN}
+\subsubsection{kNN}
 \begin{tabular}{|c|c|c|}
 \hline
 Dataset & $k$ & Accuracy \\
@@ -350,9 +356,9 @@ BASE & 42 & 0.773 \\
 \end{tabular}
 
 
-\subsection{Significance Tests}
+\subsubsection{Significance Tests}
 
-\subsubsection{Binomial Sign Test}
+\textbf{Binomial Sign Test}
 Each cell in the table below corresponds to whether the learning algorithm in that row was significantly BETTER than the algorithm in that column, WORSE or similar ($\sim$).
 
 \paragraph{DEMO} \quad
@@ -391,9 +397,9 @@ kNN (Tuned) & - & - & - & $\sim$ \\
 \hline
 \end{tabular}
 
-\section{Regression Analysis}
+\subsubsection{Regression Analysis}
 
-\subsection{Linear Regression}
+\textbf{Linear Regression}
 The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}. Here, we see that the Akaike information criterion (AIC) is lowest for ALL, given that every other feature set is a subset of it. Surprisingly, ABOUT, despite having only 2 features, best predicts minimum incarceration. Nevertheless, we see here that using demographic features (DEMO) results in the highest AIC score, again demonstrating that by-and-large, sentences lengths are decided independent of one's age, gender or race.
 \begin{table}[h]
   \centering
@@ -422,7 +428,7 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
 \end{table}
 
 
-\subsection{Principle Component Regression}
+\textbf{Principle Component Regression}
 Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained, are listed in Table \ref{TablePCR1}, along with the original attributes that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components.
 
 \begin{table}[h]
@@ -477,7 +483,7 @@ Principle component decomposition was performed on each dataset, and the top com
   \label{TablePCR2}
 \end{table}
 
-\subsection{SVM Regression}
+\textbf{SVM Regression}
 SVM regression was also performed, and the results summarized in Table \ref{TableSVMReg}.
 \begin{table}[h]
   \centering
@@ -501,6 +507,9 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \caption{SVM regression listing components with the highest coefficients (in linear case)}
   \label{TableSVMReg}
 \end{table}
+
+\subsection{Discussion}
+TODO
 
 \section{Related Work}
 
