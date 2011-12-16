@@ -104,12 +104,20 @@
 %\vskip 1em
 
 \section{Introduction}
-Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making.
-If two different individuals commit an identical or similar crime that should be given same sentences by the non-discriminatory nature of our laws, is it actually the case that the two end up receiving the same sentences? The sentence is, after all, determined by a human who uses some combination of his objective knowledge of law and subjective judgment, perhaps even some whimsical impulse. 
-While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various factors affect what kind of sentences are handed out to criminals, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves. Existing studies on criminal justice use traditional statistical techniques and limited case studies. We seek to employ machine learning techniques to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon’s sentence.
+\begin{quote}
+``I \ldots solemnly swear that I will administer justice without respect to persons, and do equal right to the poor and to the rich, and that I will faithfully and impartially discharge and perform all the duties incumbent upon me\ldots under the Constitution and laws of the United States. So help me God.''
+-- Oath of United States Justices and Judges
+\end{quote}
+Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making. We entrust the decision-makers to be objective and fair in their assessments of crimes without regard to factors about the offender or offense irrelevant to the offense, such as the offender's race. Yet, historically this has not always been the case--in the United States, the era of slavery and later, Jim Crow segregation lends many examples--and in many countries today someone's race or gender can be the determining factor between life and death. 
+
+If two different individuals of different demographic backgrounds commit an identical or similar crime, will they receive the same sentence? In the U.S., the decision, after all, is made by humans who use some combination of objective sentencing criteria and subjective judgement, perhaps even whimsical impulse or personal bias. If the decisions are indeed made completely or mostly objectively, can we replace the humans with a machine instead? Countries like the Netherlands and Australia use forms of computerized sentencing to make this process more consistent and fair (Duker and Lodder). A prototype knowledge-based sentencing decision support system has been developed as well (Uri). 
+
+While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various extralegal factors affect criminal sentences, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves.  Case and offender characteristics have been found to have influence over sentence lengths (Chester). Data supports that the disposition of a trial is a heavy factor in the criminal's sentence (Ulmer). Existing studies on criminal justice, however, use traditional statistical techniques and limited case studies. Using the Pennsylvania Sentencing Data from 1998 (the most recent year available), we create several machines using combinations of machine learning techniques and different variable sets to create a machine that can determine criminal sentences and to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon's sentence.
 
 \section{Problem Definition and Methods}
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
+We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms which are detailed in following sections. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
+
 \subsection{Feature Selection}
 
 TODO: How did we select features?
@@ -134,14 +142,6 @@ TODO: How did we select features?
 	\item [SEX] Gender of Offender
 \end{description}
 
-\subsection{Feature Processing}
-\begin{description}
-	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
-	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
-	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
-	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
-\end{description}
-
 \subsection{Datasets}
 \begin{description}
 	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
@@ -150,8 +150,18 @@ TODO: How did we select features?
 	\item [ABOUT] \hfill \\TODO
 	\item [BASE] \hfill \\Features from both DEMO and CRIME
 \end{description}
-
 The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+
+\subsection{Feature Processing}
+\begin{description}
+	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
+	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
+	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
+	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
+\end{description}
+
+
+
 
 \subsection{Linear Regression}
 We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
@@ -214,7 +224,7 @@ c4.5   	 & 0.905 & 5554  & 423  &  794   & 5982 & 0.929 & 0.875\\
 linsvm 	 & 0.882 & 4996  & 150  &  1352  & 6255 & 0.971 & 0.787\\
 logreg 	 & 0.882 & 4991  & 149  &  1357  & 6256 & 0.971 & 0.786\\
 bayes  	 & 0.861 & 5274  & 694  &  1074  & 5711 & 0.884 & 0.831\\
-kmeans   & 0.905 & 5667  & 535  &  681   & 5870 & 0.914 & 0.893\\
+knn   & 0.905 & 5667  & 535  &  681   & 5870 & 0.914 & 0.893\\
 svmlight & 0.889 & 5046  & 167	&  1302	 & 6238 & 0.968 & 0.795\\ 
 \hline
 \end{tabular}
@@ -228,7 +238,7 @@ c4.5     & 0.821  &  4484  &  1003  &  926   &  4348 & 0.817 & 0.829\\
 linsvm   & 0.819  &  4605  &  1147  &  805   &  4204 & 0.801 & 0.851\\
 logreg   & 0.819  &  4613  &  1152  &  797   &  4199 & 0.800 & 0.853\\
 bayes    & 0.810  &  4394  &  1029  &  1016  &  4322 & 0.810 & 0.812\\
-kmeans   & 0.822  &  4485  &  995   &  925   &  4356 & 0.818 & 0.829\\
+knn   & 0.822  &  4485  &  995   &  925   &  4356 & 0.818 & 0.829\\
 svmlight & 0.831  &  4632  &  1077  &  778   &  4274 & 0.811 & 0.856\\
 \hline
 \end{tabular}
@@ -242,7 +252,7 @@ c4.5     & 0.923 & 4823 & 356  &  458   &  4947 & 0.931 & 0.913\\
 linsvm   & 0.919 & 4716 & 293  &  565   &  5010 & 0.942 & 0.893\\ 
 logreg   & 0.919 & 4710 & 291  &  571   &  5012 & 0.942 & 0.892\\ 
 bayes    & 0.886 & 4897 & 820  &  384   &  4483 & 0.857 & 0.927\\
-kmeans   & 0.896 & 4647 & 464  &  634   &  4839 & 0.909 & 0.880\\
+knn   & 0.896 & 4647 & 464  &  634   &  4839 & 0.909 & 0.880\\
 svmlight & 0.925 & 4822 & 313  &  459   &  4990 & 0.939 & 0.913\\
 \hline
 \end{tabular}
@@ -256,7 +266,7 @@ c4.5     & 0.817 & 4344  & 953   & 1012 &  4452 & 0.820 & 0.811\\
 linsvm   & 0.811 & 4447  & 1121  & 909  &  4284 & 0.799 & 0.830\\
 logreg   & 0.812 & 4475  & 1140  & 881  &  4265 & 0.797 & 0.836\\ 
 bayes    & 0.807 & 4311  & 1029  & 1045 &  4376 & 0.807 & 0.805\\ 
-kmeans   & 0.817 & 4375  & 986   & 981  &  4419 & 0.816 & 0.817\\ 
+knn   & 0.817 & 4375  & 986   & 981  &  4419 & 0.816 & 0.817\\ 
 svmlight & 0.823 & 4541  & 1103  & 815  &  4302 & 0.805 & 0.848\\
 \hline
 \end{tabular}
@@ -283,8 +293,38 @@ c4.5     & 0.903 & 0.814 & 0.915 & 0.826 \\
 linsvm   & 0.885 & 0.804 & 0.916 & 0.826 \\
 logreg   & 0.884 & 0.806 & 0.916 & 0.824 \\
 bayes    & 0.871 & 0.799 & 0.886 & 0.807 \\
-kmeans   & 0.905 & 0.806 & 0.893 & 0.821 \\
+knn   & 0.905 & 0.806 & 0.893 & 0.821 \\
 svmlight & 0.852 & 0.811 & 0.924 & 0.832 \\
+\hline
+\end{tabular}
+
+\subsubsection{Validation Set Precision}
+
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & DEMO & CRIME & BASE & CRIME + HISTORY\\
+\hline
+c4.5     & 0.928 & 0.810 & 0.924 & 0.834 \\
+linsvm   & 0.976 & 0.784 & 0.936 & 0.810 \\
+logreg   & 0.976 & 0.782 & 0.934 & 0.810 \\
+knn   & 0.915 & 0.806 & 0.908 & 0.823 \\
+bayes    & 0.895 & 0.796 & 0.854 & 0.813 \\
+svmlight & 0.825 & 0.793 & 0.931 & 0.821 \\
+\hline
+\end{tabular}
+
+\subsubsection{Validation Set Recall}
+
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & DEMO & CRIME & BASE & CRIME + HISTORY\\
+\hline
+c4.5     & 0.878 & 0.809 & 0.907 & 0.821 \\
+linsvm   & 0.794 & 0.827 & 0.896 & 0.859 \\
+logreg   & 0.791 & 0.828 & 0.898 & 0.855 \\
+knn   & 0.847 & 0.796 & 0.876 & 0.825 \\
+bayes    & 0.896 & 0.793 & 0.933 & 0.807 \\
+svmlight & 0.900 & 0.831 & 0.918 & 0.855 \\
 \hline
 \end{tabular}
 
@@ -395,16 +435,18 @@ BASE & 42 & 0.773 \\
 \textbf{Binomial Sign Test}
 The binomial sign test was used to evaluate whether an algorithm performed better ($p=0.05$) than another for each dataset. Each cell in the table below corresponds to whether the learning algorithm in that row was significantly BETTER than the algorithm in that column, WORSE or similar ($\sim$).
 
+\textbf{Note:} C4.5, Linear SVM, kNN, and SVMLight are all tuned using 10-fold cross-validation.
+
 \paragraph{DEMO} \quad
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned)	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
+C4.5 	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
 Linear SVM		& -		& -			& $\sim$	& WORSE		& BETTER	& BETTER	\\
 Log Regression	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
-KNN (Tuned)		& -		& -			& -			& -			& BETTER	& BETTER	\\
+kNN 		& -		& -			& -			& -			& BETTER	& BETTER	\\
 Bayes			& -		& -			& -			& -			& -			& BETTER	\\
 SVMLight & - & - & - & - & - & - \\
 \hline
@@ -414,12 +456,12 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
+C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& $\sim$	& $\sim$	\\
 Log Regression	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
-KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
+kNN 		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
 \hline
@@ -429,12 +471,12 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
+C4.5 	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
 Linear SVM		& -		& -			& $\sim$	& BETTER	& BETTER	& WORSE		\\
 Log Regression	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
-KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& WORSE		\\
+kNN 		& -		& -			& -			& -			& $\sim$	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
 \hline
@@ -444,12 +486,12 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
+C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
 Log Regression	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
-KNN (Tuned)		& -		& -			& -			& -			& BETTER	& WORSE		\\
+kNN 		& -		& -			& -			& -			& BETTER	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
 \hline
@@ -573,8 +615,18 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
 TODO
 
 \section{Related Work}
+Many studies have investigated the influence of extralegal factors in sentencing. Johnson analyzes the Pennsylvania Sentencing Data specifically on sentences that depart from guidelines. His results suggest that black and hispanic defendants compared to whites, men compared to women, and younger offenders compared to older ones are more likelier to receive a sentence that deviates in an unfavorable direction from the guidelines. Johnson also notes that combinations of variables, like race and mode of conviction, serve as strong indicators of the direction that a sentence will deviate in. 
+
+Sentencing decision support systems have been of interest in AI, but we do not know of any such studies that have been done in machine learning. As mentioned in the introduction, some countries are moving towards delegating the gathering of information needed for sentencing to machines instead of humans. These programs do not replace judges (yet), but generally tell judges what other judges have decided for similar cases. 
+The Sentencing Information System of Scotland allows judges to enter information about the offender and offense to view the decisions that other judges made for similar circumstances, to help judges to keep sentences consistent. Uri notes that ``most people\ldots believe that as a matter of \emph{principle} [the tasks of a judge] should be an exclusively human one.'' This conception is unlikely to change anytime soon, given the popular fear and mistrust of machines. 
+
 
 \section{Future Work}
+We did not have the time to investigate sentencing output variables other than INCMIN, the minimum incarceration time. A court sentence is a multi-dimensional output, so future work should also look at output variables like INCMAX (maximum incarceration time), INCTYPE (type of incarceration), FINE (fine charged), etc. 
+
+Also, we binarified INCMIN to indicate only whether the sentence was greater than 12 months for all methods except for regression. Since INCMIN is originally a continous variable, future work should look at continuous outputs, or at least coarsified (rather than binarified) outputs. The same applies for the other potential output variables as well. Such studies take into account that the output variables are not independent of one another. e.g., a greater INCMIN may be associated with a lesser FINE. 
+
+We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account -----.
 
 \section{Conclusion}
 
@@ -585,6 +637,8 @@ TODO
 \item Ullmer, Jefferey T.; Johnson, Brian, "Sentencing in context: A multilevel analysis." Criminology. Feb 2004, 42, (1), 137 - 177. DOI: 10.1111/j.1745-9125.2004.tb00516.x
 \item Ulmer, Jeffery T.; Bradley, Minda S., "Variation in trial penalties among serious violent offenses." Criminology. Aug 2006, 44, (3), 631 - 670. DOI: 10.1111/j.1745-9125.2006.00059.x
 \item Uri J. Schild and Ruth Kannai. 2003. Intelligent computer evaluation of offender's previous record. In Proceedings of the 9th international conference on Artificial intelligence and law (ICAIL '03). ACM, New York, NY, USA, 185-194. DOI=10.1145/1047788.1047831 http://doi.acm.org/10.1145/1047788.1047831
+\item Uri J. Schild. 1995. Intelligent computer systems for criminal sentencing. In Proceedings of the 5th international conference on Artificial intelligence and law (ICAIL '95). ACM, New York, NY, USA, 229-238. DOI=10.1145/222092.222247 http://doi.acm.org/10.1145/222092.222247
+\item Marius J. A. Duker and Arno R. Lodder. 1999. Sentencing and information management: consistency and the particularities of a case. In Proceedings of the 7th international conference on Artificial intelligence and law (ICAIL '99). ACM, New York, NY, USA, 100-107. DOI=10.1145/323706.323720 http://doi.acm.org/10.1145/323706.323720
 \end{enumerate}
 \section{Appendix}
 
