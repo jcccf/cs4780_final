@@ -163,10 +163,11 @@ The DEMO subset only contains demographic information, while the CRIME subset co
 
 
 
-\subsection{Linear Regression}
+\subsection{Variable Correlation}
 We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
 
 \subsection{Learning Algorithms}
+We used C4.5 decision trees, linear SVM, logistic regression, naive bayes, k-nearest neighbors, and SVM with kernels (via SVMLight).
 
 \subsubsection{Decision Tree Learning}
 
@@ -273,7 +274,7 @@ svmlight & 0.823 & 4541  & 1103  & 815  &  4302 & 0.805 & 0.848\\
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.35]{report_figures/tv_accuracy_bar.png}
+	\includegraphics[scale=0.4]{report_figures/tv_accuracy_bar.png}
 	\caption{Training set vs validation set accuracy for DEMO}
 \end{figure}
 
@@ -281,7 +282,7 @@ svmlight & 0.823 & 4541  & 1103  & 815  &  4302 & 0.805 & 0.848\\
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.35]{report_figures/val_accuracy_bar.png}
+	\includegraphics[scale=0.4]{report_figures/val_accuracy_bar.png}
 	\caption{Validation set accuracy}
 \end{figure}
 
@@ -441,11 +442,11 @@ The binomial sign test was used to evaluate whether an algorithm performed bette
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
 Linear SVM		& -		& -			& $\sim$	& WORSE		& BETTER	& BETTER	\\
-Log Regression	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
+Log. Reg. 	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
 kNN 		& -		& -			& -			& -			& BETTER	& BETTER	\\
 Bayes			& -		& -			& -			& -			& -			& BETTER	\\
 SVMLight & - & - & - & - & - & - \\
@@ -456,11 +457,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg. & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& $\sim$	& $\sim$	\\
-Log Regression	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
+Log. Reg. 	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
 kNN 		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -471,11 +472,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
 Linear SVM		& -		& -			& $\sim$	& BETTER	& BETTER	& WORSE		\\
-Log Regression	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
+Log. Reg. 	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
 kNN 		& -		& -			& -			& -			& $\sim$	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -486,11 +487,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
-Log Regression	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
+Log. Reg. 	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
 kNN 		& -		& -			& -			& -			& BETTER	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -594,8 +595,8 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \hline
   Dataset & $R^2$ & MSE & Attr. & Coeff. \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? \\
-  &&& ??? & ??? \\
+  \multirow{2}{*}{DEMO*} & \multirow{2}{*}{-5.40\e{-3}} & \multirow{2}{*}{9.33\e{3}} & COUNTY\_1 & 6.23\e{-2} \\
+  &&& COUNTY\_51 & 3.19\e{-2} \\
   \hline
   \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.94\e{-3}} & \multirow{2}{*}{6.38\e{3}} & PCSOFF\_182502 & 2.58\e{-1} \\
   &&& OGS & 1.86\e{-1} \\  
@@ -607,7 +608,7 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   &&& INCHOATA & 6.63\e{-2} \\
   \hline
   \end{tabular}
-  \caption{SVM regression listing components with the highest coefficients (in linear case)}
+  \caption{SVM regression listing components with the highest coefficients (in linear case) (COUNTY\_1 - Adams; COUNTY\_51 - Philadelphia, ETHF1A - Prior ethnic intimidation adjudication; INCHOATA - Prior inchoate adjudication) (*Excluding DOSAGE)}
   \label{TableSVMReg}
 \end{table}
 
