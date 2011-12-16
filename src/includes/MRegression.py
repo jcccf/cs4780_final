@@ -20,6 +20,17 @@ class MRegression:
     self.Xv, self.Yv = self.__read_into_array(self.val_file, remove_constants=False)
     # self.X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     # self.Y = [-1,-1,-1,1,1,1]
+    
+  def to_csv(self, filename):
+    with open(filename, 'w') as f:
+      header = "%s" % self.select_y
+      for x in self.select_x:
+        header += ",%s" % x
+      f.write(header+"\n")
+      for i,x in enumerate(self.X):
+        s = "%s" % self.Y[i]
+        s += "".join([","+str(x2) for x2 in x])
+        f.write(s+"\n")
 
   def __read_into_array(self, filename, remove_constants=True):
     select_y_index = 0
@@ -60,9 +71,11 @@ class MRegression:
         i += 1
       print "Removed sd=0 attributes ", eyes
       a = np.delete(a, eyes, 0)
+      sx_new = list(self.select_x)
       for eye in eyes:
         print self.select_x[eye]
-        self.select_x.remove(self.select_x[eye])
+        sx_new.remove(self.select_x[eye])
+      self.select_x = sx_new
       a = np.transpose(a)
     
     return [a, y_array]
@@ -93,7 +106,7 @@ class MRegression:
     print "Writing output to " + self.base_file+"_svm.txt"
     with open(self.base_file+"_svm.txt", 'w') as fx:
       d = 1
-      for t in [0, 1, 1, 1, 1, 1, 2]:
+      for t in [0]: #[0, 1, 1, 1, 1, 1, 2]:
         print "---"
         print "SVM Regression..."
         if t != 1:
@@ -123,9 +136,9 @@ class MRegression:
         
         fx.write("---t=%d d=%d\n" % (t, d))
         fx.write("R2 (val/test)\n")
-        fx.write("%f %f \n" % metrics.r2_score(ytrue, yguess), metrics.r2_score(ytrue_orig, yguess_orig))
+        fx.write("%f %f \n" % (metrics.r2_score(ytrue, yguess), metrics.r2_score(ytrue_orig, yguess_orig)))
         fx.write("MSE (val/test)\n")
-        fx.write("%f %f \n" % metrics.mean_square_error(ytrue, yguess), metrics.mean_square_error(ytrue_orig, yguess_orig))
+        fx.write("%f %f \n" % (metrics.mean_square_error(ytrue, yguess), metrics.mean_square_error(ytrue_orig, yguess_orig)))
         fx.write("---\n")
 
   def pca(self, n_components=None):

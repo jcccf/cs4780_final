@@ -1,4 +1,4 @@
-\documentclass[]{article}
+\documentclass[11pt,letter]{article}
 
 \usepackage[]{geometry}
 \geometry{
@@ -32,70 +32,124 @@
 \providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
 
 \fancyhf{}
-\renewcommand{\headrulewidth}{0pt} % remove line at top
+\setlength{\headheight}{5pt}
+\setlength\headsep{25pt}
+%\renewcommand{\headrulewidth}{0pt} % remove line at top
 \lhead{\fancyplain{}{CS 4780 Final Project}}
 \rhead{\fancyplain{}{jc882, yl477, jp624}}
-\rfoot{\fancyplain{}{\thepage}}
+% \rfoot{\fancyplain{}{\thepage}}
+\cfoot{\thepage\ of \pageref{LastPage}}
+\usepackage{lastpage}
+
+%==Bookmarks==
+\usepackage{hyperref}
+\hypersetup{
+    % Document Information
+    pdftitle={},
+    pdfauthor={},
+    pdfkeywords={},
+    % Link Options
+    colorlinks={false},
+    linkcolor={white},
+    pagecolor={white},
+    % Display Options
+    bookmarks={true},
+    bookmarksopen={true},
+    pdfstartview={FitH},
+    pdfpagelayout={OneColumn},
+    pdfpagemode={UseOutlines}}
 
 \begin{document}
+%-------------------------------------------------------------------------------
+\begin{center}
+% ==================TITLE PAGE==================
+% Location Information
+    {\large \sc Cornell University $\bullet$ Ithaca, NY}
+    \vspace{42mm}
+    % Title
+    \\ {\huge \textbf {CS 4780 Final Project Report\vspace{8mm}\Huge\\Predicting Criminal Sentences}}
+    \vspace{22mm}
+    \normalsize
+    % Author
+    \\ Justin Cheng
+    \\ Yunchi Luo
+    \\ Jane\,\,\,Jae Won\,\,\,\,Park
+    % Email
+    \\ \{jc882, yl477, jp624\}@cornell.edu
+    
+    \vspace{8mm}
+    
+    \vspace{12mm}
+    % Date
+    
+    December 16, 2011
+ \footnote{This version was last updated and generated on \today.}
+\end{center}
 
-\title{CS 4780 Final Project: Predicting Crimial Sentences}
-\author{Justin Cheng \emph{jc882}, Yunchi Luo \emph{yl477}, Jane Jae Won Park \emph{jp624}}
-\date{\today}
-\maketitle
+\vspace{20mm}
 
-\hrule
-\vskip 1em
+%-------------------------------------------------------------------------------
+\newpage
+\tableofcontents
+\newpage
+
+%-------------------------------------------------------------------------------
+
+%\title{CS 4780 Final Project: Predicting Crimial Sentences}
+%\author{Justin Cheng \emph{jc882}, Yunchi Luo \emph{yl477}, Jane Jae Won Park \emph{jp624}}
+%\date{\today}
+%\maketitle
+
+%\hrule
+%\vskip 1em
 
 \section{Introduction}
+Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making.
+If two different individuals commit an identical or similar crime that should be given same sentences by the non-discriminatory nature of our laws, is it actually the case that the two end up receiving the same sentences? The sentence is, after all, determined by a human who uses some combination of his objective knowledge of law and subjective judgment, perhaps even some whimsical impulse. 
+While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various factors affect what kind of sentences are handed out to criminals, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves. Existing studies on criminal justice use traditional statistical techniques and limited case studies. We seek to employ machine learning techniques to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon’s sentence.
 
-\subsection{Motivation}
-
-\subsection{Statement of Task}
-
-\section{Method}
-
+\section{Problem Definition and Methods}
+Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
 \subsection{Feature Selection}
 
 TODO: How did we select features?
 
-\begin{enumerate}
-	\item COMPLETE - Offense Completed/Inchoate
-	\item COUNTY - Sentencing County
-	\item DAASS - Drug and Alcohol Assessment
-	\item DISP - Type of Disposition
-	\item DOB - Date of Birth
-	\item DOF - Date of Offense
-	\item DOSAGE - Age at Sentencing
-	\item DOS - Date of Sentence
-	\item FINE - Amount of Fine Imposed
-	\item GRADE - Statutory Offense Grade
-	\item INCMIN - Minimum Length of Incarceration
-	\item INCMAX - Maximum Length of Incarceration
-	\item INCTYPE - Type of Incarceration
-	\item PCSOFF - PCS Offense Code
-	\item PCSSUB - PCS Offense Subcode
-	\item RACE - Ethnicity of Offender
-	\item SEX - Gender of Offender
-\end{enumerate}
+\begin{description}
+	\item [COMPLETE] Offense Completed/Inchoate
+	\item [COUNTY] Sentencing County
+	\item [DAASS] Drug and Alcohol Assessment
+	\item [DISP] Type of Disposition
+	\item [DOB] Date of Birth
+	\item [DOF] Date of Offense
+	\item [DOSAGE] Age at Sentencing
+	\item [DOS] Date of Sentence
+	\item [FINE] Amount of Fine Imposed
+	\item [GRADE] Statutory Offense Grade
+	\item [INCMIN] Minimum Length of Incarceration
+	\item [INCMAX] Maximum Length of Incarceration
+	\item [INCTYPE] Type of Incarceration
+	\item [PCSOFF] PCS Offense Code
+	\item [PCSSUB] PCS Offense Subcode
+	\item [RACE] Ethnicity of Offender
+	\item [SEX] Gender of Offender
+\end{description}
 
 \subsection{Feature Processing}
-
-TODO: What are these?
-
-\begin{enumerate}
-	\item \emph{b/nb} Binarization
-	\item \emph{c/nc} Coarsification
-	\item \emph{\_/uno} Date field separation
-	\item \emph{\_/balN} Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
-\end{enumerate}
+\begin{description}
+	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
+	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
+	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
+	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
+\end{description}
 
 \subsection{Datasets}
-\begin{enumerate}
-	\item DEMO - SEX, DOFAGE, RACE (should add DAASS in the future)
-	\item CRIME - FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item BASE - Features from both DEMO and CRIME
-\end{enumerate}
+\begin{description}
+	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
+	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
+	\item [HIST] \hfill \\TODO
+	\item [ABOUT] \hfill \\TODO
+	\item [BASE] \hfill \\Features from both DEMO and CRIME
+\end{description}
 
 The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
 
@@ -138,99 +192,127 @@ We also employ the use of principle component analysis (PCA), in order to better
 
 As in the binary task, we trained a regression classifier on 80\% of the data, while validating it on the remaining 20\%.
 
-\section{Results and Discussion}
+\section{Experimental Evaluation}
+\subsection{Methdology}
+TODO: overview of evaluation methodology, what we used to measure performance
 
-\subsection{Cross-Validation Set Accuracy}
+TODO: training/test data used, why is it realistic or interesting?
+
+\subsection{Results}
+TODO: change all tables to charts
+\subsubsection{Cross-Validation Set Accuracy}
 The classification accuracies listed below is the accuracy obtained on 10-fold cross-validation.
 
-\subsubsection{DEMO}
+\textbf{DEMO} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes  &  0.629 & 284  &  153  &  218  &  345  \\
-c4.5   &  0.659 & 353  &  192  &  149  &  306  \\
-lin. svm & 0.637 & 277  &  138  &  225  &  360  \\
-svm & 0.651 & ? & ? & ? & ? \\
-kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
+c4.5   	 & 0.905 & 5554  & 423  &  794   & 5982 \\
+linsvm 	 & 0.882 & 4996  & 150  &  1352  & 6255 \\
+logreg 	 & 0.882 & 4991  & 149  &  1357  & 6256 \\
+bayes  	 & 0.861 & 5274  & 694  &  1074  & 5711 \\
+kmeans   & 0.905 & 5667  & 535  &  681   & 5870 \\
+svmlight & 0.889 & 5046  & 167	&  1302	 & 6238 \\ 
 \hline
 \end{tabular}
 
-\subsubsection{CRIME}
+\textbf{CRIME} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes  &  0.772  & 392 &   118 &   110 &   380  \\
-c4.5   &  0.783 & 404  &  119 &   98   &  379  \\
-lin. svm & 0.583 & 276  &  191 &   226  &  307  \\
-kmeans  & 0.769 & 381  &  110 &   121  &  388  \\
+c4.5     & 0.821  &  4484  &  1003  &  926   &  4348 \\
+linsvm   & 0.819  &  4605  &  1147  &  805   &  4204 \\
+logreg   & 0.819  &  4613  &  1152  &  797   &  4199 \\
+bayes    & 0.810  &  4394  &  1029  &  1016  &  4322 \\
+kmeans   & 0.822  &  4485  &  995   &  925   &  4356 \\
+svmlight & 0.81	  &  4632  &  1077  &  778  &  4274 \\
 \hline
 \end{tabular}
 
-\subsubsection{BASE}
+\textbf{BASE} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes   & 0.761  &  390  &  127  &  112  &  371  \\
-c4.5    & 0.774  &  396  &  120  &  106  &  378  \\
-lin.svm & 0.589  &  290  &  199  &  212  &  299  \\
-kmeans  & 0.773  &  400  &  125  &  102  &  373  \\
+c4.5     & 0.923 & 4823 & 356  &  458   &  4947 \\ 
+linsvm   & 0.919 & 4716 & 293  &  565   &  5010 \\ 
+logreg   & 0.919 & 4710 & 291  &  571   &  5012 \\ 
+bayes    & 0.886 & 4897 & 820  &  384   &  4483 \\
+kmeans   & 0.896 & 4647 & 464  &  634   &  4839 \\
+svmlight & 0.925 & 4822 & 313  &  459   &  4990 \\
 \hline
 \end{tabular}
 
-\subsection{Validation Set Accuracy}
+\textbf{CRIME + HISTORY} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
-Algorithm & DEMO & CRIME & BASE \\
+Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes  &  0.629 & 0.765  &  0.753   \\
-c4.5   &  0.610 & 0.762  &  0.754  \\
-lin.svm & 0.633 & 0.600  &  0.603   \\
-svm & 0.599 & ? & ? \\
-kmeans  & 0.616 & 0.777  &  0.758   \\
+c4.5     & 0.817 & 4344  & 953   & 1012 &  4452\\ 
+linsvm   & 0.811 & 4447  & 1121  & 909  &  4284\\
+logreg   & 0.812 & 4475  & 1140  & 881  &  4265\\ 
+bayes    & 0.807 & 4311  & 1029  & 1045 &  4376\\ 
+kmeans   & 0.817 & 4375  & 986   & 981  &  4419\\ 
+svmlight & 0.823 & 4541  & 1103  & 815  &  4302\\
 \hline
 \end{tabular}
 
-\subsection{Linear Regression}
 
-\subsubsection{Correlation Heatmap}
+\subsubsection{Validation Set Accuracy}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{report_figures/val_accuracy_bar.png}
+	\caption{Validation set accuracy}
+\end{figure}
+
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & DEMO & CRIME & BASE & CRIME + HISTORY\\
+\hline
+c4.5     & 0.903 & 0.814 & 0.915 & 0.826 \\
+linsvm   & 0.885 & 0.804 & 0.916 & 0.826 \\
+logreg   & 0.884 & 0.806 & 0.916 & 0.824 \\
+bayes    & 0.871 & 0.799 & 0.886 & 0.807 \\
+kmeans   & 0.905 & 0.806 & 0.893 & 0.821 \\
+svmlight & 0.852 & 0.811 & 0.924 & 0.832 \\
+\hline
+\end{tabular}
+
+\subsubsection{Variable Correlation}
+
+\textbf{Correlation Heat Map}
 % \includegraphics[scale=0.5]{report_figures/corr_heatmap.pdf} % Uncomment when ready to print
+The correlation heat maps in the appendix show the correlation between all tested attributes.
 
-TODO: Uncomment above line to import heatmap
-
-The figure above shows the correlation between all tested attributes, 
-with blue indicating uncorrelated attributes and yellow indicating highly correlated attributes.
-
-\subsubsection{Top Correlated Attributes}
+\textbf{Top Correlated Attributes}
 Ignoring correlation between binarized attributes (ex. GRADE\_1 and GRADE\_2), 
-and trivial correlations such as that between DOSAGE and DOFAGE and PCSOFF and GRADE (since unique PCSOFFs are assigned unique GRADEs in the codebook),
+and trivial correlations such as that between DOSAGE and DOFAGE and PCSOFF and GRADE (since unique PCSOFFs are assigned unique GRADEs in the codebook), we obtain
 
 \begin{tabular}{|l|l|r|c|}
 \hline
-Attribute $X$ & Attribute $Y$ & $|\rho_{X,Y}|$ & $p$-value \\
+Attribute $X$ & Attribute $Y$ & $\rho_{X,Y}$ & $p$-value \\
 \hline
-%COUNTY\_37 (Lawrence) & DISP\_6 (Other Disposition) & 0.907 & 2.2e-16 \\
-% PCSOFF\_351600 (Simple Possession) & GRADE\_1 (Unclassified Misdemeanor) & 0.786 & 2.2e-16 \\
-% PCSOFF\_353000 (PWID: Drug Unknown) & GRADE\_5 (Unclassified Felony) & 0.712 & 2.2e-16 \\
-% PCSOFF\_753731 (DUI) & GRADE\_3 (Misdemeanor 2) & 0.626 & 2.2e-16 \\
-% PCSOFF\_753731 (DUI) & GRADE\_1 (Unclassified Misdemeanor) & 0.550 & 2.2e-16 \\
-%RACE\_1 (White) & COUNTY\_51 (Philadelphia) & -0.527 & 2.2e-16 \\
-%RACE\_2 (Black) & COUNTY\_51 (Philadelphia) & 0.482 & 2.2e-16 \\
-%RACE\_9 (Unknown) & COUNTY\_30 (Greene) & 0.446 & 2.2e-16 \\
-%INCMIN & PCSOFF\_753731 (DUI) & -0.436 & 2.2e-16 \\
-%INCMIN & GRADE\_3 (Misdemeanor 2) & -0.372 & 2.2e-16 \\
-%RACE\_2 (Black) & PCSOFF\_753731 (DUI) & -0.369 & 2.2e-16 \\
-%COUNTY\_51 (Philadelphia) & PCSOFF\_753731 (DUI) & -0.353 & 2.2e-16 \\
-COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\INCMIN&	GRADE&	0.51992742 & 2.2e-16\\COUNTY\_47&	PCSOFF\_180912&	0.44711808 & 2.2e-16\\INCMIN&	PCSOFF\_753731&	0.44359416 & 2.2e-16\\COUNTY\_51&	DISP\_4&	0.40880622 & 2.2e-16\\RACE\_1&	COUNTY\_51&	0.38671562 & 2.2e-16\\INCMIN&	PCSSUB\_A&	0.34272914 & 2.2e-16\\RACE\_2&	COUNTY\_51&	0.33313766 & 2.2e-16\\RACE\_1&	PCSOFF\_753731&	0.3129321 & 2.2e-16\\COUNTY\_9&	DISP\_2&	0.31041962 & 2.2e-16\\
+COUNTY\_1 & PCSOFF\_182902 & 0.817 & 2.2\e{-16} \\
+PCSOFF\_183301 & ARSA & 0.628 & 2.2\e{-16} \\
+COUNTY\_53 & PCSOFF\_184905 & 0.577 & 2.2\e{-16} \\
+PCSOFF\_757122 & M1DUIC & 0.576 & 2.2\e{-16} \\
+ROBA & WEA & 0.547 & 2.2\e{-16} \\
+COUNTY\_51 & DISP\_4 & 0.541 & 2.2\e{-16} \\
+F1A & ROBSBIC & 0.534 & 2.2\e{-16} \\
+MIS & PRS & 0.513 & 2.2\e{-16} \\
+PCSOFF\_185506 & SEXASLTC & 0.500 & 2.2\e{-16} \\
+COUNTY\_39 & PCSOFF\_183301 & 0.490 & 2.2\e{-16} \\
+%COUNTY\_37&	DISP\_6&	0.69581896 & 2.2e-16\\%INCMIN&	GRADE&	0.51992742 & 2.2e-16\\%COUNTY\_47&	PCSOFF\_180912&	0.44711808 & 2.2e-16\\%INCMIN&	PCSOFF\_753731&	0.44359416 & 2.2e-16\\%COUNTY\_51&	DISP\_4&	0.40880622 & 2.2e-16\\%RACE\_1&	COUNTY\_51&	0.38671562 & 2.2e-16\\%INCMIN&	PCSSUB\_A&	0.34272914 & 2.2e-16\\%RACE\_2&	COUNTY\_51&	0.33313766 & 2.2e-16\\%RACE\_1&	PCSOFF\_753731&	0.3129321 & 2.2e-16\\%COUNTY\_9&	DISP\_2&	0.31041962 & 2.2e-16\\
 \hline
 \end{tabular}
 
-TODO: Analysis
+For example, according to the high correlation between $COUNTY\_1$ and $PCSOFF\_182902$, if you're convicted in Adams county, you're likely to have unlawfully restrained someone and vice versa. If you've had prior arson adjudications, you've probably committed arson again. Somewhat unexpectedly, if you've had prior DUI convictions, you've probably altered or forged vehicle license plates. If you've had a prior robbery adjudication, naturally you've also probably had a weapon misdemeanor adjudication.
 
-\subsection{Decision Tree}
-\subsubsection{Optimal Parameters}
+\subsubsection{Decision Tree}
+\textbf{Optimal Parameters}
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
@@ -273,7 +355,7 @@ RACE_1=1
 |    |    |    |    . . .
 \end{verbatim}
 
-\subsection{SVM}
+\subsubsection{SVM}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Dataset & $C$ & $t$ & $t$-dependent. vars & Accuracy \\
@@ -282,7 +364,7 @@ DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
 \hline
 \end{tabular}
 
-\subsection{kNN}
+\subsubsection{kNN}
 \begin{tabular}{|c|c|c|}
 \hline
 Dataset & $k$ & Accuracy \\
@@ -294,77 +376,103 @@ BASE & 42 & 0.773 \\
 \end{tabular}
 
 
-\subsection{Significance Tests}
+\subsubsection{Significance Tests}
 
-\subsubsection{Binomial Sign Test}
+\textbf{Binomial Sign Test}
 Each cell in the table below corresponds to whether the learning algorithm in that row was significantly BETTER than the algorithm in that column, WORSE or similar ($\sim$).
 
 \paragraph{DEMO} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & $\sim$ & $\sim$ & $\sim$ \\
-SVM & - & - & $\sim$ & $\sim$ \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
+Linear SVM		& -		& -			& $\sim$	& WORSE		& BETTER	& BETTER	\\
+Log Regression	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
+KNN (Tuned)		& -		& -			& -			& -			& BETTER	& BETTER	\\
+Bayes			& -		& -			& -			& -			& -			& BETTER	\\
 \hline
 \end{tabular}
 
 \paragraph{CRIME} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
-SVM & - & - & WORSE & WORSE \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
+Linear SVM		& -		& -			& $\sim$	& $\sim$	& $\sim$	& $\sim$	\\
+Log Regression	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
+KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 \hline
 \end{tabular}
 
 \paragraph{BASE} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
-SVM & - & - & WORSE & WORSE \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
+Linear SVM		& -		& -			& $\sim$	& BETTER	& BETTER	& WORSE		\\
+Log Regression	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
+KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& WORSE		\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 \hline
 \end{tabular}
 
-\section{Regression Analysis}
+\paragraph{CRIME + HISTORY} \quad
 
-\subsection{Linear Regression}
-The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}.
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+\hline
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
+Linear SVM		& -		& -			& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
+Log Regression	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
+KNN (Tuned)		& -		& -			& -			& -			& BETTER	& WORSE		\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
+\hline
+\end{tabular}
+
+
+\subsubsection{Regression Analysis}
+
+\textbf{Linear Regression}
+The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}. Here, we see that the Akaike information criterion (AIC) is lowest for ALL, given that every other feature set is a subset of it. Surprisingly, ABOUT, despite having only 2 features, best predicts minimum incarceration. Nevertheless, we see here that using demographic features (DEMO) results in the highest AIC score, again demonstrating that by-and-large, sentences lengths are decided independent of one's age, gender or race.
+
 \begin{table}[h]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
   \hline
   Dataset & AIC & $R^2$ & Attr. & Coeff. & $p$-value \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & COUNTY48 & 0.249 & 2\e{-16} \\
-  &&& COUNTY39 & 0.183 & 4.73\e{-16} \\
+  \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & COUNTY\_48 & 0.249 & 2\e{-16} \\
+  &&& COUNTY\_39 & 0.183 & 4.73\e{-16} \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{???\e{4}} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & PCSOFF\_751543 & 2.76 & 4.73\e{-7} \\
+  &&& PCSOFF\_353009 & 1.34 & 1.19\e{-2} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{1.57\e{4}} & \multirow{2}{*}{3.44\e{-3}} & SEXPRED & -3.78\e{-1} & 8.55\e{-4} \\
+  &&& - & - & - \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{2.86\e{4}} & \multirow{2}{*}{-7.82\e{-3}} & RAPC & 7.28\e{-1} & 3.49\e{-4} \\
+  &&& F1C & 7.34\e{-2} & 4.43\e{-3} \\
+  \hline
+  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & PCSOFF\_185503 & 1.08 & 3.58\e{-3} \\
+  &&& COMPLETE & 1.97\e{-1} & 2.68\e{-4} \\
   \hline
   \end{tabular}
-  \caption{Linear regression listing components with the highest coefficients}
+  \caption{Linear regression listing components with the highest coefficients (COUNTY\_48 - Northampton; COUNTY\_39 - Lehigh; PCSOFF\_751543 - driving with a suspended license; PCSOFF\_353009 - Possession with intent to distribute; SEXPRED - Sexually violent predator; RAPC - prior rape conviction; F1C - other felony conviction; PCSOFF\_185503 - disorderly conduct; COMPLETE - offense completed)}
   \label{TableLinReg}
 \end{table}
 
+\textbf{Principle Component Regression}
+Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained (so that $\#=1$ refers to the component that explains the most variance), are listed in Table \ref{TablePCR1}, along with the attributes with the highest weights that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components. 
 
-\subsection{Principle Component Regression}
-Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained, are listed in Table \ref{TablePCR1}, along with the original attributes that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components.
+In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh $COUNTY\_48$ (Northampton) and $COUNTY\_54$ (Schuylkill) most.
 
 \begin{table}[h]
   \centering
@@ -375,14 +483,17 @@ Principle component decomposition was performed on each dataset, and the top com
   \multirow{2}{*}{DEMO} & 1 & 2.70\e{-1} & RACE1, COUNTY67, COUNTY40, COUNTY54, SEX \\
   & 2 & 7.16\e{-2} & SEX, RACE2, COUNTY2, RACE1, COUNTY23 \\
   \hline
-  \multirow{2}{*}{CRIME} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{CRIME} & 1 & 1.84\e{-1} & PCSSUB\_B, OGS, PCSSUB\_D, PCSOFF183502, PCSOFF183701 \\
+  & 2 & 1.57\e{-1} & DISP2, OGS, DISP4, PCSSUB\_B, DISP5 \\
   \hline
-  \multirow{2}{*}{ABOUT} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{ABOUT} & 1 & 9.67\e{-1} & DRUGDEP, SEXPRED \\
+  & 2 & 3.27\e{-2} & SEXPRED, DRUGDEP \\
   \hline
-  \multirow{2}{*}{HIST} & 1 & ??? & ??? \\
-  & 2 & ??? & ??? \\
+  \multirow{2}{*}{HIST} & 1 & 4.13\e{-1} & PRS, MIS, F3C, DRGC, F1C \\
+  & 2 & 1.29\e{-1} & MIS, AGC, M1CHILDA, WEA, M1DUIA  \\
+  \hline
+  \multirow{2}{*}{ALL} & 1 & 1.20\e{-1} & RACE1, PCSOFF753731, PCSSUB\_A, DISP1, DOFUNO \\
+  & 2 & 8.55\e{-2} & MIS, PRS, F3C, PCSSUB\_A, DOFUNO \\
   \hline
   \end{tabular}
   \caption{PCA decomposition listing top components (\#) by variance explained (V.E.) and makeup}
@@ -398,47 +509,78 @@ Principle component decomposition was performed on each dataset, and the top com
   \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & 17 & 1.19\e{-2} & 2.05\e{-1} & <2\e{-16} \\
   &&& 18 & 1.14\e{-2} & -2.07\e{-1} & <2\e{-16} \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{8.05\e{4}} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & 111 & 1.03\e{-4} & -1.64 & 2.58\e{-15} \\
+  &&& 113 & 1.02\e{-4} & -1.89 & <2\e{-16} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{1.57\e{4}} & \multirow{2}{*}{3.44\e{-3}} & 2 & 3.27\e{-2} & 1.19\e{-2} & 8.55\e{-4} \\
+  &&& - & - & - & - \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? & ??? & ??? \\
-  &&& ??? & ??? & ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{2.86\e{4}} & \multirow{2}{*}{-7.82\e{-3}} & 37 & 7.21\e{-4} & 5.97\e{-1} & 7.71\e{-3} \\
+  &&& 30 & 1.14\e{-3} & -3.54\e{-1} & 4.67\e{-2} \\
+  \hline
+  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & - & - & - & - \\
+  &&& - & - & - & - \\
   \hline
   \end{tabular}
-  \caption{PCR listing components with the highest coefficients}
+  \caption{PCR listing significant components with the highest absolute coefficients}
   \label{TablePCR2}
 \end{table}
 
-\subsection{SVM Regression}
+\textbf{SVM Regression}
 SVM regression was also performed, and the results summarized in Table \ref{TableSVMReg}.
 \begin{table}[h]
   \centering
-  \begin{tabular}{|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|}
   \hline
-  Dataset & $R^2$ & Attr. & Coeff. \\
+  Dataset & $R^2$ & MSE & Attr. & Coeff. \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? \\
+  &&& ??? & ??? \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.94\e{-3}} & \multirow{2}{*}{6.38\e{3}} & PCSOFF\_182502 & 2.58\e{-1} \\
+  &&& OGS & 1.86\e{-1} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{-4.07\e{-3}} & \multirow{2}{*}{1.35\e{3}} & SEXPRED & -6.31\e{-2} \\
+  &&& DRUGDEP & -3.61\e{-4} \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{-8.59\e{-3}} & \multirow{2}{*}{2.73\e{3}} & ETHF1A & 9.82\e{-2} \\
+  &&& INCHOATA & 6.63\e{-2} \\
   \hline
   \end{tabular}
   \caption{SVM regression listing components with the highest coefficients (in linear case)}
   \label{TableSVMReg}
 \end{table}
 
+\subsection{Discussion}
+TODO
+
+\section{Related Work}
+
+\section{Future Work}
+
 \section{Conclusion}
 
-\section{Resources}
+\section{References}
+\begin{enumerate}
+\item Britt, Chester L., "Modeling the distribution of sentence length decisions under a guidelines system: An application of quantile regression models." Journal of Quantitative Criminology. Dec 2009, 25, (4), 341 - 370. DOI: 10.1007/s10940-009-9066-x
+\item Johnson, Brian D., "Racial and ethnic disparities in sentencing departures across modes of conviction." Criminology. May 2003, 41, (2), 449 - 489. DOI: 10.1111/j.1745-9125.2003.tb00994.x
+\item Ullmer, Jefferey T.; Johnson, Brian, "Sentencing in context: A multilevel analysis." Criminology. Feb 2004, 42, (1), 137 - 177. DOI: 10.1111/j.1745-9125.2004.tb00516.x
+\item Ulmer, Jeffery T.; Bradley, Minda S., "Variation in trial penalties among serious violent offenses." Criminology. Aug 2006, 44, (3), 631 - 670. DOI: 10.1111/j.1745-9125.2006.00059.x
+\item Uri J. Schild and Ruth Kannai. 2003. Intelligent computer evaluation of offender's previous record. In Proceedings of the 9th international conference on Artificial intelligence and law (ICAIL '03). ACM, New York, NY, USA, 185-194. DOI=10.1145/1047788.1047831 http://doi.acm.org/10.1145/1047788.1047831
+\end{enumerate}
+\section{Appendix}
+
+\subsection{Correlation Heat Maps}
+Red indicates low correlation, light yellow indicates high correlation.
+\subsubsection{DEMO Correlation Heat Map}
+\includegraphics[scale=0.5]{report_figures/demo.pdf}
+\subsubsection{CRIME Correlation Heat Map}
+\includegraphics[scale=0.5]{report_figures/crime.pdf}
+\subsubsection{ABOUT Correlation Heat Map}
+\includegraphics[scale=0.5]{report_figures/about.pdf}
+\subsubsection{HIST Correlation Heat Map}
+\includegraphics[scale=0.5]{report_figures/hist.pdf}
+\subsubsection{ALL Correlation Heat Map}
+\includegraphics[scale=0.5]{report_figures/all.pdf}
 
 \end{document}
