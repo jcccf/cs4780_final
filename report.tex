@@ -393,6 +393,7 @@ kNN (Tuned) & - & - & - & $\sim$ \\
 
 \textbf{Linear Regression}
 The results of linear regression on each dataset are summarized in Table \ref{TableLinReg}. Here, we see that the Akaike information criterion (AIC) is lowest for ALL, given that every other feature set is a subset of it. Surprisingly, ABOUT, despite having only 2 features, best predicts minimum incarceration. Nevertheless, we see here that using demographic features (DEMO) results in the highest AIC score, again demonstrating that by-and-large, sentences lengths are decided independent of one's age, gender or race.
+
 \begin{table}[h]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
@@ -421,7 +422,9 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
 
 
 \textbf{Principle Component Regression}
-Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained, are listed in Table \ref{TablePCR1}, along with the original attributes that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components.
+Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained (so that $\#=1$ refers to the component that explains the most variance), are listed in Table \ref{TablePCR1}, along with the attributes with the highest weights that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components. 
+
+In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh $COUNTY\_48$ and $COUNTY\_54$ most.
 
 \begin{table}[h]
   \centering
