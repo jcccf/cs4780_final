@@ -104,14 +104,12 @@
 %\vskip 1em
 
 \section{Introduction}
-
-\subsection{Motivation}
+Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making.
 If two different individuals commit an identical or similar crime that should be given same sentences by the non-discriminatory nature of our laws, is it actually the case that the two end up receiving the same sentences? The sentence is, after all, determined by a human who uses some combination of his objective knowledge of law and subjective judgment, perhaps even some whimsical impulse. 
 While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various factors affect what kind of sentences are handed out to criminals, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves. Existing studies on criminal justice use traditional statistical techniques and limited case studies. We seek to employ machine learning techniques to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon’s sentence.
-\subsection{Statement of Task}
-Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
-\section{Methods}
 
+\section{Problem Definition and Methods}
+Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
 \subsection{Feature Selection}
 
 TODO: How did we select features?
@@ -514,8 +512,14 @@ TODO
 
 \section{Conclusion}
 
-\section{Resources}
-
+\section{References}
+\begin{enumerate}
+\item Britt, Chester L., "Modeling the distribution of sentence length decisions under a guidelines system: An application of quantile regression models." Journal of Quantitative Criminology. Dec 2009, 25, (4), 341 - 370. DOI: 10.1007/s10940-009-9066-x
+\item Johnson, Brian D., "Racial and ethnic disparities in sentencing departures across modes of conviction." Criminology. May 2003, 41, (2), 449 - 489. DOI: 10.1111/j.1745-9125.2003.tb00994.x
+\item Ullmer, Jefferey T.; Johnson, Brian, "Sentencing in context: A multilevel analysis." Criminology. Feb 2004, 42, (1), 137 - 177. DOI: 10.1111/j.1745-9125.2004.tb00516.x
+\item Ulmer, Jeffery T.; Bradley, Minda S., "Variation in trial penalties among serious violent offenses." Criminology. Aug 2006, 44, (3), 631 - 670. DOI: 10.1111/j.1745-9125.2006.00059.x
+\item Uri J. Schild and Ruth Kannai. 2003. Intelligent computer evaluation of offender's previous record. In Proceedings of the 9th international conference on Artificial intelligence and law (ICAIL '03). ACM, New York, NY, USA, 185-194. DOI=10.1145/1047788.1047831 http://doi.acm.org/10.1145/1047788.1047831
+\end{enumerate}
 \section{Appendix}
 
 \subsection{Correlation Heat Maps}
