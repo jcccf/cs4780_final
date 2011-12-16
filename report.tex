@@ -620,8 +620,7 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
 Many studies have investigated the influence of extralegal factors in sentencing. Johnson analyzes the Pennsylvania Sentencing Data specifically on sentences that depart from guidelines. His results suggest that black and hispanic defendants compared to whites, men compared to women, and younger offenders compared to older ones are more likelier to receive a sentence that deviates in an unfavorable direction from the guidelines. Johnson also notes that combinations of variables, like race and mode of conviction, serve as strong indicators of the direction that a sentence will deviate in. 
 
 Sentencing decision support systems have been of interest in AI, but we do not know of any such studies that have been done in machine learning. As mentioned in the introduction, some countries are moving towards delegating the gathering of information needed for sentencing to machines instead of humans. These programs do not replace judges (yet), but generally tell judges what other judges have decided for similar cases. 
-The Sentencing Information System of Scotland allows judges to enter information about the offender and offense to view the decisions that other judges made for similar circumstances, to help judges to keep sentences consistent. Uri notes that ``most people\ldots believe that as a matter of \emph{principle} [the tasks of a judge] should be an exclusively human one.'' This conception is unlikely to change anytime soon, given the popular fear and mistrust of machines. 
-
+The Sentencing Information System of Scotland allows judges to enter information about the offender and offense to view the decisions that other judges made for similar circumstances, to help judges to keep sentences consistent. 
 
 \section{Future Work}
 We did not have the time to investigate sentencing output variables other than INCMIN, the minimum incarceration time. A court sentence is a multi-dimensional output, so future work should also look at output variables like INCMAX (maximum incarceration time), INCTYPE (type of incarceration), FINE (fine charged), etc. 
@@ -630,9 +629,13 @@ Also, we binarified INCMIN to indicate only whether the sentence was greater tha
 
 We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account should lead to more accurate predictors.
 
-\section{Discussion and Conclusion}
+\section{Conclusion}
+The C4.5 decision tree made the most accurate predictions on the DEMO set, while SVMLight performed worst of all learning methods. On the BASE variable set, however, SVMLight performed best. The methods showed less discrepancy in performance for the CRIME and CRIME+HISTORY sets. 
+
+Regression analysis shows that ABOUT was the best predictor of INCMIN, while DEMO was worst, supporting that U.S. judges determine sentences independent of predjudice as they swore they would under oath.
 
 
+We were able to create machines that could fairly accurately predict the criminal sentence. These learned machines, combined with knowledge based systems derived from sentencing guidelines, can be expected to create sentencing machines that matches the decisions of most humans while remaining more consistent than humans. Uri notes that ``most people\ldots believe that as a matter of \emph{principle} [the tasks of a judge] should be an exclusively human one.'' This conception is unlikely to change anytime soon, given the popular fear and mistrust of machines. 
 
 \section{References}
 \begin{enumerate}
