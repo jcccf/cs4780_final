@@ -118,11 +118,17 @@ While sociologists, behavioral economists, and researchers of law and our justic
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
 We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms which are detailed in following sections. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
 
-\subsection{Feature Selection}
-
-TODO: How did we select features?
-
+\subsection{Features}
+We included most of the available features, filtering out ones that were redundant (e.g., a concatenation of several other fields). The variable names and descriptions are provided below
+\footnote{All variables shown with postfix \_X in the form FOO\_X are actually two features, FOO\_A and FOO\_C. FOO\_A is the number of prior adjudications and FOO\_C is the number of prior convictions.}:
 \begin{description}
+    \item [AG\_X] Aggravated Assault (Att. SBI)
+    \item [AGASBI\_X] Aggravated Assault (SBI)
+    \item [AGIND\_X] Aggravated Indecent Assault
+    \item [ARS\_X] Arson (F-1/No Person)
+    \item [ARSPERS\_X] Arson
+    \item [BUR\_X] Burglary (House and Person)
+    \item [BUROTHR\_X] Burglary (other F-1)
 	\item [COMPLETE] Offense Completed/Inchoate
 	\item [COUNTY] Sentencing County
 	\item [DAASS] Drug and Alcohol Assessment
@@ -131,26 +137,52 @@ TODO: How did we select features?
 	\item [DOF] Date of Offense
 	\item [DOSAGE] Age at Sentencing
 	\item [DOS] Date of Sentence
+	\item [DRG\_X] Other Felony Drug
+	\item [DRUG50G\_X] Felony Drugs ($\ge 50g$)
+	\item [DRUGDEP] Was the offender drug dependent?
+	\item [DRUGDTH\_X] Drug Delivery Causing Death
+	\item [ETHF1\_X] Ethnic Intimidation
+	\item [F1\_X] Felony I
+	\item [F2\_X] Felony II
+	\item [F3\_X] Felony III
 	\item [FINE] Amount of Fine Imposed
 	\item [GRADE] Statutory Offense Grade
+	\item [INCHOAT\_X] Inchoat to 4 pt. Offense
 	\item [INCMIN] Minimum Length of Incarceration
 	\item [INCMAX] Maximum Length of Incarceration
 	\item [INCTYPE] Type of Incarceration
+	\item [IVD\_X] Involuntary Deviate Sexual Intercourse
+	\item [KID\_X] Kidnap
+	\item [M1CHILD\_X] M-1 Involving Child
+	\item [M1DEATH\_X] M-1 Involving Death
+	\item [M1DUI\_X] M-1 DUI
+	\item [MIS] Other Misdemeanor Convictions
+	\item [MUR\_X] Murder
 	\item [PCSOFF] PCS Offense Code
 	\item [PCSSUB] PCS Offense Subcode
+	\item [PRS] Prior Record Store
+	\item [OGS] Offense Gravity Score
 	\item [RACE] Ethnicity of Offender
+	\item [RAP\_X] Rape
+	\item [ROB\_X] Robbery (Other F-1)
+	\item [ROBMV\_X] Robbery of Motor Vehicle (No SBI)
+	\item [ROBSBI\_X] Robbery with SBI
+	\item [ROBMVSB\_] Robbery / Motor Vehicle (SBI) 
 	\item [SEX] Gender of Offender
+	\item [SEXASLT\_X] Sexual Assault
+	\item [SEXPRED] Is the offender a sexually violent predator?
+	\item [VM\_X] Voluntary Manslaughter
+	\item [WE\_X] M-1 Involving Weapon
 \end{description}
 
 \subsection{Datasets}
 \begin{description}
 	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
 	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item [HIST] \hfill \\TODO
-	\item [ABOUT] \hfill \\TODO
-	\item [BASE] \hfill \\Features from both DEMO and CRIME
+	\item [HIST] \hfill \\MUR\_X, VM\_X, RAP\_X, KID\_X, IVD\_X, ARSPERS\_X, ROBSBI\_X, ROBMVSB\_X, AGASBI\_X, DRUGDTH\_X, BUR\_X, ETHF1\_X, INCHOAT\_X, ARS\_X, ROB\_X, ROBMV\_X, AG\_X, BUROTHR\_X, AGIND\_X, SEXASLT\_X, F1\_X, F2\_X, DRUG50G\_X, DRG\_X, F3\_X, M1DEATH\_X, WE\_X, M1CHILD\_X, M1DUI, MIS, PRS
+	\item [ABOUT] \hfill \\DRUGDEP, SEXPRED
 \end{description}
-The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. HIST contains variables about the offender's prior offense records, and ABOUT contains two descriptions of the offender.
 
 \subsection{Feature Processing}
 \begin{description}
