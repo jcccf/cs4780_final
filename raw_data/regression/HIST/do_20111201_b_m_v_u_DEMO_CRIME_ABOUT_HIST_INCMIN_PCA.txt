@@ -1,0 +1,155 @@
+---
+PCA Regression...
+R2 Score (Val / Test) 
+-0.007827 0.004835 
+MSE (Val / Test)2725.018597 12229.517050 
+Coefficients
+[-0.01910364 -0.04400737 -0.02082287 -0.00551856 -0.07386912 -0.01084119
+  0.01940484 -0.0317774   0.00840113 -0.02573607 -0.02484292  0.01115675
+  0.05745707 -0.03128083  0.01403729  0.00285967  0.01846113  0.02104892
+ -0.04777427 -0.1570058  -0.2282007   0.10831672 -0.03508071 -0.02627679
+  0.01083132  0.04208484 -0.00184786 -0.09214415  0.07384074 -0.35431446
+ -0.02709756  0.03813971  0.01017669 -0.02212311 -0.02030011 -0.02340863
+  0.59749132 -0.05014086  0.17024873  0.08585153  0.06833226 -0.00936551
+ -0.08460225  0.04893945  0.08050739  0.02852593 -0.09469229 -0.11154408
+ -0.07830274]
+Intercept
+-0.0490197686134
+---
+
+Call:
+function (formula, data, subset, weights, na.action, method = "qr", 
+    model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
+    contrasts = NULL, offset, ...) 
+{
+    ret.x <- x
+    ret.y <- y
+    cl <- match.call()
+    mf <- match.call(expand.dots = FALSE)
+    m <- match(c("formula", "data", "subset", "weights", "na.action", 
+        "offset"), names(mf), 0L)
+    mf <- mf[c(1L, m)]
+    mf$drop.unused.levels <- TRUE
+    mf[[1L]] <- as.name("model.frame")
+    mf <- eval(mf, parent.frame())
+    if (method == "model.frame") 
+        return(mf)
+    else if (method != "qr") 
+        warning(gettextf("method = '%s' is not supported. Using 'qr'", 
+            method), domain = NA)
+    mt <- attr(mf, "terms")
+    y <- model.response(mf, "numeric")
+    w <- as.vector(model.weights(mf))
+    if (!is.null(w) && !is.numeric(w)) 
+        stop("'weights' must be a numeric vector")
+    offset <- as.vector(model.offset(mf))
+    if (!is.null(offset)) {
+        if (length(offset) != NROW(y)) 
+            stop(gettextf("number of offsets is %d, should equal %d (number of observations)", 
+                length(offset), NROW(y)), domain = NA)
+    }
+    if (is.empty.model(mt)) {
+        x <- NULL
+        z <- list(coefficients = if (is.matrix(y)) matrix(, 0, 
+            3) else numeric(), residuals = y, fitted.values = 0 * 
+            y, weights = w, rank = 0L, df.residual = if (!is.null(w)) sum(w != 
+            0) else if (is.matrix(y)) nrow(y) else length(y))
+        if (!is.null(offset)) {
+            z$fitted.values <- offset
+            z$residuals <- y - offset
+        }
+    }
+    else {
+        x <- model.matrix(mt, mf, contrasts)
+        z <- if (is.null(w)) 
+            lm.fit(x, y, offset = offset, singular.ok = singular.ok, 
+                ...)
+        else lm.wfit(x, y, w, offset = offset, singular.ok = singular.ok, 
+            ...)
+    }
+    class(z) <- c(if (is.matrix(y)) "mlm", "lm")
+    z$na.action <- attr(mf, "na.action")
+    z$offset <- offset
+    z$contrasts <- attr(x, "contrasts")
+    z$xlevels <- .getXlevels(mt, mf)
+    z$call <- cl
+    z$terms <- mt
+    if (model) 
+        z$model <- mf
+    if (ret.x) 
+        z$x <- x
+    if (ret.y) 
+        z$y <- y
+    if (!qr) 
+        z$qr <- NULL
+    z
+}(formula = "y ~ x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + x11 + x12 + x13 + x14 + x15 + x16 + x17 + x18 + x19 + x20 + x21 + x22 + x23 + x24 + x25 + x26 + x27 + x28 + x29 + x30 + x31 + x32 + x33 + x34 + x35 + x36 + x37 + x38 + x39 + x40 + x41 + x42 + x43 + x44 + x45 + x46 + x47 + x48")
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.6768 -0.2389 -0.1555 -0.0897 10.8968 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -0.049020   0.012207  -4.016 5.98e-05 ***
+x0          -0.019104   0.009371  -2.039  0.04152 *  
+x1          -0.044007   0.016854  -2.611  0.00904 ** 
+x2          -0.020823   0.020130  -1.034  0.30097    
+x3          -0.005519   0.023262  -0.237  0.81248    
+x4          -0.073869   0.025666  -2.878  0.00401 ** 
+x5          -0.010841   0.026277  -0.413  0.67993    
+x6           0.019405   0.034819   0.557  0.57733    
+x7          -0.031777   0.041272  -0.770  0.44135    
+x8           0.008401   0.042628   0.197  0.84377    
+x9          -0.025736   0.045782  -0.562  0.57403    
+x10         -0.024843   0.051336  -0.484  0.62845    
+x11          0.011157   0.055596   0.201  0.84096    
+x12          0.057457   0.056517   1.017  0.30935    
+x13         -0.031281   0.059844  -0.523  0.60119    
+x14          0.014037   0.065871   0.213  0.83125    
+x15          0.002860   0.075904   0.038  0.96995    
+x16          0.018461   0.091261   0.202  0.83969    
+x17          0.021049   0.099911   0.211  0.83314    
+x18         -0.047774   0.103159  -0.463  0.64329    
+x19         -0.157006   0.106740  -1.471  0.14135    
+x20         -0.228201   0.113416  -2.012  0.04424 *  
+x21          0.108317   0.116448   0.930  0.35231    
+x22         -0.035081   0.122647  -0.286  0.77486    
+x23         -0.026277   0.126421  -0.208  0.83535    
+x24          0.010831   0.136470   0.079  0.93674    
+x25          0.042085   0.145115   0.290  0.77181    
+x26         -0.001848   0.146120  -0.013  0.98991    
+x27         -0.092144   0.155664  -0.592  0.55390    
+x28          0.073841   0.156041   0.473  0.63607    
+x29         -0.354314   0.178093  -1.989  0.04668 *  
+x30         -0.027098   0.184217  -0.147  0.88306    
+x31          0.038140   0.184718   0.206  0.83642    
+x32          0.010177   0.185037   0.055  0.95614    
+x33         -0.022123   0.185495  -0.119  0.90507    
+x34         -0.020300   0.206086  -0.099  0.92153    
+x35         -0.023409   0.207536  -0.113  0.91020    
+x36          0.597491   0.224203   2.665  0.00771 ** 
+x37         -0.050141   0.225565  -0.222  0.82409    
+x38          0.170249   0.228520   0.745  0.45629    
+x39          0.085852   0.238307   0.360  0.71866    
+x40          0.068332   0.272932   0.250  0.80231    
+x41         -0.009366   0.291042  -0.032  0.97433    
+x42         -0.084602   0.292513  -0.289  0.77242    
+x43          0.048939   0.292807   0.167  0.86726    
+x44          0.080507   0.335906   0.240  0.81059    
+x45          0.028526   0.336276   0.085  0.93240    
+x46         -0.094692   0.411610  -0.230  0.81806    
+x47         -0.111544   0.412329  -0.271  0.78677    
+x48         -0.078303   0.582057  -0.135  0.89299    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 1.163 on 9034 degrees of freedom
+Multiple R-squared: 0.004835,	Adjusted R-squared: -0.000563 
+F-statistic: 0.8957 on 49 and 9034 DF,  p-value: 0.6796 
+
+
+[1] 28582.29
+
+Test: 0.00483473678009
+Val: -0.00782719867597
