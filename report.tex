@@ -623,17 +623,16 @@ Sentencing decision support systems have been of interest in AI, but we do not k
 The Sentencing Information System of Scotland allows judges to enter information about the offender and offense to view the decisions that other judges made for similar circumstances, to help judges to keep sentences consistent. 
 
 \section{Future Work}
-We did not have the time to investigate sentencing output variables other than INCMIN, the minimum incarceration time. A court sentence is a multi-dimensional output, so future work should also look at output variables like INCMAX (maximum incarceration time), INCTYPE (type of incarceration), FINE (fine charged), etc. 
+We did not have the time to investigate sentencing output variables other than INCMIN, the minimum incarceration time. A court sentence is a multi-dimensional output, so future work should also look at output variables like INCMAX (maximum incarceration time), INCTYPE (type of incarceration), FINE (fine charged), etc.
 
 Also, we binarified INCMIN to indicate only whether the sentence was greater than 12 months for all methods except for regression. Since INCMIN is originally a continous variable, future work should look at continuous outputs, or at least coarsified (rather than binarified) outputs. The same applies for the other potential output variables as well. Such studies take into account that the output variables are not independent of one another. e.g., a greater INCMIN may be associated with a lesser FINE. 
-
-We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account should lead to more accurate predictors.
 
 \section{Conclusion}
 The C4.5 decision tree made the most accurate predictions on the DEMO set, while SVMLight performed worst of all learning methods. On the BASE variable set, however, SVMLight performed best. The methods showed less discrepancy in performance for the CRIME and CRIME+HISTORY sets. 
 
-Using BASE gave the best accuracies, while DEMO came second. Regression analysis shows that ABOUT was the best predictor of INCMIN, while DEMO was worst, supporting that U.S. judges determine sentences independent of predjudice as they swore they would under oath.
+The uppermost levels (that is, close to the root) of the optimal decision tree for BASE only included variables from CRIME, not DEMO. In the CRIME+HISTORY decision tree, CRIME variables likewise took place near the root, suggesting that the current offense in question, rather than previous offenses, matters more. 
 
+Using BASE gave the best accuracies, while DEMO came second. Regression analysis shows that ABOUT was the best predictor of INCMIN, while DEMO was worst, supporting that U.S. judges determine sentences independent of prejudice as they swore they would under oath. However, it is worth noting that in the other learning algorithms, DEMO, while coming second to BASE, still performed better than CRIME. 
 
 We were able to create machines that could fairly accurately predict the criminal sentence. These learned machines, combined with knowledge based systems derived from sentencing guidelines, can be expected to create sentencing machines that matches the decisions of most humans while remaining more consistent than humans. However Uri notes that ``most people\ldots believe that as a matter of \emph{principle} [the tasks of a judge] should be an exclusively human one.'' This conception is unlikely to change anytime soon, given the popular fear and mistrust of machines. 
 
