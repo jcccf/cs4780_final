@@ -1,0 +1,12 @@
+---
+PCA...
+Explained Variance
+[ 0.96729143  0.03270857]
+Components
+---0---
+9.999976e-01 	 DRUGDEP
+2.207951e-03 	 SEXPRED
+---1---
+9.999976e-01 	 SEXPRED
+-2.207951e-03 	 DRUGDEP
+------

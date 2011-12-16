@@ -1,3 +1,11 @@
+Predicting Criminal Sentences
+=============================
+jc882, yl477, jp624
+
+Where's the raw data that we used in our report?
+================================================
+In raw_data/
+
 Requirements
 ============
 * Python 2.7+ (*incompatible with Python 3.x)
