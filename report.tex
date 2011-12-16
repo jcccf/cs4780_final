@@ -118,11 +118,17 @@ While sociologists, behavioral economists, and researchers of law and our justic
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
 We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms which are detailed in following sections. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
 
-\subsection{Feature Selection}
-
-TODO: How did we select features?
-
+\subsection{Features}
+We included most of the available features, filtering out ones that were redundant (e.g., a concatenation of several other fields). The variable names and descriptions are provided below
+\footnote{All variables shown with postfix \_X in the form FOO\_X are actually two features, FOO\_A and FOO\_C. FOO\_A is the number of prior adjudications and FOO\_C is the number of prior convictions.}:
 \begin{description}
+    \item [AG\_X] Aggravated Assault (Att. SBI)
+    \item [AGASBI\_X] Aggravated Assault (SBI)
+    \item [AGIND\_X] Aggravated Indecent Assault
+    \item [ARS\_X] Arson (F-1/No Person)
+    \item [ARSPERS\_X] Arson
+    \item [BUR\_X] Burglary (House and Person)
+    \item [BUROTHR\_X] Burglary (other F-1)
 	\item [COMPLETE] Offense Completed/Inchoate
 	\item [COUNTY] Sentencing County
 	\item [DAASS] Drug and Alcohol Assessment
@@ -131,26 +137,58 @@ TODO: How did we select features?
 	\item [DOF] Date of Offense
 	\item [DOSAGE] Age at Sentencing
 	\item [DOS] Date of Sentence
+	\item [DRG\_X] Other Felony Drug
+	\item [DRUG50G\_X] Felony Drugs ($\ge 50g$)
+	\item [DRUGDEP] Was the offender drug dependent?
+	\item [DRUGDTH\_X] Drug Delivery Causing Death
+	\item [ETHF1\_X] Ethnic Intimidation
+	\item [F1\_X] Felony I
+	\item [F2\_X] Felony II
+	\item [F3\_X] Felony III
 	\item [FINE] Amount of Fine Imposed
 	\item [GRADE] Statutory Offense Grade
+	\item [INCHOAT\_X] Inchoat to 4 pt. Offense
 	\item [INCMIN] Minimum Length of Incarceration
 	\item [INCMAX] Maximum Length of Incarceration
 	\item [INCTYPE] Type of Incarceration
+	\item [IVD\_X] Involuntary Deviate Sexual Intercourse
+	\item [KID\_X] Kidnap
+	\item [M1CHILD\_X] M-1 Involving Child
+	\item [M1DEATH\_X] M-1 Involving Death
+	\item [M1DUI\_X] M-1 DUI
+	\item [MIS] Other Misdemeanor Convictions
+	\item [MUR\_X] Murder
+	\item [OGS] Offense Gravity Score
 	\item [PCSOFF] PCS Offense Code
 	\item [PCSSUB] PCS Offense Subcode
+	\item [PRS] Prior Record Store
+	\item [OGS] Offense Gravity Score
 	\item [RACE] Ethnicity of Offender
+	\item [RAP\_X] Rape
+	\item [ROB\_X] Robbery (Other F-1)
+	\item [ROBMV\_X] Robbery of Motor Vehicle (No SBI)
+	\item [ROBSBI\_X] Robbery with SBI
+	\item [ROBMVSB\_] Robbery / Motor Vehicle (SBI) 
 	\item [SEX] Gender of Offender
+	\item [SEXASLT\_X] Sexual Assault
+	\item [SEXPRED] Is the offender a sexually violent predator?
+	\item [VM\_X] Voluntary Manslaughter
+	\item [WE\_X] M-1 Involving Weapon
+	\item [SEX] Gender of Offender
+	\item [SEXPRED] Sexually Violent Predator
 \end{description}
 
 \subsection{Datasets}
+
 \begin{description}
 	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
 	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item [HIST] \hfill \\TODO
-	\item [ABOUT] \hfill \\TODO
+	\item [HIST] \hfill \\MUR\_X, VM\_X, RAP\_X, KID\_X, IVD\_X, ARSPERS\_X, ROBSBI\_X, ROBMVSB\_X, AGASBI\_X, DRUGDTH\_X, BUR\_X, ETHF1\_X, INCHOAT\_X, ARS\_X, ROB\_X, ROBMV\_X, AG\_X, BUROTHR\_X, AGIND\_X, SEXASLT\_X, F1\_X, F2\_X, DRUG50G\_X, DRG\_X, F3\_X, M1DEATH\_X, WE\_X, M1CHILD\_X, M1DUI, MIS, PRS
+	\item [ABOUT] \hfill \\DRUGDEP, SEXPRED
 	\item [BASE] \hfill \\Features from both DEMO and CRIME
+	\item [ALL] \hfill \\Features from DEMO, CRIME, HIST and ABOUT
 \end{description}
-The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. HIST contains variables about the offender's prior offense records, and ABOUT contains two descriptions of the offender.
 
 \subsection{Feature Processing}
 \begin{description}
@@ -161,12 +199,11 @@ The DEMO subset only contains demographic information, while the CRIME subset co
 \end{description}
 
 
-
-
-\subsection{Linear Regression}
+\subsection{Variable Correlation}
 We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
 
 \subsection{Learning Algorithms}
+We used C4.5 decision trees, linear SVM, logistic regression, naive bayes, k-nearest neighbors, and SVM with kernels (via SVMLight).
 
 \subsubsection{Decision Tree Learning}
 
@@ -273,7 +310,7 @@ svmlight & 0.823 & 4541  & 1103  & 815  &  4302 & 0.805 & 0.848\\
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.35]{report_figures/tv_accuracy_bar.png}
+	\includegraphics[scale=0.4]{report_figures/tv_accuracy_bar.png}
 	\caption{Training set vs validation set accuracy for DEMO}
 \end{figure}
 
@@ -281,7 +318,7 @@ svmlight & 0.823 & 4541  & 1103  & 815  &  4302 & 0.805 & 0.848\\
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.35]{report_figures/val_accuracy_bar.png}
+	\includegraphics[scale=0.4]{report_figures/val_accuracy_bar.png}
 	\caption{Validation set accuracy}
 \end{figure}
 
@@ -415,11 +452,11 @@ The binomial sign test was used to evaluate whether an algorithm performed bette
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
 Linear SVM		& -		& -			& $\sim$	& WORSE		& BETTER	& BETTER	\\
-Log Regression	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
+Log. Reg. 	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
 kNN 		& -		& -			& -			& -			& BETTER	& BETTER	\\
 Bayes			& -		& -			& -			& -			& -			& BETTER	\\
 SVMLight & - & - & - & - & - & - \\
@@ -430,11 +467,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg. & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& $\sim$	& $\sim$	\\
-Log Regression	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
+Log. Reg. 	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
 kNN 		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -445,11 +482,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
 Linear SVM		& -		& -			& $\sim$	& BETTER	& BETTER	& WORSE		\\
-Log Regression	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
+Log. Reg. 	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
 kNN 		& -		& -			& -			& -			& $\sim$	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -460,11 +497,11 @@ SVMLight & - & - & - & - & - & - \\
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5  & Linear SVM & Log Regression & kNN  & Bayes & SVMLight \\
+Algorithm & C4.5  & Linear SVM & Log. Reg.  & kNN  & Bayes & SVMLight \\
 \hline
 C4.5 	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
 Linear SVM		& -		& -			& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
-Log Regression	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
+Log. Reg. 	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
 kNN 		& -		& -			& -			& -			& BETTER	& WORSE		\\
 Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 SVMLight & - & - & - & - & - & - \\
@@ -568,8 +605,8 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \hline
   Dataset & $R^2$ & MSE & Attr. & Coeff. \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? \\
-  &&& ??? & ??? \\
+  \multirow{2}{*}{DEMO*} & \multirow{2}{*}{-5.40\e{-3}} & \multirow{2}{*}{9.33\e{3}} & COUNTY\_1 & 6.23\e{-2} \\
+  &&& COUNTY\_51 & 3.19\e{-2} \\
   \hline
   \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.94\e{-3}} & \multirow{2}{*}{6.38\e{3}} & PCSOFF\_182502 & 2.58\e{-1} \\
   &&& OGS & 1.86\e{-1} \\  
@@ -581,7 +618,7 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   &&& INCHOATA & 6.63\e{-2} \\
   \hline
   \end{tabular}
-  \caption{SVM regression listing components with the highest coefficients (in linear case)}
+  \caption{SVM regression listing components with the highest coefficients (in linear case) (COUNTY\_1 - Adams; COUNTY\_51 - Philadelphia, ETHF1A - Prior ethnic intimidation adjudication; INCHOATA - Prior inchoate adjudication) (*Excluding DOSAGE)}
   \label{TableSVMReg}
 \end{table}
 
