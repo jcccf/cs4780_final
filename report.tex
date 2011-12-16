@@ -662,36 +662,129 @@ Red indicates low correlation, light yellow indicates high correlation.
 \subsubsection{ALL Correlation Heat Map}
 \includegraphics[scale=0.5]{report_figures/all.pdf}
 
-\subsection{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
+\subsection{Optimal Decision Tree for DEMO (Top level)} % TODO Turn this into a pretty tree?
 \begin{verbatim}
-RACE_1=0
-|    SEX=1
-|    |    DOFAGE<=39.500: 1 (69.05%)
-|    |    DOFAGE>39.500
-|    |    |    RACE_9=1: -1 (100.00%)
-|    |    |    RACE_9=0
-|    |    |    |    . . .
-|    SEX=2
-|    |    RACE_9=1: -1 (100.00%)
-|    |    RACE_9=0
-|    |    |    DOFAGE<=32.000: 1 (61.54%)
-|    |    |    DOFAGE>32.000
-|    |    |    |    . . .
-RACE_1=1
-|    DOFAGE<=24.500
-|    |    DOFAGE<=19.500
-|    |    |    DOFAGE<=17.500: 1 (80.00%)
-|    |    |    DOFAGE>17.500: -1 (75.47%)
-|    |    DOFAGE>19.500
-|    |    |    SEX=1: 1 (57.94%)
-|    |    |    SEX=2: -1 (83.33%)
-|    DOFAGE>24.500
-|    |    DOFAGE<=38.500: -1 (70.00%)
-|    |    DOFAGE>38.500
-|    |    |    DOFAGE>43.500: -1 (76.92%)
-|    |    |    DOFAGE<=43.500
-|    |    |    |    . . .
+	COUNTY_2=-1
+	|    COUNTY_51=1: 1 (100.00%)
+	|    COUNTY_51=-1
+	|    |    COUNTY_15=-1
+	|    |    |    COUNTY_21=-1
+	|    |    |    |    . . .
+	|    |    |    COUNTY_21=1
+	|    |    |    |    . . .
+	|    |    COUNTY_15=1
+	|    |    |    DOS_UNO<=0.922
+	|    |    |    |    . . .
+	|    |    |    DOS_UNO>0.922
+	|    |    |    |    . . .
+	COUNTY_2=1
+	|    DOB_UNO<=1.311
+	|    |    DOB_UNO<=0.654
+	|    |    |    SEX=1: -1 (96.87%)
+	|    |    |    SEX=-1
+	|    |    |    |    . . .
+	|    |    DOB_UNO>0.654
+	|    |    |    DOS_UNO<=1.618
+	|    |    |    |    . . .
+	|    |    |    DOS_UNO>1.618
+	|    |    |    |    . . .
+	|    DOB_UNO>1.311
+	|    |    DOS_UNO<=0.629
+	|    |    |    RACE_2=-1: -1 (94.12%)
+	|    |    |    RACE_2=1
+	|    |    |    |    . . .
+	|    |    DOS_UNO>0.629
+	|    |    |    DOS_UNO>1.608: 1 (100.00%)
+	|    |    |    DOS_UNO<=1.608
+	|    |    |    |    . . .
 \end{verbatim}
 
+\subsection{Optimal Decision Tree for CRIME (Top level)}
+\begin{verbatim}
+	OGS<=-0.992
+	|    PCSOFF_753731=1: -1 (95.36%)
+	|    PCSOFF_753731=-1
+	|    |    DISP_4=-1
+	|    |    |    OGS<=-1.240
+	|    |    |    |    . . .
+	|    |    |    OGS>-1.240
+	|    |    |    |    . . .
+	|    |    DISP_4=1
+	|    |    |    PCSOFF_183304=1: -1 (100.00%)
+	|    |    |    PCSOFF_183304=-1
+	|    |    |    |    . . .
+	OGS>-0.992
+	|    OGS<=-0.248
+	|    |    DISP_4=1: 1 (95.05%)
+	|    |    DISP_4=-1
+	|    |    |    DISP_5=1: 1 (90.12%)
+	|    |    |    DISP_5=-1
+	|    |    |    |    . . .
+	|    OGS>-0.248
+	|    |    OGS<=0.000
+	|    |    |    DISP_1=-1: 1 (91.01%)
+	|    |    |    DISP_1=1
+	|    |    |    |    . . .
+	|    |    OGS>0.000
+	|    |    |    PCSOFF_184953=-1: 1 (96.09%)
+	|    |    |    PCSOFF_184953=1
+	|    |    |    |    . . .
+\end{verbatim}
 
+\subsection{Optimal Decision Tree for BASE (Top level)}
+\begin{verbatim}
+	OGS<=-0.992
+	|    COUNTY_51=1: 1 (100.00%)
+	|    COUNTY_51=-1
+	|    |    COUNTY_67=1: 1 (100.00%)
+	|    |    COUNTY_67=-1
+	|    |    |    COUNTY_36=1: 1 (100.00%)
+	|    |    |    COUNTY_36=-1
+	|    |    |    |    . . .
+	OGS>-0.992
+	|    PCSOFF_183933=1: -1 (100.00%)
+	|    PCSOFF_183933=-1
+	|    |    PCSOFF_182909=1: -1 (100.00%)
+	|    |    PCSOFF_182909=-1
+	|    |    |    PCSOFF_186111=1: -1 (100.00%)
+	|    |    |    PCSOFF_186111=-1
+	|    |    |    |    . . .
+\end{verbatim}
+
+\subsection{Optimal Decision Tree for CRIME + HISTORY (Top level)}
+\begin{verbatim}
+	OGS<=-0.992
+	|    PCSOFF_753731=1: -1 (95.70%)
+	|    PCSOFF_753731=-1
+	|    |    OGS<=-1.240
+	|    |    |    PCSOFF_185902=1: -1 (97.58%)
+	|    |    |    PCSOFF_185902=-1
+	|    |    |    |    . . .
+	|    |    OGS>-1.240
+	|    |    |    DISP_5=-1
+	|    |    |    |    . . .
+	|    |    |    DISP_5=1
+	|    |    |    |    . . .
+	OGS>-0.992
+	|    OGS<=-0.248
+	|    |    DISP_1=-1
+	|    |    |    DISP_2=-1
+	|    |    |    |    . . .
+	|    |    |    DISP_2=1
+	|    |    |    |    . . .
+	|    |    DISP_1=1
+	|    |    |    PCSOFF_183126=-1
+	|    |    |    |    . . .
+	|    |    |    PCSOFF_183126=1
+	|    |    |    |    . . .
+	|    OGS>-0.248
+	|    |    OGS<=0.000
+	|    |    |    PCSOFF_353003=1: 1 (97.04%)
+	|    |    |    PCSOFF_353003=-1
+	|    |    |    |    . . .
+	|    |    OGS>0.000
+	|    |    |    PCSOFF_184953=1: -1 (100.00%)
+	|    |    |    PCSOFF_184953=-1
+	|    |    |    |    . . .
+\end{verbatim}
 \end{document}
