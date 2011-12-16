@@ -213,53 +213,77 @@ TODO: change all tables to charts
 \subsubsection{Cross-Validation Set Accuracy}
 The classification accuracies listed below is the accuracy obtained on 10-fold cross-validation.
 
-\textbf{DEMO}
+\textbf{DEMO} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes  &  0.629 & 284  &  153  &  218  &  345  \\
-c4.5   &  0.659 & 353  &  192  &  149  &  306  \\
-lin. svm & 0.637 & 277  &  138  &  225  &  360  \\
-svm & 0.651 & ? & ? & ? & ? \\
-kmeans  & 0.643 & 337  &  192  &  165  &  306  \\
+c4.5    & 0.923  &  4823  &  356  &  458  &  4947 \\
+linsvm  & 0.919  &  4716  &  293  &  565  &  5010 \\
+logreg  & 0.919  &  4710  &  291  &  571  &  5012 \\
+bayes   & 0.886  &  4897  &  820  &  384  &  4483 \\
+kmeans  & 0.896  &  4647  &  464  &  634  &  4839 \\
 \hline
 \end{tabular}
 
-\textbf{CRIME}
+\textbf{CRIME} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes  &  0.772  & 392 &   118 &   110 &   380  \\
-c4.5   &  0.783 & 404  &  119 &   98   &  379  \\
-lin. svm & 0.583 & 276  &  191 &   226  &  307  \\
-kmeans  & 0.769 & 381  &  110 &   121  &  388  \\
+c4.5    & 0.821  &  4484  &  1003  &  926   &  4348 \\
+linsvm  & 0.819  &  4605  &  1147  &  805   &  4204 \\
+logreg  & 0.819  &  4613  &  1152  &  797   &  4199 \\
+bayes   & 0.810  &  4394  &  1029  &  1016  &  4322 \\
+kmeans  & 0.822  &  4485  &  995   &  925   &  4356 \\
 \hline
 \end{tabular}
 
-\textbf{BASE}
+\textbf{BASE} \\
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-bayes   & 0.761  &  390  &  127  &  112  &  371  \\
-c4.5    & 0.774  &  396  &  120  &  106  &  378  \\
-lin.svm & 0.589  &  290  &  199  &  212  &  299  \\
-kmeans  & 0.773  &  400  &  125  &  102  &  373  \\
+c4.5    & 0.923 & 4823 & 356  &  458   &  4947 \\ 
+linsvm  & 0.919 & 4716 & 293  &  565   &  5010 \\ 
+logreg  & 0.919 & 4710 & 291  &  571   &  5012 \\ 
+bayes   & 0.886 & 4897 & 820  &  384   &  4483 \\
+kmeans  & 0.896 & 4647 & 464  &  634   &  4839 \\ 
 \hline
 \end{tabular}
+
+\textbf{CRIME + HISTORY} \\
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Algorithm & CA & TP & FP & FN & TN \\
+\hline
+c4.5    & 0.817 & 4344  & 953   & 1012 &  4452\\ 
+linsvm  & 0.811 & 4447  & 1121  & 909  &  4284\\
+logreg  & 0.812 & 4475  & 1140  & 881  &  4265\\ 
+bayes   & 0.807 & 4311  & 1029  & 1045 &  4376\\ 
+kmeans  & 0.817 & 4375  & 986   & 981  &  4419\\ 
+\hline
+\end{tabular}
+
 
 \subsubsection{Validation Set Accuracy}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{report_figures/val_accuracy_bar.png}
+	\caption{Validation set accuracy}
+\end{figure}
+
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
-Algorithm & DEMO & CRIME & BASE \\
+Algorithm & DEMO & CRIME & BASE & CRIME + HISTORY\\
 \hline
-bayes  &  0.629 & 0.765  &  0.753   \\
-c4.5   &  0.610 & 0.762  &  0.754  \\
-lin.svm & 0.633 & 0.600  &  0.603   \\
-svm & 0.599 & ? & ? \\
-kmeans  & 0.616 & 0.777  &  0.758   \\
+c4.5     & 0.903 & 0.814 & 0.915 & 0.826 \\
+linsvm   & 0.885 & 0.804 & 0.916 & 0.826 \\
+logreg   & 0.884 & 0.806 & 0.916 & 0.824 \\
+bayes    & 0.871 & 0.799 & 0.886 & 0.807 \\
+kmeans   & 0.905 & 0.806 & 0.893 & 0.821 \\
+svmlight & 0.852 & 0.811 & 0.924 & 0.832 \\
 \hline
 \end{tabular}
 
@@ -491,21 +515,21 @@ In most cases, the components that have the highest coefficients in the linear r
 SVM regression was also performed, and the results summarized in Table \ref{TableSVMReg}.
 \begin{table}[h]
   \centering
-  \begin{tabular}{|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|}
   \hline
-  Dataset & $R^2$ & Attr. & Coeff. \\
+  Dataset & $R^2$ & MSE & Attr. & Coeff. \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? \\
+  &&& ??? & ??? \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.94\e{-3}} & \multirow{2}{*}{6.38\e{3}} & PCSOFF\_182502 & 2.58\e{-1} \\
+  &&& OGS & 1.86\e{-1} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{-4.07\e{-3}} & \multirow{2}{*}{1.35\e{3}} & SEXPRED & -6.31\e{-2} \\
+  &&& DRUGDEP & -3.61\e{-4} \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{-8.59\e{-3}} & \multirow{2}{*}{2.73\e{3}} & ETHF1A & 9.82\e{-2} \\
+  &&& INCHOATA & 6.63\e{-2} \\
   \hline
   \end{tabular}
   \caption{SVM regression listing components with the highest coefficients (in linear case)}

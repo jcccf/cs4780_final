@@ -1,12 +1,21 @@
+# To make a heatmap
+data <- read.table("data_orange.txt", header=TRUE, sep=',')
+mat.data <- data.matrix(data)
+mat.cor <- cor(mat.data)
+mat.cor[lower.tri(mat.cor, diag=TRUE)] <- NA
+mat.cord <- abs(mat.cor)
+heatmap(mat.cord, col=heat.colors(256), Rowv=NA, Colv=NA, cexRow = 0.1, cexCol = 0.1)
+
 # Load stuff in and get correlation
 
-data <- read.table("data_orange.txt", header=TRUE)
+data <- read.table("data_orange.txt", header=TRUE, sep='\t')
 data <- subset(data, select= -c(DOS_YEAR))
 mat.data <- data.matrix(data)
 mat.cor <- cor(mat.data)
 
-# Random Stuff
 
+# Random Stuff
+mat.cor[lower.tri(mat.cor, diag=TRUE)] <- NA
 mat.cord <- mat.cor - diag(diag(mat.cor))
 mat.cord <- abs(mat.cord)
 mat.cormax <- max.col(mat.cord)
@@ -40,7 +49,7 @@ by(dxdone[1:2,,drop=FALSE], 1:2, function(row) { cor.test(data[,row[1]$Var1],dat
 by(dxdone, 1:nrow(dxdone), function(row) { cor.test(data[,row[1]$Var1],data[,row[2]$Var2]) })
 
 # Plot Heatmap
-heatmap(mat.cord, col=topo.colors(256), Rowv=NA, Colv=NA, cexRow = 0.1, cexCol = 0.1)
+heatmap(mat.cord, col=heat.colors(256), Rowv=NA, Colv=NA, cexRow = 0.1, cexCol = 0.1)
 
 
 write.table(dxdone2, "topcorr2.txt", sep="\t")
