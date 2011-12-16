@@ -118,9 +118,17 @@ While sociologists, behavioral economists, and researchers of law and our justic
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
 We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms which are detailed in following sections. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
 
-\subsection{Feature Selection}
-
+\subsection{Features}
+We included most of the available features, filtering out ones that were redundant (e.g., a concatenation of several other fields). The variable names and descriptions are provided below
+\footnote{All variables shown with postfix \_X in the form FOO\_X are actually two features, FOO\_A and FOO\_C. FOO\_A is the number of prior adjudications and FOO\_C is the number of prior convictions.}:
 \begin{description}
+    \item [AG\_X] Aggravated Assault (Att. SBI)
+    \item [AGASBI\_X] Aggravated Assault (SBI)
+    \item [AGIND\_X] Aggravated Indecent Assault
+    \item [ARS\_X] Arson (F-1/No Person)
+    \item [ARSPERS\_X] Arson
+    \item [BUR\_X] Burglary (House and Person)
+    \item [BUROTHR\_X] Burglary (other F-1)
 	\item [COMPLETE] Offense Completed/Inchoate
 	\item [COUNTY] Sentencing County
 	\item [DAASS] Drug and Alcohol Assessment
@@ -129,35 +137,56 @@ We selected input and output variables from the dataset and divided them into ca
 	\item [DOF] Date of Offense
 	\item [DOSAGE] Age at Sentencing
 	\item [DOS] Date of Sentence
-	\item [DRUGDEG] Drug Depedency
+	\item [DRG\_X] Other Felony Drug
+	\item [DRUG50G\_X] Felony Drugs ($\ge 50g$)
+	\item [DRUGDEP] Was the offender drug dependent?
+	\item [DRUGDTH\_X] Drug Delivery Causing Death
+	\item [ETHF1\_X] Ethnic Intimidation
+	\item [F1\_X] Felony I
+	\item [F2\_X] Felony II
+	\item [F3\_X] Felony III
 	\item [FINE] Amount of Fine Imposed
 	\item [GRADE] Statutory Offense Grade
+	\item [INCHOAT\_X] Inchoat to 4 pt. Offense
 	\item [INCMIN] Minimum Length of Incarceration
 	\item [INCMAX] Maximum Length of Incarceration
 	\item [INCTYPE] Type of Incarceration
+	\item [IVD\_X] Involuntary Deviate Sexual Intercourse
+	\item [KID\_X] Kidnap
+	\item [M1CHILD\_X] M-1 Involving Child
+	\item [M1DEATH\_X] M-1 Involving Death
+	\item [M1DUI\_X] M-1 DUI
+	\item [MIS] Other Misdemeanor Convictions
+	\item [MUR\_X] Murder
 	\item [OGS] Offense Gravity Score
-	\item [MURA/C] Prior Murder Adjudications/Convictions
 	\item [PCSOFF] PCS Offense Code
 	\item [PCSSUB] PCS Offense Subcode
+	\item [PRS] Prior Record Store
+	\item [OGS] Offense Gravity Score
 	\item [RACE] Ethnicity of Offender
-	\item [RAPA/C] Prior Rape Adjudications/Convictions
+	\item [RAP\_X] Rape
+	\item [ROB\_X] Robbery (Other F-1)
+	\item [ROBMV\_X] Robbery of Motor Vehicle (No SBI)
+	\item [ROBSBI\_X] Robbery with SBI
+	\item [ROBMVSB\_] Robbery / Motor Vehicle (SBI) 
 	\item [SEX] Gender of Offender
-	\item [SEXPRED] Sexually Violent Predator
-	\item [VMA/C] Prior Voluntary Manslaughter Adjudications/Convictions
+	\item [SEXASLT\_X] Sexual Assault
+	\item [SEXPRED] Is the offender a sexually violent predator?
+	\item [VM\_X] Voluntary Manslaughter
+	\item [WE\_X] M-1 Involving Weapon
 \end{description}
 
-Additional features listed below can be found at \url{http://www.icpsr.umich.edu/icpsrweb/NACJD/studies/03450/detail}.
-
 \subsection{Datasets}
+
 \begin{description}
-	\item [DEMO] \hfill \\SEX, DOFAGE, RACE, COUNTY
-	\item [CRIME] \hfill \\OGS, FINE, GRADE, COMPLETE, DOS\_UNO, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item [HIST] \hfill \\MURA/C, VMA/C, RAPA/C, KIDA/C, IVDA/C, ARSPERSA/C, ROBSBIA/C, ROBMVSBA/C, AGASBIA/C, DRUGDTHA/C, BURA/C, ETHF1A/C, INCHOATA/C, ARSA/C, ROBA/C, ROBMVA/C, AGA/C, BUROTHRA/C, AGINDA/C, SEXASLTA/C, F1A/C, F2A/C, DRG50GA/C, DRGA/C, F3A/C, M1DEATHA/C, WEA/C, M1CHILDA/C, M1DUI, MIS, PRS
+	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
+	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
+	\item [HIST] \hfill \\MUR\_X, VM\_X, RAP\_X, KID\_X, IVD\_X, ARSPERS\_X, ROBSBI\_X, ROBMVSB\_X, AGASBI\_X, DRUGDTH\_X, BUR\_X, ETHF1\_X, INCHOAT\_X, ARS\_X, ROB\_X, ROBMV\_X, AG\_X, BUROTHR\_X, AGIND\_X, SEXASLT\_X, F1\_X, F2\_X, DRUG50G\_X, DRG\_X, F3\_X, M1DEATH\_X, WE\_X, M1CHILD\_X, M1DUI, MIS, PRS
 	\item [ABOUT] \hfill \\DRUGDEP, SEXPRED
 	\item [BASE] \hfill \\Features from both DEMO and CRIME
 	\item [ALL] \hfill \\Features from DEMO, CRIME, HIST and ABOUT
 \end{description}
-The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. The HIST subset contains information about past offenses. In all subsets, the label being predicted is INCMIN.
+The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. HIST contains variables about the offender's prior offense records, and ABOUT contains two descriptions of the offender.
 
 \subsection{Feature Processing}
 \begin{description}
@@ -166,8 +195,6 @@ The DEMO subset only contains demographic information, while the CRIME subset co
 	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
 	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
 \end{description}
-
-
 
 
 \subsection{Variable Correlation}
@@ -380,49 +407,22 @@ For example, according to the high correlation between $COUNTY\_1$ and $PCSOFF\_
 \hline
 Dataset & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
 \hline
-DEMO & 5 & 1.0 & 2 & 2 & Gini & 0.659 \\
-CRIME & 100 & 1.0 & 2 & 2 & Relief & 0.783 \\
-BASE & 100 & 0.8 & 1 & 2 & Relief & 0.774 \\
+DEMO & 5 & 1.0 & 1 & 1 & infoGain & 0.928 \\
+CRIME & 10 & 1.0 & 2 & 2 & gini & 0.836 \\
+BASE & 5 & 1.0 & 0 & 1 & gainRatio & 0.948 \\
+CRIME+HISTORY & 10 & 1.0 & 2 & 2 & gini & 0.836 \\
 \hline
 \end{tabular}
-
-\paragraph{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
-\begin{verbatim}
-RACE_1=0
-|    SEX=1
-|    |    DOFAGE<=39.500: 1 (69.05%)
-|    |    DOFAGE>39.500
-|    |    |    RACE_9=1: -1 (100.00%)
-|    |    |    RACE_9=0
-|    |    |    |    . . .
-|    SEX=2
-|    |    RACE_9=1: -1 (100.00%)
-|    |    RACE_9=0
-|    |    |    DOFAGE<=32.000: 1 (61.54%)
-|    |    |    DOFAGE>32.000
-|    |    |    |    . . .
-RACE_1=1
-|    DOFAGE<=24.500
-|    |    DOFAGE<=19.500
-|    |    |    DOFAGE<=17.500: 1 (80.00%)
-|    |    |    DOFAGE>17.500: -1 (75.47%)
-|    |    DOFAGE>19.500
-|    |    |    SEX=1: 1 (57.94%)
-|    |    |    SEX=2: -1 (83.33%)
-|    DOFAGE>24.500
-|    |    DOFAGE<=38.500: -1 (70.00%)
-|    |    DOFAGE>38.500
-|    |    |    DOFAGE>43.500: -1 (76.92%)
-|    |    |    DOFAGE<=43.500
-|    |    |    |    . . .
-\end{verbatim}
 
 \subsubsection{SVM}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Dataset & $C$ & $t$ & $t$-dependent. vars & Accuracy \\
 \hline
-DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
+DEMO 	& 0.5 & 2 (RBF) & $g=0.2$ & 0.919 \\
+CRIME 	& 0.5 & 2 (RBF) & $g=0.2$ & 0.837 \\
+BASE 	& 0.5 & 2 (RBF) & $g=0.1$ & 0.951 \\
+CRIME + HISTORY & 0.5 & 2 (RBF) & $g=0.2$ & 0.837 \\
 \hline
 \end{tabular}
 
@@ -431,9 +431,10 @@ DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
 \hline
 Dataset & $k$ & Accuracy \\
 \hline
-DEMO & 55 & 0.643 \\
-CRIME & 28 & 0.769 \\
-BASE & 42 & 0.773 \\
+DEMO & 8 & 0.928 \\
+CRIME & 39 & 0.832 \\
+BASE & 8 & 0.922 \\
+CRIME + HISTORY & 39 & 0.832 \\
 \hline
 \end{tabular}
 
@@ -633,9 +634,11 @@ We did not have the time to investigate sentencing output variables other than I
 
 Also, we binarified INCMIN to indicate only whether the sentence was greater than 12 months for all methods except for regression. Since INCMIN is originally a continous variable, future work should look at continuous outputs, or at least coarsified (rather than binarified) outputs. The same applies for the other potential output variables as well. Such studies take into account that the output variables are not independent of one another. e.g., a greater INCMIN may be associated with a lesser FINE. 
 
-We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account -----.
+We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account should lead to more accurate predictors.
 
-\section{Conclusion}
+\section{Discussion and Conclusion}
+
+
 
 \section{References}
 \begin{enumerate}
@@ -661,5 +664,37 @@ Red indicates low correlation, light yellow indicates high correlation.
 \includegraphics[scale=0.5]{report_figures/hist.pdf}
 \subsubsection{ALL Correlation Heat Map}
 \includegraphics[scale=0.5]{report_figures/all.pdf}
+
+\subsection{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
+\begin{verbatim}
+RACE_1=0
+|    SEX=1
+|    |    DOFAGE<=39.500: 1 (69.05%)
+|    |    DOFAGE>39.500
+|    |    |    RACE_9=1: -1 (100.00%)
+|    |    |    RACE_9=0
+|    |    |    |    . . .
+|    SEX=2
+|    |    RACE_9=1: -1 (100.00%)
+|    |    RACE_9=0
+|    |    |    DOFAGE<=32.000: 1 (61.54%)
+|    |    |    DOFAGE>32.000
+|    |    |    |    . . .
+RACE_1=1
+|    DOFAGE<=24.500
+|    |    DOFAGE<=19.500
+|    |    |    DOFAGE<=17.500: 1 (80.00%)
+|    |    |    DOFAGE>17.500: -1 (75.47%)
+|    |    DOFAGE>19.500
+|    |    |    SEX=1: 1 (57.94%)
+|    |    |    SEX=2: -1 (83.33%)
+|    DOFAGE>24.500
+|    |    DOFAGE<=38.500: -1 (70.00%)
+|    |    DOFAGE>38.500
+|    |    |    DOFAGE>43.500: -1 (76.92%)
+|    |    |    DOFAGE<=43.500
+|    |    |    |    . . .
+\end{verbatim}
+
 
 \end{document}
