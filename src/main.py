@@ -1,4 +1,4 @@
-from includes import *
+from includes import Converters, DecisionTree, MSVMLight, OrangeML, Validators
 
 #
 # CONSTANTS
@@ -13,7 +13,7 @@ VAL_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_val.val'
 #
 #Converters.balance_orangetab('../data/do_20111201_b_v_u_demo.tab', '../data/do_20111201_b_v_u_bal_demo.tab')
 # Converters.normalize_orange('../data/do_20111201_b_v_u_bal.tab','../data/do_20111201_b_v_u_bal_norm.tab')
-#Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab')
+#Converters.split_orangetab_into_2('../data/do_20111201_b_v_u_bal_demo.tab', randomize=True)
 
 #
 # SVMLight File Converters
@@ -28,6 +28,7 @@ VAL_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_val.val'
 #ot.tune_decision_tree()
 #ot.tune_knn()
 #MSVMLight.tune_parameters(TRAIN_FILE_SVM)
+#MSVMLight.get_cross_val_accuracy(TRAIN_FILE_SVM, num=10, c=None, j=None, t=None, d=None, g=None, verbose=False)
 
 #
 # Cross-validation and so on
@@ -51,8 +52,8 @@ VAL_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_val.val'
 #
 # Significance Tests
 #
-# Converters.write_actual_labels(VAL_FILE, '../data_stat/original.txt')
-"""Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
+"""Converters.write_actual_labels(VAL_FILE, '../data_stat/original.txt')
+Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
   '../data_stat/dtree_demo.txt',
   '../data_stat/linsvm.txt',
   '../data_stat/logreg.txt',
@@ -65,7 +66,7 @@ VAL_FILE_SVM = '../data_svm/do_20111201_b_v_u_bal_demo_val.val'
 # Precision and Recall Calculation
 #
 Converters.write_actual_labels(VAL_FILE, '../data_stat/original.txt')
-Validators.binomial_sign_test_multiple('../data_stat/original.txt', [
+Validators.precision_recall_multiple('../data_stat/original.txt', [
   '../data_stat/dtree_demo.txt',
   '../data_stat/linsvm.txt',
   '../data_stat/logreg.txt',

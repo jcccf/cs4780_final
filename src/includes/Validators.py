@@ -54,8 +54,12 @@ def precision_recall(original_file, h_file, p=0.025, verbose=False):
     true_y = f.readlines()
   with open(h_file, 'r') as f:
     h_y = f.readlines()
-  if len(true_y) != len(h1_y) != len(h2_y):
+  if len(true_y) != len(h_y):
     raise Exception("Unequal # of classified examples")
+  TP = 0
+  FP = 0
+  TN = 0
+  FN = 0
   for i in range(len(true_y)):
       true, clv = float(true_y[i]), float(h_y[i])
       if (true <= 0 and clv <= 0):
