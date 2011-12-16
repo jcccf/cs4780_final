@@ -1,5 +1,9 @@
 from includes import *
 
+#
+# Choose which set of variables to use
+#
+
 sy1 = 'INCMIN'
 sx1 = ['DOSAGE', 'SEX', 'RACE_1', 'RACE_2', 'RACE_3', 'RACE_4', 'RACE_5', 'RACE_6', 'COUNTY_1', 'COUNTY_10', 'COUNTY_11', 'COUNTY_12', 'COUNTY_13', 'COUNTY_14', 'COUNTY_15', 'COUNTY_16', 'COUNTY_17', 'COUNTY_18', 'COUNTY_19', 'COUNTY_2', 'COUNTY_20', 'COUNTY_21', 'COUNTY_22', 'COUNTY_23', 'COUNTY_24', 'COUNTY_25', 'COUNTY_26', 'COUNTY_27', 'COUNTY_28', 'COUNTY_29', 'COUNTY_3', 'COUNTY_30', 'COUNTY_31', 'COUNTY_32', 'COUNTY_33', 'COUNTY_34', 'COUNTY_35', 'COUNTY_36', 'COUNTY_37', 'COUNTY_38', 'COUNTY_39', 'COUNTY_4', 'COUNTY_40', 'COUNTY_41', 'COUNTY_42', 'COUNTY_43', 'COUNTY_44', 'COUNTY_45', 'COUNTY_46', 'COUNTY_47', 'COUNTY_48', 'COUNTY_49', 'COUNTY_5', 'COUNTY_50', 'COUNTY_51', 'COUNTY_52', 'COUNTY_53', 'COUNTY_54', 'COUNTY_55', 'COUNTY_56', 'COUNTY_57', 'COUNTY_58', 'COUNTY_59', 'COUNTY_6', 'COUNTY_60', 'COUNTY_61', 'COUNTY_62', 'COUNTY_63', 'COUNTY_64', 'COUNTY_65', 'COUNTY_66', 'COUNTY_67', 'COUNTY_7', 'COUNTY_8'] # REMOVE COUNTY_9 because the set is complete
 # mr = MRegression.MRegression('../data/do_20111201_b_m_v_DEMO_INCMIN.tab', select_y=sy1, select_x=sx1)
@@ -25,15 +29,16 @@ sx = sx1 + sx2 + sx3 + sx4
 # mr = MRegression.MRegression('../data/do_20111201_b_m_v_u_DEMO_CRIME_ABOUT_HIST_INCMIN.tab', select_y=sy, select_x=sx)
 
 #
-# ---
+# Then do the regression/PCA here
 #
 
-# mr.to_csv('../data/tuning data/all.txt')
-
 mr.svm_regression('../data_svm/incmintest_demo')
-
-# print MSVMLight.get_separating_hyperplane('../data_svm/incmintest_crime.train.mod')
-# 
 # mr.pca()
 # mr.regression('PCA')
 # mr.regression('Linear')
+
+# Output to CSV for R Analysis
+# mr.to_csv('../data/tuning data/all.txt')
+
+# Get Separating Hyperplane for Linear SVM in SVMLight
+# print MSVMLight.get_separating_hyperplane('../data_svm/incmintest_crime.train.mod') 
