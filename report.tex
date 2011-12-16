@@ -120,8 +120,6 @@ We selected input and output variables from the dataset and divided them into ca
 
 \subsection{Feature Selection}
 
-TODO: How did we select features?
-
 \begin{description}
 	\item [COMPLETE] Offense Completed/Inchoate
 	\item [COUNTY] Sentencing County
@@ -131,26 +129,35 @@ TODO: How did we select features?
 	\item [DOF] Date of Offense
 	\item [DOSAGE] Age at Sentencing
 	\item [DOS] Date of Sentence
+	\item [DRUGDEG] Drug Depedency
 	\item [FINE] Amount of Fine Imposed
 	\item [GRADE] Statutory Offense Grade
 	\item [INCMIN] Minimum Length of Incarceration
 	\item [INCMAX] Maximum Length of Incarceration
 	\item [INCTYPE] Type of Incarceration
+	\item [OGS] Offense Gravity Score
+	\item [MURA/C] Prior Murder Adjudications/Convictions
 	\item [PCSOFF] PCS Offense Code
 	\item [PCSSUB] PCS Offense Subcode
 	\item [RACE] Ethnicity of Offender
+	\item [RAPA/C] Prior Rape Adjudications/Convictions
 	\item [SEX] Gender of Offender
+	\item [SEXPRED] Sexually Violent Predator
+	\item [VMA/C] Prior Voluntary Manslaughter Adjudications/Convictions
 \end{description}
+
+Additional features listed below can be found at \url{http://www.icpsr.umich.edu/icpsrweb/NACJD/studies/03450/detail}.
 
 \subsection{Datasets}
 \begin{description}
-	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
-	\item [CRIME] \hfill \\FINE, GRADE, COMPLETE, DOS\_UNO, COUNTY, PCSOFF, PCSSUB, DOF\_UNO, DISP
-	\item [HIST] \hfill \\TODO
-	\item [ABOUT] \hfill \\TODO
+	\item [DEMO] \hfill \\SEX, DOFAGE, RACE, COUNTY
+	\item [CRIME] \hfill \\OGS, FINE, GRADE, COMPLETE, DOS\_UNO, PCSOFF, PCSSUB, DOF\_UNO, DISP
+	\item [HIST] \hfill \\MURA/C, VMA/C, RAPA/C, KIDA/C, IVDA/C, ARSPERSA/C, ROBSBIA/C, ROBMVSBA/C, AGASBIA/C, DRUGDTHA/C, BURA/C, ETHF1A/C, INCHOATA/C, ARSA/C, ROBA/C, ROBMVA/C, AGA/C, BUROTHRA/C, AGINDA/C, SEXASLTA/C, F1A/C, F2A/C, DRG50GA/C, DRGA/C, F3A/C, M1DEATHA/C, WEA/C, M1CHILDA/C, M1DUI, MIS, PRS
+	\item [ABOUT] \hfill \\DRUGDEP, SEXPRED
 	\item [BASE] \hfill \\Features from both DEMO and CRIME
+	\item [ALL] \hfill \\Features from DEMO, CRIME, HIST and ABOUT
 \end{description}
-The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. The HIST subset contains information about past offenses. In all subsets, the label being predicted is INCMIN.
 
 \subsection{Feature Processing}
 \begin{description}
