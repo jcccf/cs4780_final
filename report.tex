@@ -402,11 +402,11 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
   \hline
   Dataset & AIC & $R^2$ & Attr. & Coeff. & $p$-value \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & COUNTY48 & 0.249 & 2\e{-16} \\
-  &&& COUNTY39 & 0.183 & 4.73\e{-16} \\
+  \multirow{2}{*}{DEMO} & \multirow{2}{*}{9.00\e{4}} & \multirow{2}{*}{1.40\e{-2}} & COUNTY\_48 & 0.249 & 2\e{-16} \\
+  &&& COUNTY\_39 & 0.183 & 4.73\e{-16} \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & PCSOFF751543 & 2.76 & 4.73\e{-7} \\
-  &&& PCSOFF353009 & 1.34 & 1.19\e{-2} \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.41\e{4}} & \multirow{2}{*}{3.55\e{-2}} & PCSOFF\_751543 & 2.76 & 4.73\e{-7} \\
+  &&& PCSOFF\_353009 & 1.34 & 1.19\e{-2} \\  
   \hline
   \multirow{2}{*}{ABOUT} & \multirow{2}{*}{1.57\e{4}} & \multirow{2}{*}{3.44\e{-3}} & SEXPRED & -3.78\e{-1} & 8.55\e{-4} \\
   &&& - & - & - \\  
@@ -414,19 +414,18 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
   \multirow{2}{*}{HIST} & \multirow{2}{*}{2.86\e{4}} & \multirow{2}{*}{-7.82\e{-3}} & RAPC & 7.28\e{-1} & 3.49\e{-4} \\
   &&& F1C & 7.34\e{-2} & 4.43\e{-3} \\
   \hline
-  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & PCSOFF185503 & 1.08 & 3.58\e{-3} \\
+  \multirow{2}{*}{ALL} & \multirow{2}{*}{4.48\e{3}} & \multirow{2}{*}{1.77\e{-3}} & PCSOFF\_185503 & 1.08 & 3.58\e{-3} \\
   &&& COMPLETE & 1.97\e{-1} & 2.68\e{-4} \\
   \hline
   \end{tabular}
-  \caption{Linear regression listing components with the highest coefficients}
+  \caption{Linear regression listing components with the highest coefficients (COUNTY\_48 - Northampton; COUNTY\_39 - Lehigh; PCSOFF\_751543 - driving with a suspended license; PCSOFF\_353009 - Possession with intent to distribute; SEXPRED - Sexually violent predator; RAPC - prior rape conviction; F1C - other felony conviction; PCSOFF\_185503 - disorderly conduct; COMPLETE - offense completed)}
   \label{TableLinReg}
 \end{table}
-
 
 \textbf{Principle Component Regression}
 Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained (so that $\#=1$ refers to the component that explains the most variance), are listed in Table \ref{TablePCR1}, along with the attributes with the highest weights that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components. 
 
-In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh $COUNTY\_48$ and $COUNTY\_54$ most.
+In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh $COUNTY\_48$ (Northampton) and $COUNTY\_54$ (Schuylkill) most.
 
 \begin{table}[h]
   \centering
