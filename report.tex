@@ -104,12 +104,20 @@
 %\vskip 1em
 
 \section{Introduction}
-Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making.
-If two different individuals commit an identical or similar crime that should be given same sentences by the non-discriminatory nature of our laws, is it actually the case that the two end up receiving the same sentences? The sentence is, after all, determined by a human who uses some combination of his objective knowledge of law and subjective judgment, perhaps even some whimsical impulse. 
-While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various factors affect what kind of sentences are handed out to criminals, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves. Existing studies on criminal justice use traditional statistical techniques and limited case studies. We seek to employ machine learning techniques to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon’s sentence.
+\begin{quote}
+``I \ldots solemnly swear that I will administer justice without respect to persons, and do equal right to the poor and to the rich, and that I will faithfully and impartially discharge and perform all the duties incumbent upon me\ldots under the Constitution and laws of the United States. So help me God.''
+-- Oath of United States Justices and Judges
+\end{quote}
+Civilizations have adopted systems of judicial guidelines to support judges and juries in decision-making. We entrust the decision-makers to be objective and fair in their assessments of crimes without regard to factors about the offender or offense irrelevant to the offense, such as the offender's race. Yet, historically this has not always been the case--in the United States, the era of slavery and later, Jim Crow segregation lends many examples--and in many countries today someone's race or gender can be the determining factor between life and death. 
+
+If two different individuals of different demographic backgrounds commit an identical or similar crime, will they receive the same sentence? In the U.S., the decision, after all, is made by humans who use some combination of objective sentencing criteria and subjective judgement, perhaps even whimsical impulse or personal bias. If the decisions are indeed made completely or mostly objectively, can we replace the humans with a machine instead? Countries like the Netherlands and Australia use forms of computerized sentencing to make this process more consistent and fair (Duker and Lodder). A prototype knowledge-based sentencing decision support system has been developed as well (Uri). 
+
+While sociologists, behavioral economists, and researchers of law and our justice system have investigated how race, age and various extralegal factors affect criminal sentences, they have focused on the psychology and motivations behind these results, not the objective details of the observations themselves.  Case and offender characteristics have been found to have influence over sentence lengths (Chester). Data supports that the disposition of a trial is a heavy factor in the criminal's sentence (Ulmer). Existing studies on criminal justice, however, use traditional statistical techniques and limited case studies. Using the Pennsylvania Sentencing Data from 1998 (the most recent year available), we create several machines using combinations of machine learning techniques and different variable sets to create a machine that can determine criminal sentences and to provide an objective analysis regarding which factors of a criminal or the crime are most influential in determining the felon's sentence.
 
 \section{Problem Definition and Methods}
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
+We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
+
 \subsection{Feature Selection}
 
 TODO: How did we select features?
@@ -134,14 +142,6 @@ TODO: How did we select features?
 	\item [SEX] Gender of Offender
 \end{description}
 
-\subsection{Feature Processing}
-\begin{description}
-	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
-	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
-	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
-	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
-\end{description}
-
 \subsection{Datasets}
 \begin{description}
 	\item [DEMO] \hfill \\SEX, DOFAGE, RACE (should add DAASS in the future)
@@ -150,8 +150,18 @@ TODO: How did we select features?
 	\item [ABOUT] \hfill \\TODO
 	\item [BASE] \hfill \\Features from both DEMO and CRIME
 \end{description}
-
 The DEMO subset only contains demographic information, while the CRIME subset contains only details about the offense committed. The BASE subset combines features from both subsets. In all subsets, the label being predicted is INCMIN.
+
+\subsection{Feature Processing}
+\begin{description}
+	\item [\emph{b/nb} Binarization] 'Split' a multi-valued label into multiple binary variables for each label (i.e., one-hot encoding of the label)
+	\item [\emph{c/nc} Coarsification] Place continuous data into a number of evenly distributed buckets, so that there are fewer values to work with.
+	\item [\emph{\_/uno} Date field separation] Process date data (MM/DD/YYYY) into month, day, year, day of week, or unix time.
+	\item [\emph{\_/balN}] Sorting label values into $N$ buckets, and whether the sample contained equal number of examples from each bucket
+\end{description}
+
+
+
 
 \subsection{Linear Regression}
 We performed linear regression on all pairs of attributes, and calculated the correlation coefficient, $\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_X\sigma_Y}$, for each of them. To validate the correlation coefficients obtained, we calculated the $p$-value for the null hypothesis that the correlation coefficient of two attributes is 0.
@@ -506,7 +516,7 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
 TODO
 
 \section{Related Work}
-
+racial and ethnic disparities
 \section{Future Work}
 
 \section{Conclusion}
@@ -518,6 +528,8 @@ TODO
 \item Ullmer, Jefferey T.; Johnson, Brian, "Sentencing in context: A multilevel analysis." Criminology. Feb 2004, 42, (1), 137 - 177. DOI: 10.1111/j.1745-9125.2004.tb00516.x
 \item Ulmer, Jeffery T.; Bradley, Minda S., "Variation in trial penalties among serious violent offenses." Criminology. Aug 2006, 44, (3), 631 - 670. DOI: 10.1111/j.1745-9125.2006.00059.x
 \item Uri J. Schild and Ruth Kannai. 2003. Intelligent computer evaluation of offender's previous record. In Proceedings of the 9th international conference on Artificial intelligence and law (ICAIL '03). ACM, New York, NY, USA, 185-194. DOI=10.1145/1047788.1047831 http://doi.acm.org/10.1145/1047788.1047831
+\item Uri J. Schild. 1995. Intelligent computer systems for criminal sentencing. In Proceedings of the 5th international conference on Artificial intelligence and law (ICAIL '95). ACM, New York, NY, USA, 229-238. DOI=10.1145/222092.222247 http://doi.acm.org/10.1145/222092.222247
+\item Marius J. A. Duker and Arno R. Lodder. 1999. Sentencing and information management: consistency and the particularities of a case. In Proceedings of the 7th international conference on Artificial intelligence and law (ICAIL '99). ACM, New York, NY, USA, 100-107. DOI=10.1145/323706.323720 http://doi.acm.org/10.1145/323706.323720
 \end{enumerate}
 \section{Appendix}
 
