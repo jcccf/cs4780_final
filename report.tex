@@ -208,11 +208,12 @@ The classification accuracies listed below is the accuracy obtained on 10-fold c
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-c4.5    & 0.923  &  4823  &  356  &  458  &  4947 \\
-linsvm  & 0.919  &  4716  &  293  &  565  &  5010 \\
-logreg  & 0.919  &  4710  &  291  &  571  &  5012 \\
-bayes   & 0.886  &  4897  &  820  &  384  &  4483 \\
-kmeans  & 0.896  &  4647  &  464  &  634  &  4839 \\
+c4.5   	 & 0.905 & 5554  & 423  &  794   & 5982 \\
+linsvm 	 & 0.882 & 4996  & 150  &  1352  & 6255 \\
+logreg 	 & 0.882 & 4991  & 149  &  1357  & 6256 \\
+bayes  	 & 0.861 & 5274  & 694  &  1074  & 5711 \\
+kmeans   & 0.905 & 5667  & 535  &  681   & 5870 \\
+svmlight & 0.889 & 5046  & 167	&  1302	 & 6238 \\ 
 \hline
 \end{tabular}
 
@@ -221,11 +222,12 @@ kmeans  & 0.896  &  4647  &  464  &  634  &  4839 \\
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-c4.5    & 0.821  &  4484  &  1003  &  926   &  4348 \\
-linsvm  & 0.819  &  4605  &  1147  &  805   &  4204 \\
-logreg  & 0.819  &  4613  &  1152  &  797   &  4199 \\
-bayes   & 0.810  &  4394  &  1029  &  1016  &  4322 \\
-kmeans  & 0.822  &  4485  &  995   &  925   &  4356 \\
+c4.5     & 0.821  &  4484  &  1003  &  926   &  4348 \\
+linsvm   & 0.819  &  4605  &  1147  &  805   &  4204 \\
+logreg   & 0.819  &  4613  &  1152  &  797   &  4199 \\
+bayes    & 0.810  &  4394  &  1029  &  1016  &  4322 \\
+kmeans   & 0.822  &  4485  &  995   &  925   &  4356 \\
+svmlight & 0.81	  &  4632  &  1077  &  778  &  4274 \\
 \hline
 \end{tabular}
 
@@ -234,11 +236,12 @@ kmeans  & 0.822  &  4485  &  995   &  925   &  4356 \\
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-c4.5    & 0.923 & 4823 & 356  &  458   &  4947 \\ 
-linsvm  & 0.919 & 4716 & 293  &  565   &  5010 \\ 
-logreg  & 0.919 & 4710 & 291  &  571   &  5012 \\ 
-bayes   & 0.886 & 4897 & 820  &  384   &  4483 \\
-kmeans  & 0.896 & 4647 & 464  &  634   &  4839 \\ 
+c4.5     & 0.923 & 4823 & 356  &  458   &  4947 \\ 
+linsvm   & 0.919 & 4716 & 293  &  565   &  5010 \\ 
+logreg   & 0.919 & 4710 & 291  &  571   &  5012 \\ 
+bayes    & 0.886 & 4897 & 820  &  384   &  4483 \\
+kmeans   & 0.896 & 4647 & 464  &  634   &  4839 \\
+svmlight & 0.925 & 4822 & 313  &  459   &  4990 \\
 \hline
 \end{tabular}
 
@@ -247,11 +250,12 @@ kmeans  & 0.896 & 4647 & 464  &  634   &  4839 \\
 \hline
 Algorithm & CA & TP & FP & FN & TN \\
 \hline
-c4.5    & 0.817 & 4344  & 953   & 1012 &  4452\\ 
-linsvm  & 0.811 & 4447  & 1121  & 909  &  4284\\
-logreg  & 0.812 & 4475  & 1140  & 881  &  4265\\ 
-bayes   & 0.807 & 4311  & 1029  & 1045 &  4376\\ 
-kmeans  & 0.817 & 4375  & 986   & 981  &  4419\\ 
+c4.5     & 0.817 & 4344  & 953   & 1012 &  4452\\ 
+linsvm   & 0.811 & 4447  & 1121  & 909  &  4284\\
+logreg   & 0.812 & 4475  & 1140  & 881  &  4265\\ 
+bayes    & 0.807 & 4311  & 1029  & 1045 &  4376\\ 
+kmeans   & 0.817 & 4375  & 986   & 981  &  4419\\ 
+svmlight & 0.823 & 4541  & 1103  & 815  &  4302\\
 \hline
 \end{tabular}
 
@@ -372,39 +376,60 @@ Each cell in the table below corresponds to whether the learning algorithm in th
 
 \paragraph{DEMO} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & $\sim$ & $\sim$ & $\sim$ \\
-SVM & - & - & $\sim$ & $\sim$ \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& BETTER	& BETTER	& $\sim$	& BETTER	& BETTER	\\
+Linear SVM		& -		& -			& $\sim$	& WORSE		& BETTER	& BETTER	\\
+Log Regression	& -		& -			& -			& WORSE		& BETTER	& BETTER	\\
+KNN (Tuned)		& -		& -			& -			& -			& BETTER	& BETTER	\\
+Bayes			& -		& -			& -			& -			& -			& BETTER	\\
 \hline
 \end{tabular}
 
 \paragraph{CRIME} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
-SVM & - & - & WORSE & WORSE \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$	\\
+Linear SVM		& -		& -			& $\sim$	& $\sim$	& $\sim$	& $\sim$	\\
+Log Regression	& -		& -			& -			& $\sim$	& $\sim$	& WORSE 	\\
+KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& $\sim$	\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 \hline
 \end{tabular}
 
 \paragraph{BASE} \quad
 
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
-Algorithm & C4.5 (Tuned) & SVM & kNN (Tuned) & Bayes \\
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
 \hline
-C4.5 (Tuned) & - & BETTER & $\sim$ & $\sim$ \\
-SVM & - & - & WORSE & WORSE \\
-kNN (Tuned) & - & - & - & $\sim$ \\
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& BETTER	& BETTER	& WORSE		\\
+Linear SVM		& -		& -			& $\sim$	& BETTER	& BETTER	& WORSE		\\
+Log Regression	& -		& -			& -			& BETTER	& BETTER	& WORSE 	\\
+KNN (Tuned)		& -		& -			& -			& -			& $\sim$	& WORSE		\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
 \hline
 \end{tabular}
+
+\paragraph{CRIME + HISTORY} \quad
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Algorithm & C4.5 (Tuned) & Linear SVM & Log Regression & kNN (Tuned) & Bayes & SVMLight \\
+\hline
+C4.5 (Tuned)	& -		& $\sim$	& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
+Linear SVM		& -		& -			& $\sim$	& $\sim$	& BETTER	& $\sim$		\\
+Log Regression	& -		& -			& -			& $\sim$	& BETTER	& $\sim$ 	\\
+KNN (Tuned)		& -		& -			& -			& -			& BETTER	& WORSE		\\
+Bayes			& -		& -			& -			& -			& -			& WORSE		\\
+\hline
+\end{tabular}
+
 
 \subsubsection{Regression Analysis}
 
