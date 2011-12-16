@@ -445,6 +445,8 @@ The binomial sign test was used to evaluate whether an algorithm performed bette
 
 \textbf{Note:} C4.5, Linear SVM, kNN, and SVMLight are all tuned using 10-fold cross-validation.
 
+Here, we see that while C4.5 performs best on most datasets, SVM with kernels (SVMLight) performs best on the BASE dataset. kNN performs surprisingly well, matching or bettering all algorithms in many cases except in BASE.
+
 \paragraph{DEMO} \quad
 
 \begin{tabular}{|c|c|c|c|c|c|c|}
@@ -540,7 +542,7 @@ The results of linear regression on each dataset are summarized in Table \ref{Ta
 \textbf{Principle Component Regression}
 Principle component decomposition was performed on each dataset, and the top components generated, by proportion of variance in the dataset explained (so that $\#=1$ refers to the component that explains the most variance), are listed in Table \ref{TablePCR1}, along with the attributes with the highest weights that make up each component. Table \ref{TablePCR2} shows the results of linear regression on the transformed components. 
 
-In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh $COUNTY\_48$ (Northampton) and $COUNTY\_54$ (Schuylkill) most.
+In most cases, the components that have the highest coefficients in the linear regression are not the ones that explain the most variance. For example, \# 17 and 18 for DEMO correspond to the components which weigh COUNTY\_48 (Northampton) and COUNTY\_54 (Schuylkill) most.
 
 \begin{table}[h]
   \centering
@@ -618,9 +620,6 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \caption{SVM regression listing components with the highest coefficients (in linear case) (COUNTY\_1 - Adams; COUNTY\_51 - Philadelphia, ETHF1A - Prior ethnic intimidation adjudication; INCHOATA - Prior inchoate adjudication) (*Excluding DOSAGE)}
   \label{TableSVMReg}
 \end{table}
-
-\subsection{Discussion}
-TODO
 
 \section{Related Work}
 Many studies have investigated the influence of extralegal factors in sentencing. Johnson analyzes the Pennsylvania Sentencing Data specifically on sentences that depart from guidelines. His results suggest that black and hispanic defendants compared to whites, men compared to women, and younger offenders compared to older ones are more likelier to receive a sentence that deviates in an unfavorable direction from the guidelines. Johnson also notes that combinations of variables, like race and mode of conviction, serve as strong indicators of the direction that a sentence will deviate in. 
