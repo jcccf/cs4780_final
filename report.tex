@@ -174,8 +174,6 @@ We included most of the available features, filtering out ones that were redunda
 	\item [SEXPRED] Is the offender a sexually violent predator?
 	\item [VM\_X] Voluntary Manslaughter
 	\item [WE\_X] M-1 Involving Weapon
-	\item [SEX] Gender of Offender
-	\item [SEXPRED] Sexually Violent Predator
 \end{description}
 
 \subsection{Datasets}
@@ -648,9 +646,6 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
   \label{TableSVMReg}
 \end{table}
 
-\subsection{Discussion}
-TODO
-
 \section{Related Work}
 Many studies have investigated the influence of extralegal factors in sentencing. Johnson analyzes the Pennsylvania Sentencing Data specifically on sentences that depart from guidelines. His results suggest that black and hispanic defendants compared to whites, men compared to women, and younger offenders compared to older ones are more likelier to receive a sentence that deviates in an unfavorable direction from the guidelines. Johnson also notes that combinations of variables, like race and mode of conviction, serve as strong indicators of the direction that a sentence will deviate in. 
 
@@ -663,9 +658,11 @@ We did not have the time to investigate sentencing output variables other than I
 
 Also, we binarified INCMIN to indicate only whether the sentence was greater than 12 months for all methods except for regression. Since INCMIN is originally a continous variable, future work should look at continuous outputs, or at least coarsified (rather than binarified) outputs. The same applies for the other potential output variables as well. Such studies take into account that the output variables are not independent of one another. e.g., a greater INCMIN may be associated with a lesser FINE. 
 
-We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account -----.
+We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account should lead to more accurate predictors.
 
-\section{Conclusion}
+\section{Discussion and Conclusion}
+
+
 
 \section{References}
 \begin{enumerate}
