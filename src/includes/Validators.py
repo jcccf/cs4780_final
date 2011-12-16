@@ -44,3 +44,32 @@ def binomial_sign_test(original_file, h1_file, h2_file, p=0.025, verbose=False):
     print
   
   return (prob, prob < p)
+
+def precision_recall_multiple(original_file, filelist, verbose=False):
+    return [precision_recall(original_file, h_file, verbose=verbose) for h_file in filelist]
+
+# Assumes classification values between -1 and 1, and only two classes -1 and 1
+def precision_recall(original_file, h_file, p=0.025, verbose=False):
+  with open(original_file, 'r') as f:
+    true_y = f.readlines()
+  with open(h_file, 'r') as f:
+    h_y = f.readlines()
+  if len(true_y) != len(h1_y) != len(h2_y):
+    raise Exception("Unequal # of classified examples")
+  for i in range(len(true_y)):
+      true, clv = float(true_y[i]), float(h_y[i])
+      if (true <= 0 and clv <= 0):
+          TN += 1
+      elif (true <= 0 and clv > 0):
+          FP += 1
+      elif (true > 0 and clv <= 0):
+          FN += 1
+      else:
+          TP += 1
+  precision = float(TP) / float(TP + FP)
+  recall = float(TP) / float(TP + FN)
+  
+  if verbose:
+    print '%s\n\tprecision: %.3f\trecall: %.3f' % (h_file, precision, recall)
+  
+  return (precision, recall)
