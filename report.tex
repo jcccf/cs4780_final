@@ -291,7 +291,14 @@ svmlight & 0.852 & 0.811 & 0.924 & 0.832 \\
 \subsubsection{Variable Correlation}
 
 \textbf{Correlation Heat Map}
-% \includegraphics[scale=0.5]{report_figures/corr_heatmap.pdf} % Uncomment when ready to print
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{report_figures/cool.pdf}
+	\caption{Correlation heat map for selected features}
+	\label{corr_heat_map}
+\end{figure}
+Figure \ref{corr_heat_map} shows the strength of correlation between selected attributes. For instance, there is a high correlation between $RACE\_1$ and $INCMIN$, suggesting that whites receive shorter sentences overall. In addition, looking at $OGS$ and $RACE\_1$, whites have lower offense gravity scores (OGS) on average. Additionally, if someone completed a crime (COMPLETE), it was more likely that that that person got a longer minimum sentence (INCMIN).
+
 The correlation heat maps in the appendix show the correlation between all tested attributes.
 
 \textbf{Top Correlated Attributes}
