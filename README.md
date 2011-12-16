@@ -58,3 +58,7 @@ Sign Test
 1. Run print_linear_svm, print_decision_tree, and so on to print out each algorithm's predicted labels to /data_svm.
 2. You also need to run Converters.write_actual_labels to print the true labels.
 3. Validators.binomial_sign_test can then be used on the true labels, and predicted labels from 2 algorithms, to see if one of them performs better than the other.
+
+Precision/Recall
+=========
+Procedure same as Sign Test, except you should call Validators.precision_recall instead.

@@ -407,49 +407,22 @@ For example, according to the high correlation between $COUNTY\_1$ and $PCSOFF\_
 \hline
 Dataset & $m$ & Max. majority & Min. examples & Min. subset & Measure & Accuracy \\
 \hline
-DEMO & 5 & 1.0 & 2 & 2 & Gini & 0.659 \\
-CRIME & 100 & 1.0 & 2 & 2 & Relief & 0.783 \\
-BASE & 100 & 0.8 & 1 & 2 & Relief & 0.774 \\
+DEMO & 5 & 1.0 & 1 & 1 & infoGain & 0.928 \\
+CRIME & 10 & 1.0 & 2 & 2 & gini & 0.836 \\
+BASE & 5 & 1.0 & 0 & 1 & gainRatio & 0.948 \\
+CRIME+HISTORY & 10 & 1.0 & 2 & 2 & gini & 0.836 \\
 \hline
 \end{tabular}
-
-\paragraph{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
-\begin{verbatim}
-RACE_1=0
-|    SEX=1
-|    |    DOFAGE<=39.500: 1 (69.05%)
-|    |    DOFAGE>39.500
-|    |    |    RACE_9=1: -1 (100.00%)
-|    |    |    RACE_9=0
-|    |    |    |    . . .
-|    SEX=2
-|    |    RACE_9=1: -1 (100.00%)
-|    |    RACE_9=0
-|    |    |    DOFAGE<=32.000: 1 (61.54%)
-|    |    |    DOFAGE>32.000
-|    |    |    |    . . .
-RACE_1=1
-|    DOFAGE<=24.500
-|    |    DOFAGE<=19.500
-|    |    |    DOFAGE<=17.500: 1 (80.00%)
-|    |    |    DOFAGE>17.500: -1 (75.47%)
-|    |    DOFAGE>19.500
-|    |    |    SEX=1: 1 (57.94%)
-|    |    |    SEX=2: -1 (83.33%)
-|    DOFAGE>24.500
-|    |    DOFAGE<=38.500: -1 (70.00%)
-|    |    DOFAGE>38.500
-|    |    |    DOFAGE>43.500: -1 (76.92%)
-|    |    |    DOFAGE<=43.500
-|    |    |    |    . . .
-\end{verbatim}
 
 \subsubsection{SVM}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 Dataset & $C$ & $t$ & $t$-dependent. vars & Accuracy \\
 \hline
-DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
+DEMO 	& 0.5 & 2 (RBF) & $g=0.2$ & 0.919 \\
+CRIME 	& 0.5 & 2 (RBF) & $g=0.2$ & 0.837 \\
+BASE 	& 0.5 & 2 (RBF) & $g=0.1$ & 0.951 \\
+CRIME + HISTORY & 0.5 & 2 (RBF) & $g=0.2$ & 0.837 \\
 \hline
 \end{tabular}
 
@@ -458,9 +431,10 @@ DEMO & 5 & 2 (RBF) & $g=0.05$ & 0.651 \\
 \hline
 Dataset & $k$ & Accuracy \\
 \hline
-DEMO & 55 & 0.643 \\
-CRIME & 28 & 0.769 \\
-BASE & 42 & 0.773 \\
+DEMO & 8 & 0.928 \\
+CRIME & 39 & 0.832 \\
+BASE & 8 & 0.922 \\
+CRIME + HISTORY & 39 & 0.832 \\
 \hline
 \end{tabular}
 
@@ -688,5 +662,37 @@ Red indicates low correlation, light yellow indicates high correlation.
 \includegraphics[scale=0.5]{report_figures/hist.pdf}
 \subsubsection{ALL Correlation Heat Map}
 \includegraphics[scale=0.5]{report_figures/all.pdf}
+
+\subsection{Optimal Decision Tree for DEMO} % TODO Turn this into a pretty tree?
+\begin{verbatim}
+RACE_1=0
+|    SEX=1
+|    |    DOFAGE<=39.500: 1 (69.05%)
+|    |    DOFAGE>39.500
+|    |    |    RACE_9=1: -1 (100.00%)
+|    |    |    RACE_9=0
+|    |    |    |    . . .
+|    SEX=2
+|    |    RACE_9=1: -1 (100.00%)
+|    |    RACE_9=0
+|    |    |    DOFAGE<=32.000: 1 (61.54%)
+|    |    |    DOFAGE>32.000
+|    |    |    |    . . .
+RACE_1=1
+|    DOFAGE<=24.500
+|    |    DOFAGE<=19.500
+|    |    |    DOFAGE<=17.500: 1 (80.00%)
+|    |    |    DOFAGE>17.500: -1 (75.47%)
+|    |    DOFAGE>19.500
+|    |    |    SEX=1: 1 (57.94%)
+|    |    |    SEX=2: -1 (83.33%)
+|    DOFAGE>24.500
+|    |    DOFAGE<=38.500: -1 (70.00%)
+|    |    DOFAGE>38.500
+|    |    |    DOFAGE>43.500: -1 (76.92%)
+|    |    |    DOFAGE<=43.500
+|    |    |    |    . . .
+\end{verbatim}
+
 
 \end{document}
