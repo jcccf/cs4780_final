@@ -116,7 +116,7 @@ While sociologists, behavioral economists, and researchers of law and our justic
 
 \section{Problem Definition and Methods}
 Can we recover the rules judges use to determine sentences by investigating information about the criminals and sentences they received? If the judges are making purely objective decisions, is it possible to reverse-engineer parts of the law by looking at the sentences that criminals received? Can we create a machine that can, with reasonable accuracy, match the decisions of the human judges and reveal the true factors that influence sentences?
-We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
+We selected input and output variables from the dataset and divided them into categories. The input variables were divided into a few sets, and combinations of these were used by machines to learn the output variables. We attempt several different learning algorithms which are detailed in following sections. These machines learn to make decisions objectively with the sole goal to become as accurate as possible in predicting the criminal's sentence. Features chosen by the machines to be the most heavily weighted in the decisions shed light into the human decision making processes. 
 
 \subsection{Feature Selection}
 
@@ -540,8 +540,18 @@ SVM regression was also performed, and the results summarized in Table \ref{Tabl
 TODO
 
 \section{Related Work}
-racial and ethnic disparities
+Many studies have been regarding the influence of extralegal factors in sentencing. Johnson analyzes the Pennsylvania Sentencing Data specifically on sentences that depart from guidelines. His results suggest that black and hispanic defendants compared to whites, men compared to women, and younger offenders compared to older ones are more likelier to receive a sentence that deviates in an unfavorable direction from the guidelines. Johnson also notes that combinations of variables, like race and mode of conviction, serve as strong indicators of the direction that a sentence will deviate in. 
+
+Sentencing decision support systems have been of interest in AI, but we do not know of any such studies that have been done in machine learning. As mentioned in the introduction, some countries are moving towards delegating the gathering of information needed for sentencing to machines instead of humans. These programs do not replace judges (yet), but generally tell judges what other judges have decided for similar cases. 
+The Sentencing Information System of Scotland allows judges to enter information about the offender and offense to view the decisions that other judges made for similar circumstances, to help judges to keep sentences consistent. Uri notes that ``most people\ldots believe that as a matter of \emph{principle} [the tasks of a judge] should be an exclusively human one.'' This conception is unlikely to change anytime soon, given the popular fear and mistrust of machines. 
+
+
 \section{Future Work}
+We did not have the time to investigate sentencing output variables other than INCMIN, the minimum incarceration time. A court sentence is a multi-dimensional output, so future work should also look at output variables like INCMAX (maximum incarceration time), INCTYPE (type of incarceration), FINE (fine charged), etc. 
+
+Also, we binarified INCMIN to indicate only whether the sentence was greater than 12 months for all methods except for regression. Since INCMIN is originally a continous variable, future work should look at continuous outputs, or at least coarsified (rather than binarified) outputs. The same applies for the other potential output variables as well. Such studies take into account that the output variables are not independent of one another. e.g., a greater INCMIN may be associated with a lesser FINE. 
+
+We computed variable correlation, but did not take the data into account in creating the sentence predictors. Taking the correlation into account -----.
 
 \section{Conclusion}
 
