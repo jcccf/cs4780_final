@@ -28,8 +28,12 @@ sx = sx1 + sx2 + sx3 + sx4
 # ---
 #
 
-mr.svm_regression('../data_svm/incmintest')
+# mr.to_csv('../data/tuning data/all.txt')
 
-mr.pca()
-mr.regression('PCA')
-mr.regression('Linear')
+mr.svm_regression('../data_svm/incmintest_demo')
+
+# print MSVMLight.get_separating_hyperplane('../data_svm/incmintest_crime.train.mod')
+# 
+# mr.pca()
+# mr.regression('PCA')
+# mr.regression('Linear')

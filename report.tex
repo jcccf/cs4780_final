@@ -483,21 +483,21 @@ In most cases, the components that have the highest coefficients in the linear r
 SVM regression was also performed, and the results summarized in Table \ref{TableSVMReg}.
 \begin{table}[h]
   \centering
-  \begin{tabular}{|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|c|}
   \hline
-  Dataset & $R^2$ & Attr. & Coeff. \\
+  Dataset & $R^2$ & MSE & Attr. & Coeff. \\
   \hline
-  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{DEMO} & \multirow{2}{*}{???} & \multirow{2}{*}{???} & ??? & ??? \\
+  &&& ??? & ??? \\
   \hline
-  \multirow{2}{*}{CRIME} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{CRIME} & \multirow{2}{*}{7.94\e{-3}} & \multirow{2}{*}{6.38\e{3}} & PCSOFF\_182502 & 2.58\e{-1} \\
+  &&& OGS & 1.86\e{-1} \\  
   \hline
-  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\  
+  \multirow{2}{*}{ABOUT} & \multirow{2}{*}{-4.07\e{-3}} & \multirow{2}{*}{1.35\e{3}} & SEXPRED & -6.31\e{-2} \\
+  &&& DRUGDEP & -3.61\e{-4} \\  
   \hline
-  \multirow{2}{*}{HIST} & \multirow{2}{*}{???} & ??? & ??? \\
-  && ??? & ??? \\
+  \multirow{2}{*}{HIST} & \multirow{2}{*}{-8.59\e{-3}} & \multirow{2}{*}{2.73\e{3}} & ETHF1A & 9.82\e{-2} \\
+  &&& INCHOATA & 6.63\e{-2} \\
   \hline
   \end{tabular}
   \caption{SVM regression listing components with the highest coefficients (in linear case)}
